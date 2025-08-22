@@ -1,46 +1,68 @@
 <!doctype html>
 <html lang="es">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
-<title>Roblox-style Garden — Fixed (movimiento & proximidad)</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+<title>Roblox-style Garden — Final (Configuración)</title>
 <style>
-  :root{ --glass: rgba(12,18,24,.6); --accent:#00d0ff; --wood:#8b5a2b; }
+  :root{
+    --glass: rgba(18,24,30,.6);
+    --accent:#00d0ff;
+    --accent2:#00ffa9;
+    --wood:#8b5a2b;
+  }
   html,body{height:100%;margin:0;background:linear-gradient(180deg,#9ed7ff,#86c27a);font-family:system-ui,Segoe UI,Roboto,Arial;overflow:hidden}
-  canvas{display:block;width:100%;height:100%;touch-action:none;-webkit-user-select:none;user-select:none}
-  /* HUD */
-  .hud{position:fixed;left:12px;right:12px;top:12px;display:flex;gap:8px;z-index:150;pointer-events:none}
+  canvas{display:block; width:100%; height:100%; touch-action:none; -webkit-user-select:none; user-select:none;}
+  /* HUD superior */
+  .hud{position:fixed;left:12px;right:12px;top:12px;display:flex;gap:8px;z-index:120;pointer-events:none}
   .chip{pointer-events:auto;background:var(--glass);backdrop-filter:blur(8px);color:#fff;padding:8px 10px;border-radius:12px;border:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:8px}
   .val{font-weight:800}
-  /* corner icon (settings placeholder) */
-  .corner{position:fixed;right:12px;top:12px;width:44px;height:44px;border-radius:10px;background:linear-gradient(180deg,#ffffff14,#00000010);display:flex;align-items:center;justify-content:center;z-index:160;pointer-events:auto}
-  /* dock */
-  .dock{position:fixed;left:0;right:0;bottom:12px;display:flex;justify-content:center;z-index:170;pointer-events:none}
+  /* corner icon */
+  .cornerIcon{position:fixed;right:12px;top:12px;width:46px;height:46px;border-radius:10px;z-index:140;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#ffffff20,#00000010);backdrop-filter:blur(6px);pointer-events:auto;border:1px solid rgba(255,255,255,.08)}
+  .cornerIcon svg{width:28px;height:28px}
+  /* dock / botones */
+  .dock{position:fixed;left:0;right:0;bottom:12px;display:flex;justify-content:center;z-index:130;pointer-events:none}
   .dockInner{pointer-events:auto;background:var(--glass);backdrop-filter:blur(10px);padding:8px;border-radius:14px;display:flex;gap:8px;border:1px solid rgba(255,255,255,.06)}
-  .btn{min-width:66px;padding:10px;border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));color:#fff;font-weight:800;border:1px solid rgba(255,255,255,.06)}
-  /* joystick */
-  .joystick{position:fixed;left:12px;bottom:110px;z-index:180;width:140px;height:140px;pointer-events:auto}
+  .btn{min-width:64px;padding:10px;border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));color:#fff;font-weight:800;border:1px solid rgba(255,255,255,.06)}
+  /* joystick y look area */
+  .joystick{position:fixed;left:12px;bottom:100px;z-index:160;width:140px;height:140px;pointer-events:auto}
   .joyBase{width:100%;height:100%;border-radius:50%;background:radial-gradient(circle at 30% 30%,rgba(255,255,255,.07),transparent);border:1px solid rgba(255,255,255,.06)}
   .joyKnob{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:64px;height:64px;border-radius:50%;background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.03));border:1px solid rgba(255,255,255,.08)}
-  /* look area */
-  .lookPad{position:fixed;right:0;top:0;bottom:0;width:46vw;z-index:140;pointer-events:auto}
-  /* modal tienda */
-  .panel{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(420px,92vw);background:var(--glass);color:#fff;padding:12px;border-radius:12px;display:none;z-index:999}
-  .panel h3{margin:6px 0 8px 0}
-  .toast{position:fixed;left:50%;top:86px;transform:translateX(-50%);background:var(--glass);color:#fff;padding:8px 12px;border-radius:10px;display:none;z-index:900}
-  .nameBox{position:fixed;left:50%;top:18%;transform:translateX(-50%);z-index:980;display:none}
+  .lookPad{position:fixed;right:0;top:0;bottom:0;width:46vw;z-index:100;pointer-events:auto}
+  /* full-screen settings overlay */
+  .settingsOverlay{position:fixed;left:0;top:0;right:0;bottom:0;background:rgba(2,6,12,0.9);z-index:1000;display:none;color:#fff;padding:18px;overflow:auto}
+  .settingsHeader{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .settingsBody{margin-top:12px;display:flex;flex-direction:column;gap:12px}
+  .row{display:flex;align-items:center;justify-content:space-between;gap:12px;background:rgba(255,255,255,0.02);padding:10px;border-radius:10px}
+  .slider{width:56%}
+  .select{background:#ffffff10;color:#fff;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,.06)}
+  .small{font-size:13px;opacity:.9}
+  .closeBtn{background:#ffffff12;border-radius:10px;padding:8px 12px;border:1px solid rgba(255,255,255,.08)}
+  /* panel tienda interior (modal) */
+  .panel{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(460px,92vw);background:var(--glass);color:#fff;padding:12px;border-radius:12px;display:none;z-index:900}
+  .panel h3{margin:2px 0 8px 0}
+  .panel .row{background:transparent;padding:8px}
+  /* toast */
+  .toast{position:fixed;left:50%;top:86px;transform:translateX(-50%);background:var(--glass);color:#fff;padding:8px 12px;border-radius:10px;display:none;z-index:920}
+  /* name input */
+  .nameBox{position:fixed;left:50%;top:18%;transform:translateX(-50%);z-index:920;display:none}
   .nameBox input{font-size:18px;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,.2)}
 </style>
 </head>
 <body>
-
   <div class="hud">
     <div class="chip">💰 <span class="val" id="money">0</span></div>
     <div class="chip">🌱 <span class="val" id="seeds">5</span></div>
-    <div style="margin-left:auto" class="chip" id="farmChip">🏷️ <span id="farmName">Mi Granja</span></div>
+    <div style="margin-left:auto" class="chip" id="farmTag">🏷️ <span id="farmName">Mi Granja</span></div>
   </div>
 
-  <div class="corner" id="settingsBtn" title="Ajustes">⚙️</div>
+  <div class="cornerIcon" id="openSettings" title="Configuración">
+    <!-- Cubo estilizado -->
+    <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.2" stroke-linejoin="round">
+      <path d="M3 7.5L12 2l9 5.5v9L12 22 3 16.5v-9z" fill="#ffffff20"></path>
+      <path d="M12 2v20" stroke="#fff" stroke-opacity="0.9"></path>
+    </svg>
+  </div>
 
   <div class="dock">
     <div class="dockInner">
@@ -54,46 +76,95 @@
   <div class="joystick" id="joystick"><div class="joyBase"></div><div class="joyKnob" id="knob"></div></div>
   <div class="lookPad" id="lookPad"></div>
 
-  <div class="panel" id="shopPanel"><h3>🛒 Tienda</h3><div id="shopItems"></div><div style="height:12px"></div><button class="btn" id="closeShop">Cerrar</button></div>
+  <div class="panel" id="shopPanel">
+    <h3>🛒 Tienda – Estantería</h3>
+    <div id="shopItems"></div>
+    <div style="height:12px"></div>
+    <button class="btn" id="closeShop">Cerrar</button>
+  </div>
+
+  <div class="settingsOverlay" id="settingsOverlay" role="dialog" aria-modal="true">
+    <div class="settingsHeader">
+      <strong style="font-size:18px">⚙️ Configuración</strong>
+      <button class="closeBtn" id="closeSettings">Cerrar</button>
+    </div>
+    <div class="settingsBody">
+      <div class="row"><div>Calidad gráfica</div>
+        <select id="gfxQuality" class="select">
+          <option value="low">Baja (móvil lento)</option>
+          <option value="med">Media</option>
+          <option value="high">Alta (mejor GPU)</option>
+        </select>
+      </div>
+      <div class="row"><div>Sensibilidad mirada</div><input id="sensSlider" class="slider" type="range" min="0.6" max="2.5" step="0.05" value="1.1"></div>
+      <div class="row"><div>Velocidad de movimiento</div><input id="speedSlider" class="slider" type="range" min="5" max="16" step="0.5" value="10"></div>
+      <div class="row"><div>Sonidos</div><select id="soundToggle" class="select"><option value="on">ON</option><option value="off">OFF</option></select></div>
+      <div class="row"><div>Pantalla completa</div><button class="btn" id="toggleFullscreen">Activar</button></div>
+      <div class="row"><div>Resetear progreso</div><button class="btn" id="resetProgress">Reset</button></div>
+    </div>
+  </div>
+
   <div class="toast" id="toast"></div>
-  <div class="nameBox" id="nameBox"><input id="nameInput" placeholder="Nombre de la granja" maxlength="24"/><button class="btn" id="saveName">Guardar</button></div>
+  <div class="nameBox" id="nameBox">
+    <input id="nameInput" placeholder="Nombre de la granja" maxlength="24"/>
+    <button class="btn" id="saveName">Guardar</button>
+  </div>
 
   <!-- three.js -->
   <script src="https://cdn.jsdelivr.net/npm/three@0.156.0/build/three.min.js"></script>
 
   <script>
-  /* ------------------ CONFIG & STATE ------------------ */
-  const LS_KEY = 'rbgarden_fixed_v1';
+  // ----- CONFIG y ESTADO -----
+  const LS_KEY = 'rbgarden_final_v3';
+  const SETTINGS_KEY = 'rbgarden_settings_v3';
+  let state = { money:0, seeds:6, farmName:'Mi Granja', plants: [] }; // plants: {plotIndex, plantedAt}
+  const plotSize = 2.2;
   const GROWTIME = 12_000;
   const MAX_STAGE = 3;
   const PLANT_COST = 1;
   const HARVEST_REWARD = 3;
-  const INTERACT_RANGE = 2.2; // proximidad para plantar/cosechar/interactuar
-  const DEFAULT_SPEED = 12; // más rápido por defecto
 
-  let state = { money:0, seeds:5, farmName:'Mi Granja', plants: [] }; // plants: {plotIndex, plantedAt}
-  try { const raw = localStorage.getItem(LS_KEY); if(raw) state = Object.assign(state, JSON.parse(raw)); } catch(e){}
+  // SETTINGS por defecto
+  const defaultSettings = { gfx:'med', sens:1.1, speed:10, sound:'on' };
+  let settings = Object.assign({}, defaultSettings);
 
-  /* ------------------ THREE SETUP ------------------ */
+  // ----- CARGA -----
+  function loadState(){ try{ const raw = localStorage.getItem(LS_KEY); if(raw) Object.assign(state, JSON.parse(raw)); }catch(e){} }
+  function saveState(){ localStorage.setItem(LS_KEY, JSON.stringify(state)); }
+  function loadSettings(){ try{ const raw = localStorage.getItem(SETTINGS_KEY); if(raw) Object.assign(settings, JSON.parse(raw)); }catch(e){} }
+  function saveSettings(){ localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); }
+
+  loadState(); loadSettings();
+
+  // ----- THREE.JS -----
   const scene = new THREE.Scene(); scene.background = new THREE.Color(0x9ed7ff);
+  const MAX_DPR = Math.min(devicePixelRatio || 1, 2);
   const camera = new THREE.PerspectiveCamera(70, innerWidth/innerHeight, 0.1, 600);
-  camera.position.set(0,1.7,6);
+  camera.position.set(0,1.7,10);
   const renderer = new THREE.WebGLRenderer({antialias:true});
-  renderer.setPixelRatio(Math.min(devicePixelRatio||1, 1.6));
-  renderer.setSize(innerWidth, innerHeight);
+  renderer.setPixelRatio(1); renderer.setSize(innerWidth, innerHeight);
   document.body.appendChild(renderer.domElement);
 
-  scene.add(new THREE.HemisphereLight(0xffffff,0x4444ff,0.95));
-  const dl = new THREE.DirectionalLight(0xffffff,0.6); dl.position.set(6,10,4); scene.add(dl);
+  // ajuste gráfico según settings.gfx
+  function applyGfxQuality(){
+    if(settings.gfx === 'low'){ renderer.setPixelRatio(Math.min(MAX_DPR, 0.9)); toggleDecor(false); }
+    else if(settings.gfx === 'med'){ renderer.setPixelRatio(Math.min(MAX_DPR, 1.2)); toggleDecor(true); }
+    else { renderer.setPixelRatio(Math.min(MAX_DPR, 2)); toggleDecor(true); }
+    renderer.setSize(innerWidth, innerHeight);
+  }
 
-  // ground
+  const lightHemi = new THREE.HemisphereLight(0xffffff, 0x4444ff, 0.95); scene.add(lightHemi);
+  const dir = new THREE.DirectionalLight(0xffffff, 0.6); dir.position.set(6,10,4); scene.add(dir);
+
+  // suelo grande
   const ground = new THREE.Mesh(new THREE.BoxGeometry(120,0.4,120), new THREE.MeshStandardMaterial({color:0x6fbf5f}));
   ground.position.y = -0.2; scene.add(ground);
 
-  /* ------------------ PLOTS ------------------ */
-  const plotSize = 2.2;
+  // ----- PLOTS -----
   const plots = []; const plotGroup = new THREE.Group(); scene.add(plotGroup);
-  const gap = 0.6; const startX = - (plotSize + gap); const startZ = -3.5;
+  const gap = 0.6;
+  const startX = - (plotSize + gap);
+  const startZ = - 3.5; // alejar plots hacia el frente (negative z)
   for(let rz=0; rz<2; rz++){
     for(let cx=0; cx<3; cx++){
       const x = startX + cx*(plotSize+gap);
@@ -101,6 +172,7 @@
       plots.push({x,z});
       const soil = new THREE.Mesh(new THREE.BoxGeometry(plotSize,0.14,plotSize), new THREE.MeshStandardMaterial({color:0x5a3d2b}));
       soil.position.set(x,0.02,z); plotGroup.add(soil);
+      // marco
       const frameMat = new THREE.MeshStandardMaterial({color:0x8b5a2b});
       const ft = 0.16;
       const f1 = new THREE.Mesh(new THREE.BoxGeometry(plotSize+ft,0.3,ft), frameMat);
@@ -109,40 +181,67 @@
       const fs = new THREE.Mesh(new THREE.BoxGeometry(ft,0.3,plotSize + ft), frameMat);
       fs.position.set(x - plotSize/2 - ft/2,0.2,z); plotGroup.add(fs);
       const fr = fs.clone(); fr.position.set(x + plotSize/2 + ft/2,0.2,z); plotGroup.add(fr);
+      // soportes
+      const sup = new THREE.BoxGeometry(0.12,0.9,0.12);
+      const s1 = new THREE.Mesh(sup, frameMat); s1.position.set(x - plotSize/2 - ft/2,0.6,z - plotSize/2 - ft/2); plotGroup.add(s1);
+      const s2 = s1.clone(); s2.position.set(x + plotSize/2 + ft/2,0.6,z - plotSize/2 - ft/2); plotGroup.add(s2);
+      const s3 = s1.clone(); s3.position.set(x - plotSize/2 - ft/2,0.6,z + plotSize/2 + ft/2); plotGroup.add(s3);
+      const s4 = s1.clone(); s4.position.set(x + plotSize/2 + ft/2,0.6,z + plotSize/2 + ft/2); plotGroup.add(s4);
     }
   }
 
-  /* ------------------ KIOSKO & Buzon ------------------ */
+  // ----- KIOSKO (colocado más lejos y sin overlapp) -----
   const kiosk = new THREE.Group();
-  const floorK = new THREE.Mesh(new THREE.BoxGeometry(5.2,0.2,5.2), new THREE.MeshStandardMaterial({color:0xf2e1c8})); floorK.position.y = 0.1; kiosk.add(floorK);
-  const wMat = new THREE.MeshStandardMaterial({color:0xffffff}); const thickness = 0.18;
-  kiosk.add(new THREE.Mesh(new THREE.BoxGeometry(5.2,2.4,thickness), wMat)).position.set(0,1.2,-2.56);
+  const floorK = new THREE.Mesh(new THREE.BoxGeometry(5.2,0.2,5.2), new THREE.MeshStandardMaterial({color:0xf2e1c8}));
+  floorK.position.y = 0.1; kiosk.add(floorK);
+  const wMat = new THREE.MeshStandardMaterial({color:0xffffff});
+  const thickness = 0.18;
+  const back = new THREE.Mesh(new THREE.BoxGeometry(5.2,2.4,thickness), wMat); back.position.set(0,1.2,-2.56); kiosk.add(back);
   const leftW = new THREE.Mesh(new THREE.BoxGeometry(thickness,2.4,5.2), wMat); leftW.position.set(-2.56,1.2,0); kiosk.add(leftW);
   const rightW = leftW.clone(); rightW.position.set(2.56,1.2,0); kiosk.add(rightW);
-  const roof = new THREE.Mesh(new THREE.BoxGeometry(5.4,0.12,5.4), new THREE.MeshStandardMaterial({color:0x00d0ff})); roof.position.set(0,2.48,0); kiosk.add(roof);
-  const door = new THREE.Mesh(new THREE.BoxGeometry(1.0,1.9,0.06), new THREE.MeshStandardMaterial({color:0x663300})); door.position.set(0,0.95,2.56); door.userData.open=false; kiosk.add(door);
-  kiosk.position.set(0,0,8); scene.add(kiosk);
-  // shelves
-  const shelves = []; const shelfOffsets = [{x:-1.2,z:-0.6,type:0},{x:0,z:-0.6,type:1},{x:1.2,z:-0.6,type:2}];
-  for(const s of shelfOffsets){ const g=new THREE.Group(); g.add(new THREE.Mesh(new THREE.BoxGeometry(0.9,0.45,0.35), new THREE.MeshStandardMaterial({color:0xfffbea}))); g.position.set(s.x,0,s.z); g.userData={seedType:s.type}; kiosk.add(g); shelves.push(g); }
+  const roof = new THREE.Mesh(new THREE.BoxGeometry(5.4,0.12,5.4), new THREE.MeshStandardMaterial({color:0x00d0ff}));
+  roof.position.set(0,2.48,0); kiosk.add(roof);
+  // puerta (sliding)
+  const door = new THREE.Mesh(new THREE.BoxGeometry(1.0,1.9,0.06), new THREE.MeshStandardMaterial({color:0x663300}));
+  door.position.set(0,0.95,2.56); kiosk.add(door); door.userData.open = false;
+  kiosk.position.set(0,0,8); // mover kiosk adelante, lejos de plots
+  scene.add(kiosk);
 
+  // shelves dentro
+  const shelves = []; const shelfOffsets = [{x:-1.2,z:-0.6,type:0},{x:0,z:-0.6,type:1},{x:1.2,z:-0.6,type:2}];
+  for(const s of shelfOffsets){
+    const g = new THREE.Group();
+    const base = new THREE.Mesh(new THREE.BoxGeometry(0.9,0.45,0.35), new THREE.MeshStandardMaterial({color:0xfffbea}));
+    base.position.y = 0.35; g.add(base);
+    const stand = new THREE.Mesh(new THREE.BoxGeometry(0.08,1.0,0.08), new THREE.MeshStandardMaterial({color:0x8b5a2b}));
+    stand.position.set(-0.42,0.75,0); g.add(stand);
+    const stand2 = stand.clone(); stand2.position.set(0.42,0.75,0); g.add(stand2);
+    g.position.set(s.x,0,s.z); g.userData.seedType = s.type; kiosk.add(g); shelves.push(g);
+  }
+
+  // buzón (posicionado lejos)
   const boxGroup = new THREE.Group();
-  const post = new THREE.Mesh(new THREE.BoxGeometry(0.12,1.6,0.12), new THREE.MeshStandardMaterial({color:0x593d2b})); post.position.set(-8,0.8,-2); boxGroup.add(post);
-  const boxMesh = new THREE.Mesh(new THREE.BoxGeometry(0.9,0.45,0.45), new THREE.MeshStandardMaterial({color:0xfff176})); boxMesh.position.set(-8,1.05,-2); boxGroup.add(boxMesh);
+  const post = new THREE.Mesh(new THREE.BoxGeometry(0.12,1.6,0.12), new THREE.MeshStandardMaterial({color:0x593d2b}));
+  post.position.set(-8,0.8,-2); boxGroup.add(post);
+  const boxMesh = new THREE.Mesh(new THREE.BoxGeometry(0.9,0.45,0.45), new THREE.MeshStandardMaterial({color:0xfff176}));
+  boxMesh.position.set(-8,1.05,-2); boxGroup.add(boxMesh);
+  const board = new THREE.Mesh(new THREE.BoxGeometry(0.9,0.28,0.06), new THREE.MeshStandardMaterial({color:0xffffff}));
+  board.position.set(-8,1.5,-2); boxGroup.add(board);
   scene.add(boxGroup);
 
+  // crops group
   const cropsGroup = new THREE.Group(); scene.add(cropsGroup);
 
-  /* ------------------ RAYCAST helper (only used for kiosk shelf UI placement if needed) ------------------ */
+  // ----- RAYCAST -----
   const ray = new THREE.Raycaster();
   function centerRay(){ ray.setFromCamera({x:0,y:0}, camera); }
 
-  /* ------------------ UI DOM ------------------ */
+  // ----- UI ELEMENTS -----
   const moneyEl = document.getElementById('money'), seedsEl = document.getElementById('seeds'), farmNameEl = document.getElementById('farmName');
-  const toast = document.getElementById('toast'), shopPanel = document.getElementById('shopPanel'), shopItems = document.getElementById('shopItems');
-  function showToast(msg,ms=1400){ toast.textContent = msg; toast.style.display='block'; clearTimeout(showToast._); showToast._ = setTimeout(()=> toast.style.display='none', ms); }
+  const toastEl = document.getElementById('toast');
+  function showToast(msg,ms=1400){ toastEl.textContent = msg; toastEl.style.display='block'; clearTimeout(showToast._); showToast._ = setTimeout(()=> toastEl.style.display='none', ms); }
 
-  /* ------------------ PLANTS (proximity-based) ------------------ */
+  // ----- Plant / harvest -----
   function rebuildPlants(){
     while(cropsGroup.children.length) cropsGroup.remove(cropsGroup.children[0]);
     const now = Date.now();
@@ -152,147 +251,194 @@
       const age = Math.min(MAX_STAGE, Math.floor((now - p.plantedAt)/GROWTIME));
       const size = 0.22 + (age/MAX_STAGE)*1.0;
       const color = age<MAX_STAGE? 0x2e7d32 : 0xffd54f;
-      const cube = new THREE.Mesh(new THREE.BoxGeometry(0.6*size,0.6*size,0.6*size), new THREE.MeshStandardMaterial({color}));
-      cube.position.set(plot.x, 0.12 + 0.3*(size/2), plot.z);
+      const cube = new THREE.Mesh(new THREE.BoxGeometry(0.6 * size, 0.6 * size, 0.6 * size), new THREE.MeshStandardMaterial({color}));
+      cube.position.set(plot.x, 0.15 + 0.3*(size/2), plot.z);
       cube.userData = {plotIndex: p.plotIndex, plantedAt: p.plantedAt};
       cropsGroup.add(cube);
     }
     moneyEl.textContent = state.money; seedsEl.textContent = state.seeds; farmNameEl.textContent = state.farmName;
   }
 
-  function findNearestPlotToPlayer(range=INTERACT_RANGE){
-    let best = -1, bd = 1e9;
-    for(let i=0;i<plots.length;i++){
-      const d = Math.hypot(camera.position.x - plots[i].x, camera.position.z - plots[i].z);
-      if(d < bd){ bd = d; best = i; }
-    }
-    if(bd <= range) return best;
-    return -1;
-  }
-
   function tryPlant(){
-    const idx = findNearestPlotToPlayer();
-    if(idx === -1){ showToast('No estás cerca de ningún parche'); return; }
-    if(state.plants.some(p=>p.plotIndex===idx)){ showToast('Parche ya ocupado'); return; }
+    centerRay();
+    const inter = ray.intersectObject(ground);
+    if(!inter.length){ showToast('Apunta al suelo'); return; }
+    const pt = inter[0].point;
+    let idx = -1;
+    for(let i=0;i<plots.length;i++){
+      const d = Math.hypot(pt.x - plots[i].x, pt.z - plots[i].z);
+      if(d < plotSize/2) { idx = i; break; }
+    }
+    if(idx === -1){ showToast('Debes apuntar a un parche'); return; }
+    if(state.plants.some(p=>p.plotIndex===idx)){ showToast('Parche ocupado'); return; }
     if(state.seeds < PLANT_COST){ showToast('Sin semillas'); return; }
     state.seeds -= PLANT_COST;
     state.plants.push({plotIndex: idx, plantedAt: Date.now()});
-    saveState(); rebuildPlants(); showToast('Semilla plantada 🌱');
+    saveState(); rebuildPlants(); showToast('Plantado 🌱');
   }
 
   function tryHarvest(){
-    // buscar planta más cercana dentro de rango
-    let nearestPlantIndex = -1, nd = 1e9;
-    for(let i=0;i<state.plants.length;i++){
-      const p = state.plants[i];
-      const plot = plots[p.plotIndex];
-      const d = Math.hypot(camera.position.x - plot.x, camera.position.z - plot.z);
-      if(d < nd){ nd = d; nearestPlantIndex = i; }
-    }
-    if(nearestPlantIndex === -1 || nd > INTERACT_RANGE){ showToast('No hay planta cerca'); return; }
-    const p = state.plants[nearestPlantIndex];
-    const age = Math.floor((Date.now() - p.plantedAt)/GROWTIME);
+    centerRay();
+    const inter = ray.intersectObjects(cropsGroup.children, true);
+    if(!inter.length){ showToast('Apunta a una planta'); return; }
+    const o = inter[0].object; const data = o.userData; if(!data) return;
+    const pIndex = data.plotIndex; const plantIdx = state.plants.findIndex(p => p.plotIndex === pIndex);
+    if(plantIdx === -1) return;
+    const p = state.plants[plantIdx]; const age = Math.floor((Date.now() - p.plantedAt)/GROWTIME);
     if(age < MAX_STAGE){ showToast('Aún no madura'); return; }
-    // cosechar
-    state.plants.splice(nearestPlantIndex,1);
-    state.money += HARVEST_REWARD;
-    if(Math.random() < 0.4) state.seeds += 1;
+    state.plants.splice(plantIdx,1); state.money += HARVEST_REWARD; if(Math.random() < 0.4) state.seeds += 1;
     saveState(); rebuildPlants(); showToast('Cosechado +'+HARVEST_REWARD+' 💰');
   }
 
-  /* ------------------ INTERACT (kiosk door / shelves / mailbox) ------------------ */
-  const seedCatalog = [{name:'Zanahoria',price:1,desc:'Semilla básica'}, {name:'Remolacha',price:4,desc:'Más valor'}, {name:'Tomate raro',price:8,desc:'Valioso'}];
+  // ----- Interact (door, enter kiosk, shelves, mailbox) -----
+  const shopPanel = document.getElementById('shopPanel'), shopItemsEl = document.getElementById('shopItems');
+
+  const seedCatalog = [
+    {name:'Zanahoria', price:1, desc:'Semilla básica'},
+    {name:'Remolacha', price:3, desc:'Más valor'},
+    {name:'Tomate raro', price:6, desc:'Muy valioso'}
+  ];
+
   function openShelfPanel(seedIndex){
-    shopItems.innerHTML = '';
+    shopItemsEl.innerHTML = '';
     const it = seedCatalog[seedIndex] || seedCatalog[0];
-    const row = document.createElement('div'); row.style.display='flex'; row.style.justifyContent='space-between'; row.style.alignItems='center';
-    row.innerHTML = `<div><strong>${it.name}</strong><div style="opacity:.85;font-size:13px">${it.desc}</div></div><div style="display:flex;gap:8px;align-items:center"><div style="color:#ffd54f;font-weight:900">${it.price} 💰</div><button class="btn buyBtn">Comprar</button></div>`;
-    shopItems.appendChild(row);
-    shopPanel.dataset.selected = seedIndex;
+    const r = document.createElement('div'); r.className='row';
+    r.innerHTML = `<div><strong>${it.name}</strong><div class="small">${it.desc}</div></div>
+      <div style="display:flex;gap:8px;align-items:center"><div style="color:#ffd54f;font-weight:900">${it.price} 💰</div><button class="btn buyBtn">Comprar</button></div>`;
+    shopItemsEl.appendChild(r);
     shopPanel.style.display = 'block';
+    shopPanel.dataset.selected = seedIndex;
   }
   document.getElementById('closeShop').addEventListener('click', ()=> shopPanel.style.display='none');
-  shopPanel.addEventListener('click', (e)=>{ if(e.target.closest('.buyBtn')){ const idx = Number(shopPanel.dataset.selected||0); const it = seedCatalog[idx]; if(state.money < it.price){ showToast('No tienes suficiente 💰'); return; } state.money -= it.price; state.seeds += 1; saveState(); rebuildPlants(); showToast('Compraste 1 semilla de '+it.name); } });
+  shopPanel.addEventListener('click', (e)=>{ const b = e.target.closest('.buyBtn'); if(!b) return; const idx = Number(shopPanel.dataset.selected||0); const item = seedCatalog[idx]; if(state.money < item.price){ showToast('No tienes suficiente 💰'); return; } state.money -= item.price; state.seeds += 1; saveState(); rebuildPlants(); showToast('Compraste 1 semilla de '+item.name); });
 
   function tryInteract(){
-    // puerta kiosk
-    const distDoor = camera.position.distanceTo(kiosk.position);
-    if(distDoor < 2.4){ door.userData.open = !door.userData.open; animateDoor(door.userData.open); showToast(door.userData.open? 'Puerta abierta':'Puerta cerrada'); return; }
-    // dentro kiosk: buscar estante cercano
+    // distancia a kiosk puerta
+    const dDoor = camera.position.distanceTo(kiosk.position);
+    if(dDoor < 2.6){
+      door.userData.open = !door.userData.open; animateDoor(door.userData.open);
+      showToast(door.userData.open? 'Puerta abierta' : 'Puerta cerrada');
+      return;
+    }
+    // si dentro del área interior del kiosk -> buscar estante cercano
     const rel = new THREE.Vector3().subVectors(camera.position, kiosk.position);
     if(Math.abs(rel.x) < 2.4 && Math.abs(rel.z) < 2.4 && camera.position.y < 2.6){
-      let nearest=null; let nd=1e9;
-      for(const s of shelves){ const wp = new THREE.Vector3(); s.getWorldPosition(wp); const d = wp.distanceTo(camera.position); if(d < nd){ nd = d; nearest = s; } }
-      if(nearest && nd < 2.2){ openShelfPanel(nearest.userData.seedType||0); return; } else { showToast('Acércate a un estante'); return; }
+      // buscar estante cercano
+      let nearest = null, nd = 1e9;
+      for(const s of shelves){ const wp = new THREE.Vector3(); s.getWorldPosition(wp); const dd = wp.distanceTo(camera.position); if(dd < nd){ nd = dd; nearest = s; } }
+      if(nearest && nd < 2.2){ const seedType = nearest.userData.seedType || 0; openShelfPanel(seedType); return; }
+      showToast('Acércate a un estante');
+      return;
     }
     // buzón
     const db = camera.position.distanceTo(boxGroup.position);
-    if(db < 2.2){ document.getElementById('nameBox').style.display='block'; document.getElementById('nameInput').value = state.farmName; return; }
-    showToast('Nada que interactuar cerca');
+    if(db < 2.2){ document.getElementById('nameBox').style.display = 'block'; document.getElementById('nameInput').value = state.farmName; return; }
+    showToast('Nada para interactuar cerca');
   }
 
+  // animate door sliding
   let doorAnim = null;
   function animateDoor(open){
     if(doorAnim) cancelAnimationFrame(doorAnim);
-    const from = door.position.z; const to = open? 3.8 : 2.56; const start = performance.now(); const dur = 260;
+    const from = door.position.z; const to = open? 3.8 : 2.56; const start = performance.now(); const dur = 280;
     function step(){ const t = Math.min((performance.now()-start)/dur,1); door.position.z = from + (to-from)*(1 - Math.pow(1-t,3)); if(t<1) doorAnim = requestAnimationFrame(step); else doorAnim = null; }
     step();
   }
 
-  /* ------------------ MOVEMENT & CAMERA (FIXED) ------------------ */
-  let yaw = 0, pitch = 0; camera.rotation.order='YXZ';
+  // ----- MOVIMIENTO y CAMARA mejorados -----
+  let yaw = 0, pitch = 0;
+  camera.rotation.order = 'YXZ';
   function applyCam(){ camera.rotation.set(pitch, yaw, 0, 'YXZ'); }
 
-  // joystick mapping: compute joy.x, joy.y such that pushing up (toward top) => forward positive
-  let joy = {x:0,y:0,active:false}; const joyEl = document.getElementById('joystick'), knob = document.getElementById('knob');
+  // movimiento con joystick (más responsivo)
+  let joy = {x:0,y:0,active:false}, vel = new THREE.Vector3(), canJump=true;
+  const joyEl = document.getElementById('joystick'), knob = document.getElementById('knob');
   joyEl.addEventListener('touchstart', (e)=>{ joy.active=true; e.preventDefault(); }, {passive:false});
-  joyEl.addEventListener('touchmove', (e)=>{ e.preventDefault(); const t = e.touches[0]; const r = joyEl.getBoundingClientRect(); const cx = r.left + r.width/2; const cy = r.top + r.height/2; let dx = t.clientX - cx, dy = t.clientY - cy; const rmax = r.width*0.42; const len = Math.hypot(dx,dy); const cl = len>rmax? rmax/len:1; dx *= cl; dy *= cl; knob.style.transform = `translate(${dx}px,${dy}px)`; // IMPORTANT: map so that upward drag => positive forward
-    joy.x = dx / rmax; joy.y = -dy / rmax; }, {passive:false});
+  joyEl.addEventListener('touchmove', (e)=>{ e.preventDefault(); const t = e.touches[0]; const r = joyEl.getBoundingClientRect(); const cx = r.left + r.width/2; const cy = r.top + r.height/2; let dx = t.clientX - cx, dy = t.clientY - cy; const rmax = r.width*0.42; const len = Math.hypot(dx,dy); const cl = len>rmax? rmax/len:1; dx*=cl; dy*=cl; knob.style.transform = `translate(${dx}px,${dy}px)`; joy.x = dx/rmax; joy.y = dy/rmax; }, {passive:false});
   joyEl.addEventListener('touchend', ()=>{ joy.active=false; joy.x=0; joy.y=0; knob.style.transform='translate(-50%,-50%)'; });
 
-  // lookPad: accumulate delta and smooth
-  let lookVelX = 0, lookVelY = 0; let lastLook = null;
-  const lookPad = document.getElementById('lookPad'); const SENS_BASE = 0.0026;
+  // lookPad: acumulador de deltas con smoothing
+  const lookPad = document.getElementById('lookPad'); let lastLook = null;
+  let lookVelX = 0, lookVelY = 0;
   lookPad.addEventListener('touchstart', e=>{ lastLook = e.touches[0]; }, {passive:true});
-  lookPad.addEventListener('touchmove', e=>{ const t = e.touches[0]; if(!lastLook){ lastLook=t; return; } const dx = t.clientX - lastLook.clientX; const dy = t.clientY - lastLook.clientY; lastLook = t; lookVelX += (-dx * SENS_BASE); lookVelY += (-dy * SENS_BASE); }, {passive:true});
+  lookPad.addEventListener('touchmove', e=>{ const t = e.touches[0]; if(!lastLook){ lastLook = t; return; } const dx = t.clientX - lastLook.clientX; const dy = t.clientY - lastLook.clientY; lastLook = t; // accumulate velocity scaled by sensitivity
+    const s = settings.sens || 1.0; lookVelX += (-dx * 0.0008 * s); lookVelY += (-dy * 0.0008 * s); }, {passive:true});
   lookPad.addEventListener('touchend', ()=> lastLook = null);
 
-  // buttons
+  // botones
   document.getElementById('btnPlant').addEventListener('click', tryPlant);
   document.getElementById('btnHarvest').addEventListener('click', tryHarvest);
-  document.getElementById('btnJump').addEventListener('click', ()=>{ if(canJump) { vel.y = 6; canJump = false; }});
+  document.getElementById('btnJump').addEventListener('click', ()=>{ if(canJump){ vel.y = 6; canJump = false; }});
   document.getElementById('btnInteract').addEventListener('click', tryInteract);
+
+  // name save
   document.getElementById('saveName').addEventListener('click', ()=>{ const v = document.getElementById('nameInput').value.trim(); if(!v) return; state.farmName = v; saveState(); document.getElementById('farmName').textContent = v; document.getElementById('nameBox').style.display='none'; showToast('Nombre guardado'); });
 
-  let canJump = true; let vel = new THREE.Vector3();
+  // ----- SETTINGS UI -----
+  const overlay = document.getElementById('settingsOverlay'), openBtn = document.getElementById('openSettings'), closeSettings = document.getElementById('closeSettings');
+  const gfxSelect = document.getElementById('gfxQuality'), sensSlider = document.getElementById('sensSlider'), speedSlider = document.getElementById('speedSlider');
+  const soundSelect = document.getElementById('soundToggle'), fullscreenBtn = document.getElementById('toggleFullscreen'), resetBtn = document.getElementById('resetProgress');
 
-  /* ------------------ LOOP ------------------ */
+  // init UI from settings
+  gfxSelect.value = settings.gfx || 'med'; sensSlider.value = settings.sens || 1.1; speedSlider.value = settings.speed || 10; soundSelect.value = settings.sound || 'on';
+
+  openBtn.addEventListener('click', ()=>{ overlay.style.display='block'; });
+  closeSettings.addEventListener('click', ()=>{ overlay.style.display='none'; applyAndSaveSettings(); });
+
+  gfxSelect.addEventListener('change', (e)=>{ settings.gfx = e.target.value; applyGfxQuality(); saveSettings(); });
+  sensSlider.addEventListener('input', (e)=>{ settings.sens = Number(e.target.value); saveSettings(); });
+  speedSlider.addEventListener('input', (e)=>{ settings.speed = Number(e.target.value); saveSettings(); });
+  soundSelect.addEventListener('change', (e)=>{ settings.sound = e.target.value; saveSettings(); });
+
+  fullscreenBtn.addEventListener('click', async ()=>{
+    if(!document.fullscreenElement){ await document.documentElement.requestFullscreen().catch(()=>{}); fullscreenBtn.textContent = 'Salir'; }
+    else await document.exitFullscreen().catch(()=>{});
+  });
+
+  resetBtn.addEventListener('click', ()=>{ if(confirm('¿Borrar guardado?')){ localStorage.removeItem(LS_KEY); state={money:0,seeds:6,farmName:'Mi Granja',plants:[]}; saveState(); rebuildPlants(); showToast('Progreso reiniciado'); }});
+
+  function applyAndSaveSettings(){ // apply sens and speed immediately
+    saveSettings(); applyGfxQuality();
+  }
+
+  // toggle decorative objects (for low gfx)
+  let decorVisible = true;
+  function toggleDecor(show){
+    if(show === decorVisible) return;
+    decorVisible = show;
+    // hide/show shelves details and frames
+    plotGroup.traverse(c=>{ if(c.isMesh && c.geometry.type.includes('BoxGeometry')) c.visible = true; }); // keep plots
+    // for demo: toggle kiosk roof and fence if existed
+    kiosk.traverse(o=>{ if(o!==floorK && o!==door) o.visible = show; }); // keep floor and door at least
+  }
+
+  applyGfxQuality();
+
+  // ----- LOOP -----
   let prev = performance.now();
   function loop(){
     requestAnimationFrame(loop);
     const now = performance.now(); const dt = Math.min((now - prev)/1000, 0.05); prev = now;
 
-    // look smoothing
-    lookVelX *= 0.86; lookVelY *= 0.86;
+    // apply look velocities with damping
+    lookVelX *= 0.88; lookVelY *= 0.88;
     yaw += lookVelX; pitch += lookVelY;
     const PI2 = Math.PI/2 - 0.02; if(pitch < -PI2) pitch = -PI2; if(pitch > PI2) pitch = PI2;
     applyCam();
 
-    // movement: forward computed from yaw only (pitch ignored) so looking down doesn't affect movement direction
-    const forwardInput = Math.max(-1, Math.min(1, joy.y)); // joy.y already mapped so up => positive
-    const rightInput = Math.max(-1, Math.min(1, joy.x));
+    // movement: forward computed only from yaw
+    const forward = -joy.y; const right = joy.x;
     const fwdVec = new THREE.Vector3(Math.sin(yaw),0,-Math.cos(yaw)).normalize();
     const rightVec = new THREE.Vector3().crossVectors(new THREE.Vector3(0,1,0), fwdVec).normalize();
-    const speed = DEFAULT_SPEED;
-    vel.x += (fwdVec.x * forwardInput + rightVec.x * rightInput) * speed * dt;
-    vel.z += (fwdVec.z * forwardInput + rightVec.z * rightInput) * speed * dt;
-
+    const SPEED = settings.speed || 10;
+    vel.x += (fwdVec.x * forward + rightVec.x * right) * SPEED * dt;
+    vel.z += (fwdVec.z * forward + rightVec.z * right) * SPEED * dt;
     // damping & gravity
     vel.x -= vel.x * 6 * dt; vel.z -= vel.z * 6 * dt; vel.y -= 18 * dt;
     camera.position.x += vel.x * dt; camera.position.y += vel.y * dt; camera.position.z += vel.z * dt;
     if(camera.position.y < 1.7){ camera.position.y = 1.7; vel.y = 0; canJump = true; }
 
-    // animate plants growth smoothing
+    // animate crops
     const tms = Date.now();
     for(const m of cropsGroup.children){
       const age = Math.min(MAX_STAGE, Math.floor((tms - m.userData.plantedAt)/GROWTIME));
@@ -303,53 +449,38 @@
 
     renderer.render(scene, camera);
   }
-
-  /* ------------------ HELPERS ------------------ */
-  function saveState(){ try{ localStorage.setItem(LS_KEY, JSON.stringify(state)); }catch(e){} }
-  setInterval(saveState, 4000);
-  window.addEventListener('beforeunload', saveState);
-
-  // rebuild on load
-  function rebuildAll(){ rebuildPlants(); moneyEl.textContent = state.money; seedsEl.textContent = state.seeds; farmNameEl.textContent = state.farmName; }
-  rebuildAll();
   loop();
 
-  // kiosk shelf buy handling
-  shopPanel.addEventListener('click', (e)=>{ const b = e.target.closest('.buyBtn'); if(!b) return; const idx = Number(shopPanel.dataset.selected||0); const it = seedCatalog[idx] || seedCatalog[0]; if(state.money < it.price){ showToast('No tienes suficiente 💰'); return; } state.money -= it.price; state.seeds += 1; saveState(); rebuildPlants(); showToast('Compraste 1 semilla de '+it.name); shopPanel.style.display='none'; });
-
-  // seed catalog used earlier
-  const seedCatalog = [{name:'Zanahoria',price:1,desc:'Semilla básica'}, {name:'Remolacha',price:4,desc:'Más valor'}, {name:'Tomate raro',price:8,desc:'Valioso'}];
-
-  // interact via shelf opening (used by tryInteract when inside)
-  function openShelfPanelIdx(idx){ shopItems.innerHTML=''; const it = seedCatalog[idx]||seedCatalog[0]; const row = document.createElement('div'); row.style.display='flex'; row.style.justifyContent='space-between'; row.style.alignItems='center'; row.innerHTML = `<div><strong>${it.name}</strong><div style="opacity:.85;font-size:13px">${it.desc}</div></div><div style="display:flex;gap:8px;align-items:center"><div style="color:#ffd54f;font-weight:900">${it.price} 💰</div><button class="btn buyBtn">Comprar</button></div>`; shopItems.appendChild(row); shopPanel.dataset.selected = idx; shopPanel.style.display='block'; }
-
-  // door animation (same)
-  let doorAnim = null;
-  function animateDoor(open){
-    if(doorAnim) cancelAnimationFrame(doorAnim);
-    const from = door.position.z; const to = open? 3.8 : 2.56; const start = performance.now(); const dur = 260;
-    function step(){ const t = Math.min((performance.now()-start)/dur,1); door.position.z = from + (to-from)*(1 - Math.pow(1-t,3)); if(t<1) doorAnim = requestAnimationFrame(step); else doorAnim = null; }
-    step();
+  // ----- simple interactions: liquid detection for shelves, door, mailbox -----
+  function checkProximityHints(){
+    // optional: show toast hint when near door/kiosk or mailbox
   }
 
-  // settingsBtn small demo (rename farm via chip)
-  document.getElementById('farmChip').addEventListener('click', ()=>{ document.getElementById('nameBox').style.display='block'; document.getElementById('nameInput').value = state.farmName; });
-  document.getElementById('settingsBtn').addEventListener('click', ()=>{ showToast('Ajustes no configurables en esta versión rápida'); });
+  // ----- rebuild plants initial & UI sync -----
+  function rebuildAll(){ rebuildPlants(); moneyEl.textContent = state.money; seedsEl.textContent = state.seeds; farmNameEl.textContent = state.farmName; }
+  rebuildAll();
 
-  // buy button logic wired above
+  // ----- joystick behavior -----
+  joyEl.addEventListener('touchmove', ()=>{}); // already bound
 
-  // fix: if phone's joystick inverted for some devices, allow inversion toggle via double tap on corner (hidden)
-  let invertTry = 0;
-  document.getElementById('settingsBtn').addEventListener('dblclick', ()=>{ // toggle inversion (debug)
-    invertTry = 1 - invertTry;
-    showToast('Invertido joystick: ' + (invertTry? 'ON' : 'OFF'));
-    // apply inversion by flipping joy mapping sign (if invertTry==1, multiply joy values by -1 in loop)
-    // implement as small wrapper:
-    const oldAdd = joyEl._oldTouchMove;
-  });
+  // ----- raycasting helper for center interactions (tap) -----
+  renderer.domElement.addEventListener('touchstart', (e)=>{ if(e.touches.length===1){ /* could implement quick-tap harvest */ } }, {passive:true});
 
-  // expose some helpers (for debug)
-  window._rbg_fixed = {state, saveState, rebuildAll};
+  // ----- save periodically and on unload -----
+  setInterval(saveState, 5000);
+  window.addEventListener('beforeunload', saveState);
+
+  // ----- initial UI wiring -----
+  // open settings via corner icon
+  document.getElementById('openSettings').addEventListener('click', ()=>{ overlay.style.display='block'; });
+  document.getElementById('closeSettings').addEventListener('click', ()=>{ overlay.style.display='none'; applyAndSaveSettings(); });
+
+  // shop opening: handled in tryInteract (when inside kiosk and near shelf)
+  // seeds display
+  moneyEl.textContent = state.money; seedsEl.textContent = state.seeds; farmNameEl.textContent = state.farmName;
+
+  // expose some global helpers for debugging (optional)
+  window._rbg = { state, settings, saveState, saveSettings, rebuildAll, applyGfxQuality };
 
   </script>
 </body>
