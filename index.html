@@ -28,6 +28,13 @@
   .joyKnob{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:64px;height:64px;border-radius:50%;background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.03));border:1px solid rgba(255,255,255,.08)}
   .lookPad{position:fixed;right:0;top:0;bottom:0;width:46vw;z-index:100;pointer-events:auto}
   
+  .inventoryPanel{position:fixed;right:12px;top:80px;width:200px;background:var(--glass);color:#fff;padding:12px;border-radius:12px;z-index:140;backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.06)}
+  .inventoryTitle{font-weight:bold;margin-bottom:8px;text-align:center;color:var(--accent)}
+  .inventoryGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
+  .inventorySlot{aspect-ratio:1;background:rgba(255,255,255,.1);border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:16px;border:1px solid rgba(255,255,255,.2)}
+  .inventorySlot.has-item{background:rgba(76,175,80,.3);border-color:var(--accent2)}
+  .slotCount{font-size:10px;font-weight:bold}
+  
   .storePanel{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(600px,95vw);max-height:80vh;background:var(--glass);color:#fff;padding:16px;border-radius:16px;display:none;z-index:900;overflow-y:auto}
   .storeHeader{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
   .seedGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:16px}
@@ -42,29 +49,37 @@
   .cartItem{display:flex;justify-content:space-between;align-items:center;padding:8px;background:rgba(255,255,255,.1);border-radius:8px;margin-bottom:8px}
   .cartTotal{border-top:2px solid rgba(255,255,255,.2);padding-top:12px;margin-top:12px;font-weight:bold}
   
-  .deliveryPanel{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:rgba(76,175,80,.9);color:#fff;padding:12px 20px;border-radius:12px;display:none;z-index:920}
-  .deliveryBar{width:200px;height:8px;background:rgba(255,255,255,.3);border-radius:4px;margin:8px 0}
-  .deliveryProgress{height:100%;background:#fff;border-radius:4px;width:0%;transition:width 1s ease}
+  .deliveryBox{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:rgba(139,69,19,.9);color:#fff;padding:16px;border-radius:12px;display:none;z-index:920;text-align:center;cursor:pointer;border:3px solid #ffd54f}
+  .deliveryBox:hover{background:rgba(139,69,19,1);transform:translateX(-50%) scale(1.05)}
+  .ticketInfo{background:rgba(255,255,255,.1);padding:8px;border-radius:8px;margin:8px 0;font-size:12px}
   
   .toast{position:fixed;left:50%;top:86px;transform:translateX(-50%);background:var(--glass);color:#fff;padding:8px 12px;border-radius:10px;display:none;z-index:920}
   
   .npcDialog{position:fixed;left:50%;bottom:150px;transform:translateX(-50%);background:rgba(255,255,255,.95);color:#333;padding:12px 16px;border-radius:12px;display:none;z-index:930;max-width:300px;text-align:center}
   .npcName{font-weight:bold;color:var(--accent);margin-bottom:4px}
+  
+  .touchIndicator{position:absolute;pointer-events:none;width:30px;height:30px;border:3px solid var(--accent);border-radius:50%;animation:touchPulse 0.5s ease-out}
+  @keyframes touchPulse{from{transform:scale(0);opacity:1}to{transform:scale(1);opacity:0}}
 </style>
 </head>
 <body>
   <div class="hud">
     <div class="chip">💰 <span class="val" id="money">50</span></div>
-    <div class="chip">🌱 <span class="val" id="seeds">5</span></div>
     <div style="margin-left:auto" class="chip" id="farmTag">🏷️ <span id="farmName">Mi Granja</span></div>
+  </div>
+
+  <!-- Panel de Inventario -->
+  <div class="inventoryPanel">
+    <div class="inventoryTitle">📦 Inventario</div>
+    <div class="inventoryGrid" id="inventoryGrid">
+      <!-- Se genera dinámicamente -->
+    </div>
   </div>
 
   <div class="dock">
     <div class="dockInner">
       <button class="btn" id="btnJump">Saltar</button>
-      <button class="btn" id="btnHarvest">Cosechar</button>
       <button class="btn" id="btnInteract">Interactuar</button>
-      <button class="btn" id="btnPlant">Plantar</button>
     </div>
   </div>
 
@@ -97,11 +112,14 @@
     <button class="btn" id="proceedCheckout" style="width:100%;margin-top:12px">Proceder al Pago</button>
   </div>
 
-  <!-- Panel de Entrega -->
-  <div class="deliveryPanel" id="deliveryPanel">
-    <div>📦 Preparando tu pedido...</div>
-    <div class="deliveryBar"><div class="deliveryProgress" id="deliveryProgress"></div></div>
-    <div id="deliveryTime">Tiempo estimado: 60s</div>
+  <!-- Caja de Entrega -->
+  <div class="deliveryBox" id="deliveryBox">
+    <div>📦 ¡Tu Pedido Ha Llegado!</div>
+    <div class="ticketInfo">
+      <div>🧾 Ticket #<span id="orderNumber">001</span></div>
+      <div>📋 <span id="orderItems">Items del pedido</span></div>
+    </div>
+    <div>👆 Toca para abrir la caja</div>
   </div>
 
   <!-- Diálogo del NPC -->
@@ -118,11 +136,19 @@
   // ----- ESTADO DEL JUEGO -----
   let state = { 
     money: 50, 
-    seeds: 5, 
     farmName: 'Mi Granja', 
     plants: [],
     cart: [],
-    deliveries: []
+    inventory: {
+      carrot: 3,
+      tomato: 2,
+      corn: 0,
+      lettuce: 1,
+      potato: 0,
+      pepper: 0
+    },
+    orderCounter: 1,
+    npcState: 'idle' // idle, walking, delivering
   };
 
   // Catálogo de semillas expandido
@@ -189,6 +215,7 @@
       );
       soil.position.set(x, 0.02, z);
       soil.receiveShadow = true;
+      soil.userData = {type: 'plot', plotIndex: plots.length - 1};
       plotGroup.add(soil);
       
       // Marco de madera
@@ -221,6 +248,7 @@
   );
   storeBase.position.set(0, 2, -15);
   storeBase.castShadow = true;
+  storeBase.userData = {type: 'store'};
   storeGroup.add(storeBase);
 
   // Techo
@@ -249,58 +277,8 @@
     })
   );
   door.position.set(0, 1.5, -10.95);
+  door.userData = {type: 'store'};
   storeGroup.add(door);
-
-  // Displays de semillas dentro de la tienda
-  const displayGroup = new THREE.Group();
-  const displayPositions = [
-    {x: -3, z: -13}, {x: 0, z: -13}, {x: 3, z: -13},
-    {x: -3, z: -15}, {x: 0, z: -15}, {x: 3, z: -15}
-  ];
-
-  displayPositions.forEach((pos, i) => {
-    const seed = seedCatalog[i] || seedCatalog[0];
-    
-    // Base del display
-    const base = new THREE.Mesh(
-      new THREE.BoxGeometry(1.5, 0.8, 1.5), 
-      new THREE.MeshStandardMaterial({color: 0xffffff})
-    );
-    base.position.set(pos.x, 0.4, pos.z);
-    displayGroup.add(base);
-    
-    // Cúpula de cristal
-    const glass = new THREE.Mesh(
-      new THREE.SphereGeometry(0.6, 16, 8, 0, Math.PI * 2, 0, Math.PI * 0.7), 
-      new THREE.MeshStandardMaterial({
-        color: 0xffffff, 
-        transparent: true, 
-        opacity: 0.3,
-        envMapIntensity: 1
-      })
-    );
-    glass.position.set(pos.x, 1.0, pos.z);
-    displayGroup.add(glass);
-    
-    // Semilla dentro del cristal
-    const seedMesh = new THREE.Mesh(
-      new THREE.BoxGeometry(0.3, 0.3, 0.3), 
-      new THREE.MeshStandardMaterial({color: seed.color})
-    );
-    seedMesh.position.set(pos.x, 0.9, pos.z);
-    seedMesh.userData = {seedId: seed.id, price: seed.price, name: seed.name};
-    displayGroup.add(seedMesh);
-    
-    // Etiqueta de precio
-    const label = new THREE.Mesh(
-      new THREE.BoxGeometry(0.8, 0.2, 0.05), 
-      new THREE.MeshStandardMaterial({color: 0xffd54f})
-    );
-    label.position.set(pos.x, 0.1, pos.z + 0.8);
-    displayGroup.add(label);
-  });
-  
-  storeGroup.add(displayGroup);
 
   // NPC Vendedor
   const npcGroup = new THREE.Group();
@@ -334,17 +312,10 @@
   npcGroup.add(armRight);
   
   npcGroup.position.set(1.5, 0, -14);
+  npcGroup.userData = {type: 'npc'};
   storeGroup.add(npcGroup);
   
   scene.add(storeGroup);
-
-  // Caja registradora
-  const cashRegister = new THREE.Mesh(
-    new THREE.BoxGeometry(1, 0.5, 0.8), 
-    new THREE.MeshStandardMaterial({color: 0x424242})
-  );
-  cashRegister.position.set(-1.5, 1.05, -14);
-  storeGroup.add(cashRegister);
 
   // ----- PLANTAS -----
   const cropsGroup = new THREE.Group();
@@ -391,7 +362,7 @@
     knob.style.transform = `translate(${dx}px, ${dy}px)`;
     
     joy.x = dx / maxRadius;
-    joy.y = dy / maxRadius; // SIN NEGATIVO - ESTO CORRIGE EL MOVIMIENTO
+    joy.y = dy / maxRadius;
   }, {passive: false});
   
   joyEl.addEventListener('touchend', () => {
@@ -430,8 +401,140 @@
     lastLook = null;
   });
 
-  // ----- RAYCAST -----
+  // ----- RAYCAST PARA TOQUE -----
   const raycaster = new THREE.Raycaster();
+  const mouse = new THREE.Vector2();
+
+  // Toque en la pantalla principal
+  renderer.domElement.addEventListener('touchend', (e) => {
+    if (e.touches.length === 0 && e.changedTouches.length === 1) {
+      const touch = e.changedTouches[0];
+      
+      // Calcular posición normalizada
+      mouse.x = (touch.clientX / window.innerWidth) * 2 - 1;
+      mouse.y = -(touch.clientY / window.innerHeight) * 2 + 1;
+      
+      // Hacer raycast
+      raycaster.setFromCamera(mouse, camera);
+      const intersects = raycaster.intersectObjects(scene.children, true);
+      
+      if (intersects.length > 0) {
+        handleTouch(intersects[0], touch);
+      }
+    }
+  });
+
+  // Manejar toques
+  function handleTouch(intersect, touch) {
+    const object = intersect.object;
+    const userData = object.userData;
+    
+    // Mostrar indicador visual de toque
+    showTouchIndicator(touch.clientX, touch.clientY);
+    
+    if (userData.type === 'store' || userData.type === 'npc') {
+      // Verificar distancia antes de abrir tienda
+      const distance = camera.position.distanceTo(intersect.point);
+      if (distance < 8) {
+        openStore();
+      } else {
+        showToast('Acércate más a la tienda 🏪');
+      }
+    } else if (userData.type === 'plot') {
+      handlePlotTouch(userData.plotIndex);
+    } else if (userData.type === 'plant') {
+      handlePlantTouch(userData.plotIndex);
+    }
+  }
+
+  // Indicador visual de toque
+  function showTouchIndicator(x, y) {
+    const indicator = document.createElement('div');
+    indicator.className = 'touchIndicator';
+    indicator.style.left = (x - 15) + 'px';
+    indicator.style.top = (y - 15) + 'px';
+    document.body.appendChild(indicator);
+    
+    setTimeout(() => {
+      document.body.removeChild(indicator);
+    }, 500);
+  }
+
+  // Manejar toque en plot
+  function handlePlotTouch(plotIndex) {
+    const existing = state.plants.find(p => p.plotIndex === plotIndex);
+    if (existing) {
+      showToast('Ya hay una planta aquí 🌱');
+      return;
+    }
+    
+    // Buscar una semilla disponible en el inventario
+    const availableSeed = Object.keys(state.inventory).find(seedId => state.inventory[seedId] > 0);
+    
+    if (!availableSeed) {
+      showToast('No tienes semillas 🌱');
+      return;
+    }
+    
+    // Plantar
+    state.inventory[availableSeed]--;
+    state.plants.push({
+      plotIndex: plotIndex,
+      plantedAt: Date.now(),
+      type: availableSeed
+    });
+    
+    rebuildPlants();
+    updateInventory();
+    updateUI();
+    showToast(`¡${seedCatalog.find(s => s.id === availableSeed).name} plantada! 🌱`);
+  }
+
+  // Manejar toque en planta
+  function handlePlantTouch(plotIndex) {
+    const plantIndex = state.plants.findIndex(p => p.plotIndex === plotIndex);
+    if (plantIndex === -1) return;
+    
+    const plantData = state.plants[plantIndex];
+    const age = Date.now() - plantData.plantedAt;
+    const seedInfo = seedCatalog.find(s => s.id === plantData.type);
+    const growTime = seedInfo ? seedInfo.growTime : 12000;
+    
+    if (age >= growTime) {
+      // Cosechar
+      state.plants.splice(plantIndex, 1);
+      state.money += 5;
+      
+      // Posibilidad de obtener semillas
+      if (Math.random() < 0.3) {
+        state.inventory[plantData.type] = (state.inventory[plantData.type] || 0) + 1;
+      }
+      
+      rebuildPlants();
+      updateInventory();
+      updateUI();
+      showToast(`¡${seedInfo.name} cosechada! +$5 💰`);
+    } else {
+      const remainingTime = Math.ceil((growTime - age) / 1000);
+      showToast(`La planta estará lista en ${remainingTime}s 🌱`);
+    }
+  }
+
+  // ----- INVENTARIO -----
+  function updateInventory() {
+    const grid = document.getElementById('inventoryGrid');
+    grid.innerHTML = '';
+    
+    seedCatalog.forEach(seed => {
+      const count = state.inventory[seed.id] || 0;
+      const slot = document.createElement('div');
+      slot.className = `inventorySlot ${count > 0 ? 'has-item' : ''}`;
+      slot.innerHTML = count > 0 ? 
+        `<div>${seed.icon}</div><div class="slotCount">${count}</div>` : 
+        `<div style="opacity:0.3">${seed.icon}</div>`;
+      grid.appendChild(slot);
+    });
+  }
 
   // ----- SISTEMA DE TIENDA -----
   const storePanel = document.getElementById('storePanel');
@@ -442,6 +545,12 @@
   const cartTotalAmount = document.getElementById('cartTotalAmount');
   const npcDialog = document.getElementById('npcDialog');
   const npcMessage = document.getElementById('npcMessage');
+
+  function openStore() {
+    storePanel.style.display = 'block';
+    renderSeedCatalog();
+    showNPCDialog('¡Bienvenido a Garden Mart! Tenemos las mejores semillas 🌱');
+  }
 
   // Renderizar catálogo de semillas
   function renderSeedCatalog() {
@@ -520,47 +629,93 @@
     }
   });
 
-  // Sistema de entrega
+  // ----- SISTEMA DE ENTREGA INTERACTIVO -----
+  let currentDelivery = null;
+
   function startDelivery() {
-    const deliveryPanel = document.getElementById('deliveryPanel');
-    const deliveryProgress = document.getElementById('deliveryProgress');
-    const deliveryTime = document.getElementById('deliveryTime');
+    if (currentDelivery) return;
     
-    deliveryPanel.style.display = 'block';
+    const orderNumber = state.orderCounter++;
+    const orderItems = state.cart.map(item => `${item.quantity}x ${item.name}`).join(', ');
     
-    let progress = 0;
-    const duration = 60000; // 60 segundos
-    const interval = 100;
-    const increment = (interval / duration) * 100;
+    currentDelivery = {
+      orderNumber,
+      orderItems,
+      items: [...state.cart],
+      npcStartPos: {...npcGroup.position},
+      npcTargetPos: {x: 0, y: 0, z: 5}, // Cerca del jugador/granja
+      deliveryStartTime: Date.now(),
+      phase: 'walking' // walking, delivered, completed
+    };
     
-    const timer = setInterval(() => {
-      progress += increment;
-      deliveryProgress.style.width = `${Math.min(progress, 100)}%`;
-      
-      const remaining = Math.max(0, Math.ceil((100 - progress) * duration / 100 / 1000));
-      deliveryTime.textContent = `Tiempo estimado: ${remaining}s`;
-      
-      if (progress >= 100) {
-        clearInterval(timer);
-        deliveryComplete();
-      }
-    }, interval);
+    state.npcState = 'walking';
+    showNPCDialog(`¡Perfecto! Llevaré tu pedido #${orderNumber} a tu granja. ¡Espérame allí! 🚶‍♂️`);
   }
 
-  function deliveryComplete() {
-    const deliveryPanel = document.getElementById('deliveryPanel');
-    deliveryPanel.style.display = 'none';
+  function updateDelivery() {
+    if (!currentDelivery || state.npcState !== 'walking') return;
     
-    // Agregar semillas al inventario
-    state.cart.forEach(item => {
-      state.seeds += item.quantity;
+    const elapsed = Date.now() - currentDelivery.deliveryStartTime;
+    const walkDuration = 5000; // 5 segundos de caminata
+    const progress = Math.min(elapsed / walkDuration, 1);
+    
+    // Mover NPC hacia la granja
+    npcGroup.position.x = currentDelivery.npcStartPos.x + 
+      (currentDelivery.npcTargetPos.x - currentDelivery.npcStartPos.x) * progress;
+    npcGroup.position.z = currentDelivery.npcStartPos.z + 
+      (currentDelivery.npcTargetPos.z - currentDelivery.npcStartPos.z) * progress;
+    
+    // Animación de caminar
+    npcGroup.rotation.y = Math.sin(elapsed * 0.01) * 0.1;
+    
+    if (progress >= 1 && currentDelivery.phase === 'walking') {
+      // NPC llegó, mostrar caja de entrega
+      currentDelivery.phase = 'delivered';
+      state.npcState = 'delivering';
+      showDeliveryBox();
+    }
+  }
+
+  function showDeliveryBox() {
+    const deliveryBox = document.getElementById('deliveryBox');
+    const orderNumber = document.getElementById('orderNumber');
+    const orderItems = document.getElementById('orderItems');
+    
+    orderNumber.textContent = currentDelivery.orderNumber.toString().padStart(3, '0');
+    orderItems.textContent = currentDelivery.orderItems;
+    
+    deliveryBox.style.display = 'block';
+    showNPCDialog('¡Tu pedido ha llegado! Toca la caja para abrir tu paquete 📦');
+  }
+
+  // Clic en la caja de entrega
+  document.getElementById('deliveryBox').addEventListener('click', () => {
+    if (!currentDelivery || currentDelivery.phase !== 'delivered') return;
+    
+    // Agregar items al inventario
+    currentDelivery.items.forEach(item => {
+      state.inventory[item.id] = (state.inventory[item.id] || 0) + item.quantity;
     });
     
-    state.cart = [];
-    updateCartDisplay();
+    // Ocultar caja
+    document.getElementById('deliveryBox').style.display = 'none';
+    
+    // Completar entrega
+    currentDelivery.phase = 'completed';
+    state.npcState = 'returning';
+    
+    // NPC regresa a la tienda
+    setTimeout(() => {
+      npcGroup.position.set(1.5, 0, -14);
+      state.npcState = 'idle';
+      currentDelivery = null;
+    }, 2000);
+    
+    updateInventory();
     updateUI();
-    showToast('¡Pedido entregado! Revisa tu inventario 📦');
-  }
+    showToast('¡Semillas agregadas a tu inventario! 📦✨');
+    showNPCDialog('¡Gracias por tu compra! ¡Que tengas una excelente cosecha! 🌱');
+  });
 
   // Checkout
   function checkout() {
@@ -580,8 +735,11 @@
     storePanel.style.display = 'none';
     cartPanel.style.display = 'none';
     
-    showNPCDialog('¡Gracias por tu compra! Tu pedido llegará en 1 minuto 📦');
     startDelivery();
+    
+    state.cart = [];
+    updateCartDisplay();
+    updateUI();
   }
 
   // Diálogo del NPC
@@ -592,119 +750,6 @@
     setTimeout(() => {
       npcDialog.style.display = 'none';
     }, duration);
-  }
-
-  // ----- INTERACCIONES -----
-  function tryInteract() {
-    const playerPos = camera.position;
-    
-    // Verificar si está cerca de la tienda
-    const storeDistance = playerPos.distanceTo(new THREE.Vector3(0, 1.7, -12));
-    if (storeDistance < 4) {
-      storePanel.style.display = 'block';
-      renderSeedCatalog();
-      showNPCDialog('¡Bienvenido a Garden Mart! Tenemos las mejores semillas 🌱');
-      return;
-    }
-    
-    // Verificar displays individuales
-    for (const child of displayGroup.children) {
-      if (child.userData.seedId) {
-        const distance = playerPos.distanceTo(child.position);
-        if (distance < 2) {
-          const seed = seedCatalog.find(s => s.id === child.userData.seedId);
-          showNPCDialog(`${seed.icon} ${seed.name} - $${seed.price}\n${seed.desc}`, 2000);
-          return;
-        }
-      }
-    }
-    
-    showToast('Nada para interactuar cerca');
-  }
-
-  // Plantar
-  function tryPlant() {
-    if (state.seeds <= 0) {
-      showToast('No tienes semillas 🌱');
-      return;
-    }
-    
-    // Raycast al suelo
-    raycaster.setFromCamera({x: 0, y: 0}, camera);
-    const intersects = raycaster.intersectObject(ground);
-    
-    if (intersects.length > 0) {
-      const point = intersects[0].point;
-      
-      // Encontrar plot más cercano
-      let closestPlot = null;
-      let minDistance = Infinity;
-      
-      plots.forEach((plot, index) => {
-        const distance = Math.hypot(point.x - plot.x, point.z - plot.z);
-        if (distance < plotSize / 2 && distance < minDistance) {
-          minDistance = distance;
-          closestPlot = {index, ...plot};
-        }
-      });
-      
-      if (closestPlot) {
-        // Verificar si ya hay una planta
-        const existing = state.plants.find(p => p.plotIndex === closestPlot.index);
-        if (existing) {
-          showToast('Ya hay una planta aquí 🌱');
-          return;
-        }
-        
-        // Plantar
-        state.seeds--;
-        state.plants.push({
-          plotIndex: closestPlot.index,
-          plantedAt: Date.now(),
-          type: 'basic'
-        });
-        
-        rebuildPlants();
-        updateUI();
-        showToast('¡Semilla plantada! 🌱');
-      } else {
-        showToast('Debes estar cerca de un plot para plantar');
-      }
-    }
-  }
-
-  // Cosechar
-  function tryHarvest() {
-    raycaster.setFromCamera({x: 0, y: 0}, camera);
-    const intersects = raycaster.intersectObjects(cropsGroup.children, true);
-    
-    if (intersects.length > 0) {
-      const plant = intersects[0].object;
-      const data = plant.userData;
-      
-      if (data && data.plotIndex !== undefined) {
-        const plantIndex = state.plants.findIndex(p => p.plotIndex === data.plotIndex);
-        if (plantIndex !== -1) {
-          const plantData = state.plants[plantIndex];
-          const age = Date.now() - plantData.plantedAt;
-          const growTime = 12000; // 12 segundos
-          
-          if (age >= growTime) {
-            state.plants.splice(plantIndex, 1);
-            state.money += 5;
-            if (Math.random() < 0.3) state.seeds++;
-            
-            rebuildPlants();
-            updateUI();
-            showToast('¡Cosechado! +$5 💰');
-          } else {
-            showToast('La planta aún está creciendo 🌱');
-          }
-        }
-      }
-    } else {
-      showToast('Apunta a una planta madura para cosechar');
-    }
   }
 
   // Reconstruir plantas
@@ -720,12 +765,13 @@
       const plot = plots[plant.plotIndex];
       if (!plot) return;
       
+      const seedInfo = seedCatalog.find(s => s.id === plant.type);
+      const growTime = seedInfo ? seedInfo.growTime : 12000;
       const age = now - plant.plantedAt;
-      const growTime = 12000; // 12 segundos
       const growthStage = Math.min(age / growTime, 1);
       
       const size = 0.3 + growthStage * 0.7;
-      const color = growthStage >= 1 ? 0xffd54f : 0x4CAF50;
+      const color = growthStage >= 1 ? 0xffd54f : seedInfo.color;
       
       const plantMesh = new THREE.Mesh(
         new THREE.BoxGeometry(0.4 * size, 0.8 * size, 0.4 * size),
@@ -734,7 +780,7 @@
       
       plantMesh.position.set(plot.x, 0.2 + (0.4 * size), plot.z);
       plantMesh.castShadow = true;
-      plantMesh.userData = {plotIndex: plant.plotIndex, plantedAt: plant.plantedAt};
+      plantMesh.userData = {type: 'plant', plotIndex: plant.plotIndex, plantedAt: plant.plantedAt};
       
       cropsGroup.add(plantMesh);
     });
@@ -743,7 +789,6 @@
   // Actualizar UI
   function updateUI() {
     document.getElementById('money').textContent = state.money;
-    document.getElementById('seeds').textContent = state.seeds;
     document.getElementById('farmName').textContent = state.farmName;
   }
 
@@ -759,9 +804,18 @@
   }
 
   // ----- EVENT LISTENERS -----
-  document.getElementById('btnInteract').addEventListener('click', tryInteract);
-  document.getElementById('btnPlant').addEventListener('click', tryPlant);
-  document.getElementById('btnHarvest').addEventListener('click', tryHarvest);
+  document.getElementById('btnInteract').addEventListener('click', () => {
+    // Buscar objetos interactuables cerca
+    const playerPos = camera.position;
+    const storeDistance = playerPos.distanceTo(new THREE.Vector3(0, 1.7, -12));
+    
+    if (storeDistance < 6) {
+      openStore();
+    } else {
+      showToast('Acércate a algo para interactuar');
+    }
+  });
+
   document.getElementById('btnJump').addEventListener('click', () => {
     if (canJump) {
       vel.y = 8;
@@ -808,7 +862,7 @@
     
     applyCam();
     
-    // Movimiento (CORREGIDO)
+    // Movimiento
     if (joy.active) {
       const speed = 8;
       
@@ -816,7 +870,7 @@
       const forward = new THREE.Vector3(
         Math.sin(yaw), 
         0, 
-        Math.cos(yaw) // CAMBIADO: era -Math.cos(yaw)
+        Math.cos(yaw)
       ).normalize();
       
       const right = new THREE.Vector3().crossVectors(
@@ -825,7 +879,7 @@
       ).normalize();
       
       // Aplicar movimiento
-      const moveForward = -joy.y; // NEGATIVO porque joy.y positivo es hacia abajo
+      const moveForward = -joy.y;
       const moveRight = joy.x;
       
       vel.x += (forward.x * moveForward + right.x * moveRight) * speed * deltaTime;
@@ -849,13 +903,16 @@
       canJump = true;
     }
     
+    // Actualizar sistema de entrega
+    updateDelivery();
+    
     // Animar plantas
     cropsGroup.children.forEach(plant => {
       plant.rotation.y += 0.01;
     });
     
     // Animar NPC
-    if (npcGroup) {
+    if (state.npcState === 'idle') {
       npcGroup.rotation.y = Math.sin(currentTime * 0.001) * 0.1;
     }
     
@@ -864,6 +921,7 @@
 
   // ----- INICIALIZACIÓN -----
   updateUI();
+  updateInventory();
   updateCartDisplay();
   rebuildPlants();
   gameLoop();
