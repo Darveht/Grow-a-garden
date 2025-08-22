@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
-<title>Roblox-style Garden — Final (Configuración)</title>
+<title>Garden Simulator - Tienda Realista</title>
 <style>
   :root{
     --glass: rgba(18,24,30,.6);
@@ -14,55 +14,49 @@
   }
   html,body{height:100%;margin:0;background:linear-gradient(180deg,#9ed7ff,#86c27a);font-family:system-ui,Segoe UI,Roboto,Arial;overflow:hidden}
   canvas{display:block; width:100%; height:100%; touch-action:none; -webkit-user-select:none; user-select:none;}
-  /* HUD superior */
+  
   .hud{position:fixed;left:12px;right:12px;top:12px;display:flex;gap:8px;z-index:120;pointer-events:none}
   .chip{pointer-events:auto;background:var(--glass);backdrop-filter:blur(8px);color:#fff;padding:8px 10px;border-radius:12px;border:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:8px}
   .val{font-weight:800}
-  /* corner icon */
-  .cornerIcon{position:fixed;right:12px;top:12px;width:46px;height:46px;border-radius:10px;z-index:140;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#ffffff20,#00000010);backdrop-filter:blur(6px);pointer-events:auto;border:1px solid rgba(255,255,255,.08)}
-  .cornerIcon svg{width:28px;height:28px}
-  /* dock / botones */
+  
   .dock{position:fixed;left:0;right:0;bottom:12px;display:flex;justify-content:center;z-index:130;pointer-events:none}
   .dockInner{pointer-events:auto;background:var(--glass);backdrop-filter:blur(10px);padding:8px;border-radius:14px;display:flex;gap:8px;border:1px solid rgba(255,255,255,.06)}
   .btn{min-width:64px;padding:10px;border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));color:#fff;font-weight:800;border:1px solid rgba(255,255,255,.06)}
-  /* joystick y look area */
+  
   .joystick{position:fixed;left:12px;bottom:100px;z-index:160;width:140px;height:140px;pointer-events:auto}
   .joyBase{width:100%;height:100%;border-radius:50%;background:radial-gradient(circle at 30% 30%,rgba(255,255,255,.07),transparent);border:1px solid rgba(255,255,255,.06)}
   .joyKnob{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:64px;height:64px;border-radius:50%;background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.03));border:1px solid rgba(255,255,255,.08)}
   .lookPad{position:fixed;right:0;top:0;bottom:0;width:46vw;z-index:100;pointer-events:auto}
-  /* full-screen settings overlay */
-  .settingsOverlay{position:fixed;left:0;top:0;right:0;bottom:0;background:rgba(2,6,12,0.9);z-index:1000;display:none;color:#fff;padding:18px;overflow:auto}
-  .settingsHeader{display:flex;align-items:center;justify-content:space-between;gap:12px}
-  .settingsBody{margin-top:12px;display:flex;flex-direction:column;gap:12px}
-  .row{display:flex;align-items:center;justify-content:space-between;gap:12px;background:rgba(255,255,255,0.02);padding:10px;border-radius:10px}
-  .slider{width:56%}
-  .select{background:#ffffff10;color:#fff;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,.06)}
-  .small{font-size:13px;opacity:.9}
-  .closeBtn{background:#ffffff12;border-radius:10px;padding:8px 12px;border:1px solid rgba(255,255,255,.08)}
-  /* panel tienda interior (modal) */
-  .panel{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(460px,92vw);background:var(--glass);color:#fff;padding:12px;border-radius:12px;display:none;z-index:900}
-  .panel h3{margin:2px 0 8px 0}
-  .panel .row{background:transparent;padding:8px}
-  /* toast */
+  
+  .storePanel{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(600px,95vw);max-height:80vh;background:var(--glass);color:#fff;padding:16px;border-radius:16px;display:none;z-index:900;overflow-y:auto}
+  .storeHeader{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+  .seedGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:16px}
+  .seedDisplay{background:rgba(255,255,255,.1);border-radius:12px;padding:12px;text-align:center;border:2px solid rgba(255,255,255,.2);transition:all 0.3s}
+  .seedDisplay:hover{border-color:var(--accent);transform:translateY(-2px)}
+  .seedIcon{width:60px;height:60px;margin:0 auto 8px;background:linear-gradient(45deg,#4CAF50,#81C784);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:28px}
+  .seedName{font-weight:bold;margin-bottom:4px}
+  .seedPrice{color:#ffd54f;font-weight:800;margin-bottom:8px}
+  .seedDesc{font-size:12px;opacity:0.8;margin-bottom:8px}
+  
+  .cartPanel{position:fixed;right:12px;top:50%;transform:translateY(-50%);width:300px;background:var(--glass);color:#fff;padding:16px;border-radius:16px;display:none;z-index:910}
+  .cartItem{display:flex;justify-content:space-between;align-items:center;padding:8px;background:rgba(255,255,255,.1);border-radius:8px;margin-bottom:8px}
+  .cartTotal{border-top:2px solid rgba(255,255,255,.2);padding-top:12px;margin-top:12px;font-weight:bold}
+  
+  .deliveryPanel{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:rgba(76,175,80,.9);color:#fff;padding:12px 20px;border-radius:12px;display:none;z-index:920}
+  .deliveryBar{width:200px;height:8px;background:rgba(255,255,255,.3);border-radius:4px;margin:8px 0}
+  .deliveryProgress{height:100%;background:#fff;border-radius:4px;width:0%;transition:width 1s ease}
+  
   .toast{position:fixed;left:50%;top:86px;transform:translateX(-50%);background:var(--glass);color:#fff;padding:8px 12px;border-radius:10px;display:none;z-index:920}
-  /* name input */
-  .nameBox{position:fixed;left:50%;top:18%;transform:translateX(-50%);z-index:920;display:none}
-  .nameBox input{font-size:18px;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,.2)}
+  
+  .npcDialog{position:fixed;left:50%;bottom:150px;transform:translateX(-50%);background:rgba(255,255,255,.95);color:#333;padding:12px 16px;border-radius:12px;display:none;z-index:930;max-width:300px;text-align:center}
+  .npcName{font-weight:bold;color:var(--accent);margin-bottom:4px}
 </style>
 </head>
 <body>
   <div class="hud">
-    <div class="chip">💰 <span class="val" id="money">0</span></div>
+    <div class="chip">💰 <span class="val" id="money">50</span></div>
     <div class="chip">🌱 <span class="val" id="seeds">5</span></div>
     <div style="margin-left:auto" class="chip" id="farmTag">🏷️ <span id="farmName">Mi Granja</span></div>
-  </div>
-
-  <div class="cornerIcon" id="openSettings" title="Configuración">
-    <!-- Cubo estilizado -->
-    <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.2" stroke-linejoin="round">
-      <path d="M3 7.5L12 2l9 5.5v9L12 22 3 16.5v-9z" fill="#ffffff20"></path>
-      <path d="M12 2v20" stroke="#fff" stroke-opacity="0.9"></path>
-    </svg>
   </div>
 
   <div class="dock">
@@ -70,425 +64,816 @@
       <button class="btn" id="btnJump">Saltar</button>
       <button class="btn" id="btnHarvest">Cosechar</button>
       <button class="btn" id="btnInteract">Interactuar</button>
+      <button class="btn" id="btnPlant">Plantar</button>
     </div>
   </div>
 
   <div class="joystick" id="joystick"><div class="joyBase"></div><div class="joyKnob" id="knob"></div></div>
   <div class="lookPad" id="lookPad"></div>
 
-  <div class="panel" id="shopPanel">
-    <h3>🛒 Tienda – Estantería</h3>
-    <div id="shopItems"></div>
-    <div style="height:12px"></div>
-    <button class="btn" id="closeShop">Cerrar</button>
+  <!-- Tienda -->
+  <div class="storePanel" id="storePanel">
+    <div class="storeHeader">
+      <h3>🏪 Garden Mart - Semillas Premium</h3>
+      <button class="btn" id="closeStore">Cerrar</button>
+    </div>
+    <div class="seedGrid" id="seedGrid"></div>
+    <div style="display:flex;gap:12px;justify-content:center">
+      <button class="btn" id="viewCart">Ver Carrito (<span id="cartCount">0</span>)</button>
+      <button class="btn" id="checkout">Pagar</button>
+    </div>
   </div>
 
-  <div class="settingsOverlay" id="settingsOverlay" role="dialog" aria-modal="true">
-    <div class="settingsHeader">
-      <strong style="font-size:18px">⚙️ Configuración</strong>
-      <button class="closeBtn" id="closeSettings">Cerrar</button>
+  <!-- Carrito -->
+  <div class="cartPanel" id="cartPanel">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <h4>🛒 Carrito</h4>
+      <button class="btn" id="closeCart">✕</button>
     </div>
-    <div class="settingsBody">
-      <div class="row"><div>Calidad gráfica</div>
-        <select id="gfxQuality" class="select">
-          <option value="low">Baja (móvil lento)</option>
-          <option value="med">Media</option>
-          <option value="high">Alta (mejor GPU)</option>
-        </select>
-      </div>
-      <div class="row"><div>Sensibilidad mirada</div><input id="sensSlider" class="slider" type="range" min="0.6" max="2.5" step="0.05" value="1.1"></div>
-      <div class="row"><div>Velocidad de movimiento</div><input id="speedSlider" class="slider" type="range" min="5" max="16" step="0.5" value="10"></div>
-      <div class="row"><div>Sonidos</div><select id="soundToggle" class="select"><option value="on">ON</option><option value="off">OFF</option></select></div>
-      <div class="row"><div>Pantalla completa</div><button class="btn" id="toggleFullscreen">Activar</button></div>
-      <div class="row"><div>Resetear progreso</div><button class="btn" id="resetProgress">Reset</button></div>
+    <div id="cartItems"></div>
+    <div class="cartTotal">
+      Total: $<span id="cartTotalAmount">0</span>
     </div>
+    <button class="btn" id="proceedCheckout" style="width:100%;margin-top:12px">Proceder al Pago</button>
+  </div>
+
+  <!-- Panel de Entrega -->
+  <div class="deliveryPanel" id="deliveryPanel">
+    <div>📦 Preparando tu pedido...</div>
+    <div class="deliveryBar"><div class="deliveryProgress" id="deliveryProgress"></div></div>
+    <div id="deliveryTime">Tiempo estimado: 60s</div>
+  </div>
+
+  <!-- Diálogo del NPC -->
+  <div class="npcDialog" id="npcDialog">
+    <div class="npcName">Roberto - Vendedor</div>
+    <div id="npcMessage">¡Bienvenido a Garden Mart! ¿En qué puedo ayudarte?</div>
   </div>
 
   <div class="toast" id="toast"></div>
-  <div class="nameBox" id="nameBox">
-    <input id="nameInput" placeholder="Nombre de la granja" maxlength="24"/>
-    <button class="btn" id="saveName">Guardar</button>
-  </div>
 
-  <!-- three.js -->
   <script src="https://cdn.jsdelivr.net/npm/three@0.156.0/build/three.min.js"></script>
 
   <script>
-  // ----- CONFIG y ESTADO -----
-  const LS_KEY = 'rbgarden_final_v3';
-  const SETTINGS_KEY = 'rbgarden_settings_v3';
-  let state = { money:0, seeds:6, farmName:'Mi Granja', plants: [] }; // plants: {plotIndex, plantedAt}
-  const plotSize = 2.2;
-  const GROWTIME = 12_000;
-  const MAX_STAGE = 3;
-  const PLANT_COST = 1;
-  const HARVEST_REWARD = 3;
+  // ----- ESTADO DEL JUEGO -----
+  let state = { 
+    money: 50, 
+    seeds: 5, 
+    farmName: 'Mi Granja', 
+    plants: [],
+    cart: [],
+    deliveries: []
+  };
 
-  // SETTINGS por defecto
-  const defaultSettings = { gfx:'med', sens:1.1, speed:10, sound:'on' };
-  let settings = Object.assign({}, defaultSettings);
-
-  // ----- CARGA -----
-  function loadState(){ try{ const raw = localStorage.getItem(LS_KEY); if(raw) Object.assign(state, JSON.parse(raw)); }catch(e){} }
-  function saveState(){ localStorage.setItem(LS_KEY, JSON.stringify(state)); }
-  function loadSettings(){ try{ const raw = localStorage.getItem(SETTINGS_KEY); if(raw) Object.assign(settings, JSON.parse(raw)); }catch(e){} }
-  function saveSettings(){ localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); }
-
-  loadState(); loadSettings();
-
-  // ----- THREE.JS -----
-  const scene = new THREE.Scene(); scene.background = new THREE.Color(0x9ed7ff);
-  const MAX_DPR = Math.min(devicePixelRatio || 1, 2);
-  const camera = new THREE.PerspectiveCamera(70, innerWidth/innerHeight, 0.1, 600);
-  camera.position.set(0,1.7,10);
-  const renderer = new THREE.WebGLRenderer({antialias:true});
-  renderer.setPixelRatio(1); renderer.setSize(innerWidth, innerHeight);
-  document.body.appendChild(renderer.domElement);
-
-  // ajuste gráfico según settings.gfx
-  function applyGfxQuality(){
-    if(settings.gfx === 'low'){ renderer.setPixelRatio(Math.min(MAX_DPR, 0.9)); toggleDecor(false); }
-    else if(settings.gfx === 'med'){ renderer.setPixelRatio(Math.min(MAX_DPR, 1.2)); toggleDecor(true); }
-    else { renderer.setPixelRatio(Math.min(MAX_DPR, 2)); toggleDecor(true); }
-    renderer.setSize(innerWidth, innerHeight);
-  }
-
-  const lightHemi = new THREE.HemisphereLight(0xffffff, 0x4444ff, 0.95); scene.add(lightHemi);
-  const dir = new THREE.DirectionalLight(0xffffff, 0.6); dir.position.set(6,10,4); scene.add(dir);
-
-  // suelo grande
-  const ground = new THREE.Mesh(new THREE.BoxGeometry(120,0.4,120), new THREE.MeshStandardMaterial({color:0x6fbf5f}));
-  ground.position.y = -0.2; scene.add(ground);
-
-  // ----- PLOTS -----
-  const plots = []; const plotGroup = new THREE.Group(); scene.add(plotGroup);
-  const gap = 0.6;
-  const startX = - (plotSize + gap);
-  const startZ = - 3.5; // alejar plots hacia el frente (negative z)
-  for(let rz=0; rz<2; rz++){
-    for(let cx=0; cx<3; cx++){
-      const x = startX + cx*(plotSize+gap);
-      const z = startZ + rz*(plotSize+gap);
-      plots.push({x,z});
-      const soil = new THREE.Mesh(new THREE.BoxGeometry(plotSize,0.14,plotSize), new THREE.MeshStandardMaterial({color:0x5a3d2b}));
-      soil.position.set(x,0.02,z); plotGroup.add(soil);
-      // marco
-      const frameMat = new THREE.MeshStandardMaterial({color:0x8b5a2b});
-      const ft = 0.16;
-      const f1 = new THREE.Mesh(new THREE.BoxGeometry(plotSize+ft,0.3,ft), frameMat);
-      f1.position.set(x,0.2,z - plotSize/2 - ft/2); plotGroup.add(f1);
-      const f2 = f1.clone(); f2.position.set(x,0.2,z + plotSize/2 + ft/2); plotGroup.add(f2);
-      const fs = new THREE.Mesh(new THREE.BoxGeometry(ft,0.3,plotSize + ft), frameMat);
-      fs.position.set(x - plotSize/2 - ft/2,0.2,z); plotGroup.add(fs);
-      const fr = fs.clone(); fr.position.set(x + plotSize/2 + ft/2,0.2,z); plotGroup.add(fr);
-      // soportes
-      const sup = new THREE.BoxGeometry(0.12,0.9,0.12);
-      const s1 = new THREE.Mesh(sup, frameMat); s1.position.set(x - plotSize/2 - ft/2,0.6,z - plotSize/2 - ft/2); plotGroup.add(s1);
-      const s2 = s1.clone(); s2.position.set(x + plotSize/2 + ft/2,0.6,z - plotSize/2 - ft/2); plotGroup.add(s2);
-      const s3 = s1.clone(); s3.position.set(x - plotSize/2 - ft/2,0.6,z + plotSize/2 + ft/2); plotGroup.add(s3);
-      const s4 = s1.clone(); s4.position.set(x + plotSize/2 + ft/2,0.6,z + plotSize/2 + ft/2); plotGroup.add(s4);
-    }
-  }
-
-  // ----- KIOSKO (colocado más lejos y sin overlapp) -----
-  const kiosk = new THREE.Group();
-  const floorK = new THREE.Mesh(new THREE.BoxGeometry(5.2,0.2,5.2), new THREE.MeshStandardMaterial({color:0xf2e1c8}));
-  floorK.position.y = 0.1; kiosk.add(floorK);
-  const wMat = new THREE.MeshStandardMaterial({color:0xffffff});
-  const thickness = 0.18;
-  const back = new THREE.Mesh(new THREE.BoxGeometry(5.2,2.4,thickness), wMat); back.position.set(0,1.2,-2.56); kiosk.add(back);
-  const leftW = new THREE.Mesh(new THREE.BoxGeometry(thickness,2.4,5.2), wMat); leftW.position.set(-2.56,1.2,0); kiosk.add(leftW);
-  const rightW = leftW.clone(); rightW.position.set(2.56,1.2,0); kiosk.add(rightW);
-  const roof = new THREE.Mesh(new THREE.BoxGeometry(5.4,0.12,5.4), new THREE.MeshStandardMaterial({color:0x00d0ff}));
-  roof.position.set(0,2.48,0); kiosk.add(roof);
-  // puerta (sliding)
-  const door = new THREE.Mesh(new THREE.BoxGeometry(1.0,1.9,0.06), new THREE.MeshStandardMaterial({color:0x663300}));
-  door.position.set(0,0.95,2.56); kiosk.add(door); door.userData.open = false;
-  kiosk.position.set(0,0,8); // mover kiosk adelante, lejos de plots
-  scene.add(kiosk);
-
-  // shelves dentro
-  const shelves = []; const shelfOffsets = [{x:-1.2,z:-0.6,type:0},{x:0,z:-0.6,type:1},{x:1.2,z:-0.6,type:2}];
-  for(const s of shelfOffsets){
-    const g = new THREE.Group();
-    const base = new THREE.Mesh(new THREE.BoxGeometry(0.9,0.45,0.35), new THREE.MeshStandardMaterial({color:0xfffbea}));
-    base.position.y = 0.35; g.add(base);
-    const stand = new THREE.Mesh(new THREE.BoxGeometry(0.08,1.0,0.08), new THREE.MeshStandardMaterial({color:0x8b5a2b}));
-    stand.position.set(-0.42,0.75,0); g.add(stand);
-    const stand2 = stand.clone(); stand2.position.set(0.42,0.75,0); g.add(stand2);
-    g.position.set(s.x,0,s.z); g.userData.seedType = s.type; kiosk.add(g); shelves.push(g);
-  }
-
-  // buzón (posicionado lejos)
-  const boxGroup = new THREE.Group();
-  const post = new THREE.Mesh(new THREE.BoxGeometry(0.12,1.6,0.12), new THREE.MeshStandardMaterial({color:0x593d2b}));
-  post.position.set(-8,0.8,-2); boxGroup.add(post);
-  const boxMesh = new THREE.Mesh(new THREE.BoxGeometry(0.9,0.45,0.45), new THREE.MeshStandardMaterial({color:0xfff176}));
-  boxMesh.position.set(-8,1.05,-2); boxGroup.add(boxMesh);
-  const board = new THREE.Mesh(new THREE.BoxGeometry(0.9,0.28,0.06), new THREE.MeshStandardMaterial({color:0xffffff}));
-  board.position.set(-8,1.5,-2); boxGroup.add(board);
-  scene.add(boxGroup);
-
-  // crops group
-  const cropsGroup = new THREE.Group(); scene.add(cropsGroup);
-
-  // ----- RAYCAST -----
-  const ray = new THREE.Raycaster();
-  function centerRay(){ ray.setFromCamera({x:0,y:0}, camera); }
-
-  // ----- UI ELEMENTS -----
-  const moneyEl = document.getElementById('money'), seedsEl = document.getElementById('seeds'), farmNameEl = document.getElementById('farmName');
-  const toastEl = document.getElementById('toast');
-  function showToast(msg,ms=1400){ toastEl.textContent = msg; toastEl.style.display='block'; clearTimeout(showToast._); showToast._ = setTimeout(()=> toastEl.style.display='none', ms); }
-
-  // ----- Plant / harvest -----
-  function rebuildPlants(){
-    while(cropsGroup.children.length) cropsGroup.remove(cropsGroup.children[0]);
-    const now = Date.now();
-    for(const p of state.plants){
-      const plot = plots[p.plotIndex];
-      if(!plot) continue;
-      const age = Math.min(MAX_STAGE, Math.floor((now - p.plantedAt)/GROWTIME));
-      const size = 0.22 + (age/MAX_STAGE)*1.0;
-      const color = age<MAX_STAGE? 0x2e7d32 : 0xffd54f;
-      const cube = new THREE.Mesh(new THREE.BoxGeometry(0.6 * size, 0.6 * size, 0.6 * size), new THREE.MeshStandardMaterial({color}));
-      cube.position.set(plot.x, 0.15 + 0.3*(size/2), plot.z);
-      cube.userData = {plotIndex: p.plotIndex, plantedAt: p.plantedAt};
-      cropsGroup.add(cube);
-    }
-    moneyEl.textContent = state.money; seedsEl.textContent = state.seeds; farmNameEl.textContent = state.farmName;
-  }
-
-  function tryPlantAtPosition(worldPos){
-    let idx = -1;
-    for(let i=0;i<plots.length;i++){
-      const d = Math.hypot(worldPos.x - plots[i].x, worldPos.z - plots[i].z);
-      if(d < plotSize/2) { idx = i; break; }
-    }
-    if(idx === -1) return false;
-    if(state.plants.some(p=>p.plotIndex===idx)){ showToast('Parche ocupado'); return false; }
-    if(state.seeds < PLANT_COST){ showToast('Sin semillas'); return false; }
-    state.seeds -= PLANT_COST;
-    state.plants.push({plotIndex: idx, plantedAt: Date.now()});
-    saveState(); rebuildPlants(); showToast('Plantado 🌱');
-    return true;
-  }
-
-  function tryHarvest(){
-    centerRay();
-    const inter = ray.intersectObjects(cropsGroup.children, true);
-    if(!inter.length){ showToast('Apunta a una planta'); return; }
-    const o = inter[0].object; const data = o.userData; if(!data) return;
-    const pIndex = data.plotIndex; const plantIdx = state.plants.findIndex(p => p.plotIndex === pIndex);
-    if(plantIdx === -1) return;
-    const p = state.plants[plantIdx]; const age = Math.floor((Date.now() - p.plantedAt)/GROWTIME);
-    if(age < MAX_STAGE){ showToast('Aún no madura'); return; }
-    state.plants.splice(plantIdx,1); state.money += HARVEST_REWARD; if(Math.random() < 0.4) state.seeds += 1;
-    saveState(); rebuildPlants(); showToast('Cosechado +'+HARVEST_REWARD+' 💰');
-  }
-
-  // ----- Interact (door, enter kiosk, shelves, mailbox) -----
-  const shopPanel = document.getElementById('shopPanel'), shopItemsEl = document.getElementById('shopItems');
-
+  // Catálogo de semillas expandido
   const seedCatalog = [
-    {name:'Zanahoria', price:1, desc:'Semilla básica'},
-    {name:'Remolacha', price:3, desc:'Más valor'},
-    {name:'Tomate raro', price:6, desc:'Muy valioso'}
+    {id: 'carrot', name: 'Zanahoria', price: 2, desc: 'Crece rápido, perfecta para principiantes', icon: '🥕', color: '#FF6B35', growTime: 8000},
+    {id: 'tomato', name: 'Tomate', price: 4, desc: 'Jugoso y nutritivo, gran demanda', icon: '🍅', color: '#FF4444', growTime: 12000},
+    {id: 'corn', name: 'Maíz', price: 6, desc: 'Alto rendimiento, cultivo premium', icon: '🌽', color: '#FFD700', growTime: 15000},
+    {id: 'lettuce', name: 'Lechuga', price: 3, desc: 'Fresca y crujiente, fácil cuidado', icon: '🥬', color: '#4CAF50', growTime: 10000},
+    {id: 'potato', name: 'Papa', price: 5, desc: 'Versátil y rentable, larga duración', icon: '🥔', color: '#8D6E63', growTime: 14000},
+    {id: 'pepper', name: 'Pimiento', price: 7, desc: 'Picante y colorido, alta ganancia', icon: '🌶️', color: '#F44336', growTime: 16000}
   ];
 
-  function openShelfPanel(seedIndex){
-    shopItemsEl.innerHTML = '';
-    const it = seedCatalog[seedIndex] || seedCatalog[0];
-    const r = document.createElement('div'); r.className='row';
-    r.innerHTML = `<div><strong>${it.name}</strong><div class="small">${it.desc}</div></div>
-      <div style="display:flex;gap:8px;align-items:center"><div style="color:#ffd54f;font-weight:900">${it.price} 💰</div><button class="btn buyBtn">Comprar</button></div>`;
-    shopItemsEl.appendChild(r);
-    shopPanel.style.display = 'block';
-    shopPanel.dataset.selected = seedIndex;
-  }
-  document.getElementById('closeShop').addEventListener('click', ()=> shopPanel.style.display='none');
-  shopPanel.addEventListener('click', (e)=>{ const b = e.target.closest('.buyBtn'); if(!b) return; const idx = Number(shopPanel.dataset.selected||0); const item = seedCatalog[idx]; if(state.money < item.price){ showToast('No tienes suficiente 💰'); return; } state.money -= item.price; state.seeds += 1; saveState(); rebuildPlants(); showToast('Compraste 1 semilla de '+item.name); });
+  // ----- THREE.JS SETUP -----
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x9ed7ff);
+  
+  const camera = new THREE.PerspectiveCamera(70, innerWidth/innerHeight, 0.1, 600);
+  camera.position.set(0, 1.7, 15);
+  
+  const renderer = new THREE.WebGLRenderer({antialias: true});
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.setSize(innerWidth, innerHeight);
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  document.body.appendChild(renderer.domElement);
 
-  function tryInteract(){
-    // distancia a kiosk puerta
-    const dDoor = camera.position.distanceTo(kiosk.position);
-    if(dDoor < 2.6){
-      door.userData.open = !door.userData.open; animateDoor(door.userData.open);
-      showToast(door.userData.open? 'Puerta abierta' : 'Puerta cerrada');
+  // Iluminación mejorada
+  const lightHemi = new THREE.HemisphereLight(0xffffff, 0x4444ff, 0.8);
+  scene.add(lightHemi);
+  
+  const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+  dirLight.position.set(10, 15, 5);
+  dirLight.castShadow = true;
+  dirLight.shadow.mapSize.width = 2048;
+  dirLight.shadow.mapSize.height = 2048;
+  scene.add(dirLight);
+
+  // Suelo
+  const ground = new THREE.Mesh(
+    new THREE.BoxGeometry(200, 0.4, 200), 
+    new THREE.MeshStandardMaterial({color: 0x6fbf5f})
+  );
+  ground.position.y = -0.2;
+  ground.receiveShadow = true;
+  scene.add(ground);
+
+  // ----- PLOTS -----
+  const plots = [];
+  const plotGroup = new THREE.Group();
+  scene.add(plotGroup);
+  
+  const plotSize = 2.2;
+  const gap = 0.8;
+  for(let rz = 0; rz < 3; rz++) {
+    for(let cx = 0; cx < 4; cx++) {
+      const x = -6 + cx * (plotSize + gap);
+      const z = -2 + rz * (plotSize + gap);
+      plots.push({x, z});
+      
+      // Suelo del plot
+      const soil = new THREE.Mesh(
+        new THREE.BoxGeometry(plotSize, 0.14, plotSize), 
+        new THREE.MeshStandardMaterial({color: 0x5a3d2b})
+      );
+      soil.position.set(x, 0.02, z);
+      soil.receiveShadow = true;
+      plotGroup.add(soil);
+      
+      // Marco de madera
+      const frameMat = new THREE.MeshStandardMaterial({color: 0x8b5a2b});
+      const thickness = 0.16;
+      
+      const borders = [
+        {pos: [x, 0.2, z - plotSize/2 - thickness/2], size: [plotSize + thickness, 0.3, thickness]},
+        {pos: [x, 0.2, z + plotSize/2 + thickness/2], size: [plotSize + thickness, 0.3, thickness]},
+        {pos: [x - plotSize/2 - thickness/2, 0.2, z], size: [thickness, 0.3, plotSize + thickness]},
+        {pos: [x + plotSize/2 + thickness/2, 0.2, z], size: [thickness, 0.3, plotSize + thickness]}
+      ];
+      
+      borders.forEach(border => {
+        const frame = new THREE.Mesh(new THREE.BoxGeometry(...border.size), frameMat);
+        frame.position.set(...border.pos);
+        frame.castShadow = true;
+        plotGroup.add(frame);
+      });
+    }
+  }
+
+  // ----- TIENDA REALISTA -----
+  const storeGroup = new THREE.Group();
+  
+  // Edificio principal
+  const storeBase = new THREE.Mesh(
+    new THREE.BoxGeometry(12, 4, 8), 
+    new THREE.MeshStandardMaterial({color: 0xe3f2fd})
+  );
+  storeBase.position.set(0, 2, -15);
+  storeBase.castShadow = true;
+  storeGroup.add(storeBase);
+
+  // Techo
+  const roof = new THREE.Mesh(
+    new THREE.BoxGeometry(13, 0.3, 9), 
+    new THREE.MeshStandardMaterial({color: 0x1976d2})
+  );
+  roof.position.set(0, 4.2, -15);
+  storeGroup.add(roof);
+
+  // Letrero
+  const sign = new THREE.Mesh(
+    new THREE.BoxGeometry(8, 1, 0.2), 
+    new THREE.MeshStandardMaterial({color: 0x4CAF50})
+  );
+  sign.position.set(0, 3.5, -10.9);
+  storeGroup.add(sign);
+
+  // Puerta de cristal
+  const door = new THREE.Mesh(
+    new THREE.BoxGeometry(2, 3, 0.1), 
+    new THREE.MeshStandardMaterial({
+      color: 0x81c784, 
+      transparent: true, 
+      opacity: 0.7
+    })
+  );
+  door.position.set(0, 1.5, -10.95);
+  storeGroup.add(door);
+
+  // Displays de semillas dentro de la tienda
+  const displayGroup = new THREE.Group();
+  const displayPositions = [
+    {x: -3, z: -13}, {x: 0, z: -13}, {x: 3, z: -13},
+    {x: -3, z: -15}, {x: 0, z: -15}, {x: 3, z: -15}
+  ];
+
+  displayPositions.forEach((pos, i) => {
+    const seed = seedCatalog[i] || seedCatalog[0];
+    
+    // Base del display
+    const base = new THREE.Mesh(
+      new THREE.BoxGeometry(1.5, 0.8, 1.5), 
+      new THREE.MeshStandardMaterial({color: 0xffffff})
+    );
+    base.position.set(pos.x, 0.4, pos.z);
+    displayGroup.add(base);
+    
+    // Cúpula de cristal
+    const glass = new THREE.Mesh(
+      new THREE.SphereGeometry(0.6, 16, 8, 0, Math.PI * 2, 0, Math.PI * 0.7), 
+      new THREE.MeshStandardMaterial({
+        color: 0xffffff, 
+        transparent: true, 
+        opacity: 0.3,
+        envMapIntensity: 1
+      })
+    );
+    glass.position.set(pos.x, 1.0, pos.z);
+    displayGroup.add(glass);
+    
+    // Semilla dentro del cristal
+    const seedMesh = new THREE.Mesh(
+      new THREE.BoxGeometry(0.3, 0.3, 0.3), 
+      new THREE.MeshStandardMaterial({color: seed.color})
+    );
+    seedMesh.position.set(pos.x, 0.9, pos.z);
+    seedMesh.userData = {seedId: seed.id, price: seed.price, name: seed.name};
+    displayGroup.add(seedMesh);
+    
+    // Etiqueta de precio
+    const label = new THREE.Mesh(
+      new THREE.BoxGeometry(0.8, 0.2, 0.05), 
+      new THREE.MeshStandardMaterial({color: 0xffd54f})
+    );
+    label.position.set(pos.x, 0.1, pos.z + 0.8);
+    displayGroup.add(label);
+  });
+  
+  storeGroup.add(displayGroup);
+
+  // NPC Vendedor
+  const npcGroup = new THREE.Group();
+  
+  // Cuerpo del NPC
+  const npcBody = new THREE.Mesh(
+    new THREE.BoxGeometry(0.6, 1.2, 0.4), 
+    new THREE.MeshStandardMaterial({color: 0x2196F3})
+  );
+  npcBody.position.y = 1.2;
+  npcGroup.add(npcBody);
+  
+  // Cabeza
+  const npcHead = new THREE.Mesh(
+    new THREE.BoxGeometry(0.4, 0.4, 0.4), 
+    new THREE.MeshStandardMaterial({color: 0xffdbcb})
+  );
+  npcHead.position.y = 2.0;
+  npcGroup.add(npcHead);
+  
+  // Brazos
+  const armLeft = new THREE.Mesh(
+    new THREE.BoxGeometry(0.2, 0.8, 0.2), 
+    new THREE.MeshStandardMaterial({color: 0xffdbcb})
+  );
+  armLeft.position.set(-0.5, 1.2, 0);
+  npcGroup.add(armLeft);
+  
+  const armRight = armLeft.clone();
+  armRight.position.set(0.5, 1.2, 0);
+  npcGroup.add(armRight);
+  
+  npcGroup.position.set(1.5, 0, -14);
+  storeGroup.add(npcGroup);
+  
+  scene.add(storeGroup);
+
+  // Caja registradora
+  const cashRegister = new THREE.Mesh(
+    new THREE.BoxGeometry(1, 0.5, 0.8), 
+    new THREE.MeshStandardMaterial({color: 0x424242})
+  );
+  cashRegister.position.set(-1.5, 1.05, -14);
+  storeGroup.add(cashRegister);
+
+  // ----- PLANTAS -----
+  const cropsGroup = new THREE.Group();
+  scene.add(cropsGroup);
+
+  // ----- MOVIMIENTO CORREGIDO -----
+  let yaw = 0, pitch = 0;
+  camera.rotation.order = 'YXZ';
+  
+  function applyCam() {
+    camera.rotation.set(pitch, yaw, 0, 'YXZ');
+  }
+
+  // Joystick (MOVIMIENTO CORREGIDO)
+  let joy = {x: 0, y: 0, active: false};
+  let vel = new THREE.Vector3();
+  let canJump = true;
+  
+  const joyEl = document.getElementById('joystick');
+  const knob = document.getElementById('knob');
+  
+  joyEl.addEventListener('touchstart', (e) => {
+    joy.active = true;
+    e.preventDefault();
+  }, {passive: false});
+  
+  joyEl.addEventListener('touchmove', (e) => {
+    e.preventDefault();
+    const touch = e.touches[0];
+    const rect = joyEl.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    
+    let dx = touch.clientX - centerX;
+    let dy = touch.clientY - centerY;
+    
+    const maxRadius = rect.width * 0.42;
+    const distance = Math.hypot(dx, dy);
+    const clamp = distance > maxRadius ? maxRadius / distance : 1;
+    
+    dx *= clamp;
+    dy *= clamp;
+    
+    knob.style.transform = `translate(${dx}px, ${dy}px)`;
+    
+    joy.x = dx / maxRadius;
+    joy.y = dy / maxRadius; // SIN NEGATIVO - ESTO CORRIGE EL MOVIMIENTO
+  }, {passive: false});
+  
+  joyEl.addEventListener('touchend', () => {
+    joy.active = false;
+    joy.x = 0;
+    joy.y = 0;
+    knob.style.transform = 'translate(-50%, -50%)';
+  });
+
+  // Look pad
+  const lookPad = document.getElementById('lookPad');
+  let lastLook = null;
+  let lookVelX = 0, lookVelY = 0;
+  
+  lookPad.addEventListener('touchstart', e => {
+    lastLook = e.touches[0];
+  }, {passive: true});
+  
+  lookPad.addEventListener('touchmove', e => {
+    const touch = e.touches[0];
+    if (!lastLook) {
+      lastLook = touch;
       return;
     }
-    // si dentro del área interior del kiosk -> buscar estante cercano
-    const rel = new THREE.Vector3().subVectors(camera.position, kiosk.position);
-    if(Math.abs(rel.x) < 2.4 && Math.abs(rel.z) < 2.4 && camera.position.y < 2.6){
-      // buscar estante cercano
-      let nearest = null, nd = 1e9;
-      for(const s of shelves){ const wp = new THREE.Vector3(); s.getWorldPosition(wp); const dd = wp.distanceTo(camera.position); if(dd < nd){ nd = dd; nearest = s; } }
-      if(nearest && nd < 2.2){ const seedType = nearest.userData.seedType || 0; openShelfPanel(seedType); return; }
-      showToast('Acércate a un estante');
+    
+    const dx = touch.clientX - lastLook.clientX;
+    const dy = touch.clientY - lastLook.clientY;
+    lastLook = touch;
+    
+    const sensitivity = 0.001;
+    lookVelX += (-dx * sensitivity);
+    lookVelY += (-dy * sensitivity);
+  }, {passive: true});
+  
+  lookPad.addEventListener('touchend', () => {
+    lastLook = null;
+  });
+
+  // ----- RAYCAST -----
+  const raycaster = new THREE.Raycaster();
+
+  // ----- SISTEMA DE TIENDA -----
+  const storePanel = document.getElementById('storePanel');
+  const cartPanel = document.getElementById('cartPanel');
+  const seedGrid = document.getElementById('seedGrid');
+  const cartItems = document.getElementById('cartItems');
+  const cartCount = document.getElementById('cartCount');
+  const cartTotalAmount = document.getElementById('cartTotalAmount');
+  const npcDialog = document.getElementById('npcDialog');
+  const npcMessage = document.getElementById('npcMessage');
+
+  // Renderizar catálogo de semillas
+  function renderSeedCatalog() {
+    seedGrid.innerHTML = '';
+    seedCatalog.forEach(seed => {
+      const div = document.createElement('div');
+      div.className = 'seedDisplay';
+      div.innerHTML = `
+        <div class="seedIcon" style="background: linear-gradient(45deg, ${seed.color}, ${seed.color}aa)">${seed.icon}</div>
+        <div class="seedName">${seed.name}</div>
+        <div class="seedPrice">$${seed.price}</div>
+        <div class="seedDesc">${seed.desc}</div>
+        <button class="btn addToCart" data-seed-id="${seed.id}">Agregar al Carrito</button>
+      `;
+      seedGrid.appendChild(div);
+    });
+  }
+
+  // Agregar al carrito
+  seedGrid.addEventListener('click', (e) => {
+    if (e.target.classList.contains('addToCart')) {
+      const seedId = e.target.dataset.seedId;
+      const seed = seedCatalog.find(s => s.id === seedId);
+      
+      const existing = state.cart.find(item => item.id === seedId);
+      if (existing) {
+        existing.quantity++;
+      } else {
+        state.cart.push({...seed, quantity: 1});
+      }
+      
+      updateCartDisplay();
+      showToast(`${seed.name} agregado al carrito!`);
+    }
+  });
+
+  // Actualizar display del carrito
+  function updateCartDisplay() {
+    cartItems.innerHTML = '';
+    let total = 0;
+    
+    state.cart.forEach(item => {
+      const div = document.createElement('div');
+      div.className = 'cartItem';
+      div.innerHTML = `
+        <div>
+          <div>${item.icon} ${item.name}</div>
+          <div style="font-size:12px">Cantidad: ${item.quantity}</div>
+        </div>
+        <div>
+          <div>$${item.price * item.quantity}</div>
+          <button class="btn removeItem" data-seed-id="${item.id}" style="font-size:12px;padding:2px 6px">-</button>
+        </div>
+      `;
+      cartItems.appendChild(div);
+      total += item.price * item.quantity;
+    });
+    
+    cartCount.textContent = state.cart.reduce((sum, item) => sum + item.quantity, 0);
+    cartTotalAmount.textContent = total;
+  }
+
+  // Remover del carrito
+  cartItems.addEventListener('click', (e) => {
+    if (e.target.classList.contains('removeItem')) {
+      const seedId = e.target.dataset.seedId;
+      const index = state.cart.findIndex(item => item.id === seedId);
+      if (index !== -1) {
+        if (state.cart[index].quantity > 1) {
+          state.cart[index].quantity--;
+        } else {
+          state.cart.splice(index, 1);
+        }
+        updateCartDisplay();
+      }
+    }
+  });
+
+  // Sistema de entrega
+  function startDelivery() {
+    const deliveryPanel = document.getElementById('deliveryPanel');
+    const deliveryProgress = document.getElementById('deliveryProgress');
+    const deliveryTime = document.getElementById('deliveryTime');
+    
+    deliveryPanel.style.display = 'block';
+    
+    let progress = 0;
+    const duration = 60000; // 60 segundos
+    const interval = 100;
+    const increment = (interval / duration) * 100;
+    
+    const timer = setInterval(() => {
+      progress += increment;
+      deliveryProgress.style.width = `${Math.min(progress, 100)}%`;
+      
+      const remaining = Math.max(0, Math.ceil((100 - progress) * duration / 100 / 1000));
+      deliveryTime.textContent = `Tiempo estimado: ${remaining}s`;
+      
+      if (progress >= 100) {
+        clearInterval(timer);
+        deliveryComplete();
+      }
+    }, interval);
+  }
+
+  function deliveryComplete() {
+    const deliveryPanel = document.getElementById('deliveryPanel');
+    deliveryPanel.style.display = 'none';
+    
+    // Agregar semillas al inventario
+    state.cart.forEach(item => {
+      state.seeds += item.quantity;
+    });
+    
+    state.cart = [];
+    updateCartDisplay();
+    updateUI();
+    showToast('¡Pedido entregado! Revisa tu inventario 📦');
+  }
+
+  // Checkout
+  function checkout() {
+    const total = state.cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    
+    if (state.money < total) {
+      showToast('No tienes suficiente dinero 💰');
       return;
     }
-    // buzón
-    const db = camera.position.distanceTo(boxGroup.position);
-    if(db < 2.2){ document.getElementById('nameBox').style.display = 'block'; document.getElementById('nameInput').value = state.farmName; return; }
+    
+    if (state.cart.length === 0) {
+      showToast('El carrito está vacío 🛒');
+      return;
+    }
+    
+    state.money -= total;
+    storePanel.style.display = 'none';
+    cartPanel.style.display = 'none';
+    
+    showNPCDialog('¡Gracias por tu compra! Tu pedido llegará en 1 minuto 📦');
+    startDelivery();
+  }
+
+  // Diálogo del NPC
+  function showNPCDialog(message, duration = 3000) {
+    npcMessage.textContent = message;
+    npcDialog.style.display = 'block';
+    
+    setTimeout(() => {
+      npcDialog.style.display = 'none';
+    }, duration);
+  }
+
+  // ----- INTERACCIONES -----
+  function tryInteract() {
+    const playerPos = camera.position;
+    
+    // Verificar si está cerca de la tienda
+    const storeDistance = playerPos.distanceTo(new THREE.Vector3(0, 1.7, -12));
+    if (storeDistance < 4) {
+      storePanel.style.display = 'block';
+      renderSeedCatalog();
+      showNPCDialog('¡Bienvenido a Garden Mart! Tenemos las mejores semillas 🌱');
+      return;
+    }
+    
+    // Verificar displays individuales
+    for (const child of displayGroup.children) {
+      if (child.userData.seedId) {
+        const distance = playerPos.distanceTo(child.position);
+        if (distance < 2) {
+          const seed = seedCatalog.find(s => s.id === child.userData.seedId);
+          showNPCDialog(`${seed.icon} ${seed.name} - $${seed.price}\n${seed.desc}`, 2000);
+          return;
+        }
+      }
+    }
+    
     showToast('Nada para interactuar cerca');
   }
 
-  // animate door sliding
-  let doorAnim = null;
-  function animateDoor(open){
-    if(doorAnim) cancelAnimationFrame(doorAnim);
-    const from = door.position.z; const to = open? 3.8 : 2.56; const start = performance.now(); const dur = 280;
-    function step(){ const t = Math.min((performance.now()-start)/dur,1); door.position.z = from + (to-from)*(1 - Math.pow(1-t,3)); if(t<1) doorAnim = requestAnimationFrame(step); else doorAnim = null; }
-    step();
-  }
-
-  // ----- MOVIMIENTO y CAMARA mejorados -----
-  let yaw = 0, pitch = 0;
-  camera.rotation.order = 'YXZ';
-  function applyCam(){ camera.rotation.set(pitch, yaw, 0, 'YXZ'); }
-
-  // movimiento con joystick (CORREGIDO - invertido el forward)
-  let joy = {x:0,y:0,active:false}, vel = new THREE.Vector3(), canJump=true;
-  const joyEl = document.getElementById('joystick'), knob = document.getElementById('knob');
-  joyEl.addEventListener('touchstart', (e)=>{ joy.active=true; e.preventDefault(); }, {passive:false});
-  joyEl.addEventListener('touchmove', (e)=>{ e.preventDefault(); const t = e.touches[0]; const r = joyEl.getBoundingClientRect(); const cx = r.left + r.width/2; const cy = r.top + r.height/2; let dx = t.clientX - cx, dy = t.clientY - cy; const rmax = r.width*0.42; const len = Math.hypot(dx,dy); const cl = len>rmax? rmax/len:1; dx*=cl; dy*=cl; knob.style.transform = `translate(${dx}px,${dy}px)`; joy.x = dx/rmax; joy.y = dy/rmax; }, {passive:false});
-  joyEl.addEventListener('touchend', ()=>{ joy.active=false; joy.x=0; joy.y=0; knob.style.transform='translate(-50%,-50%)'; });
-
-  // lookPad: acumulador de deltas con smoothing
-  const lookPad = document.getElementById('lookPad'); let lastLook = null;
-  let lookVelX = 0, lookVelY = 0;
-  lookPad.addEventListener('touchstart', e=>{ lastLook = e.touches[0]; }, {passive:true});
-  lookPad.addEventListener('touchmove', e=>{ const t = e.touches[0]; if(!lastLook){ lastLook = t; return; } const dx = t.clientX - lastLook.clientX; const dy = t.clientY - lastLook.clientY; lastLook = t; // accumulate velocity scaled by sensitivity
-    const s = settings.sens || 1.0; lookVelX += (-dx * 0.0008 * s); lookVelY += (-dy * 0.0008 * s); }, {passive:true});
-  lookPad.addEventListener('touchend', ()=> lastLook = null);
-
-  // botones
-  document.getElementById('btnHarvest').addEventListener('click', tryHarvest);
-  document.getElementById('btnJump').addEventListener('click', ()=>{ if(canJump){ vel.y = 6; canJump = false; }});
-  document.getElementById('btnInteract').addEventListener('click', tryInteract);
-
-  // name save
-  document.getElementById('saveName').addEventListener('click', ()=>{ const v = document.getElementById('nameInput').value.trim(); if(!v) return; state.farmName = v; saveState(); document.getElementById('farmName').textContent = v; document.getElementById('nameBox').style.display='none'; showToast('Nombre guardado'); });
-
-  // ----- SETTINGS UI -----
-  const overlay = document.getElementById('settingsOverlay'), openBtn = document.getElementById('openSettings'), closeSettings = document.getElementById('closeSettings');
-  const gfxSelect = document.getElementById('gfxQuality'), sensSlider = document.getElementById('sensSlider'), speedSlider = document.getElementById('speedSlider');
-  const soundSelect = document.getElementById('soundToggle'), fullscreenBtn = document.getElementById('toggleFullscreen'), resetBtn = document.getElementById('resetProgress');
-
-  // init UI from settings
-  gfxSelect.value = settings.gfx || 'med'; sensSlider.value = settings.sens || 1.1; speedSlider.value = settings.speed || 10; soundSelect.value = settings.sound || 'on';
-
-  openBtn.addEventListener('click', ()=>{ overlay.style.display='block'; });
-  closeSettings.addEventListener('click', ()=>{ overlay.style.display='none'; applyAndSaveSettings(); });
-
-  gfxSelect.addEventListener('change', (e)=>{ settings.gfx = e.target.value; applyGfxQuality(); saveSettings(); });
-  sensSlider.addEventListener('input', (e)=>{ settings.sens = Number(e.target.value); saveSettings(); });
-  speedSlider.addEventListener('input', (e)=>{ settings.speed = Number(e.target.value); saveSettings(); });
-  soundSelect.addEventListener('change', (e)=>{ settings.sound = e.target.value; saveSettings(); });
-
-  fullscreenBtn.addEventListener('click', async ()=>{
-    if(!document.fullscreenElement){ await document.documentElement.requestFullscreen().catch(()=>{}); fullscreenBtn.textContent = 'Salir'; }
-    else await document.exitFullscreen().catch(()=>{});
-  });
-
-  resetBtn.addEventListener('click', ()=>{ if(confirm('¿Borrar guardado?')){ localStorage.removeItem(LS_KEY); state={money:0,seeds:6,farmName:'Mi Granja',plants:[]}; saveState(); rebuildPlants(); showToast('Progreso reiniciado'); }});
-
-  function applyAndSaveSettings(){ // apply sens and speed immediately
-    saveSettings(); applyGfxQuality();
-  }
-
-  // toggle decorative objects (for low gfx)
-  let decorVisible = true;
-  function toggleDecor(show){
-    if(show === decorVisible) return;
-    decorVisible = show;
-    // hide/show shelves details and frames
-    plotGroup.traverse(c=>{ if(c.isMesh && c.geometry.type.includes('BoxGeometry')) c.visible = true; }); // keep plots
-    // for demo: toggle kiosk roof and fence if existed
-    kiosk.traverse(o=>{ if(o!==floorK && o!==door) o.visible = show; }); // keep floor and door at least
-  }
-
-  applyGfxQuality();
-
-  // ----- TAP TO PLANT -----
-  let lastTapTime = 0;
-  renderer.domElement.addEventListener('touchstart', (e) => {
-    if(e.touches.length === 1) {
-      const now = Date.now();
-      if(now - lastTapTime < 300) return; // prevent double tap
-      lastTapTime = now;
+  // Plantar
+  function tryPlant() {
+    if (state.seeds <= 0) {
+      showToast('No tienes semillas 🌱');
+      return;
+    }
+    
+    // Raycast al suelo
+    raycaster.setFromCamera({x: 0, y: 0}, camera);
+    const intersects = raycaster.intersectObject(ground);
+    
+    if (intersects.length > 0) {
+      const point = intersects[0].point;
       
-      // Get touch position and convert to world position
-      const touch = e.touches[0];
-      const mouse = new THREE.Vector2();
-      mouse.x = (touch.clientX / window.innerWidth) * 2 - 1;
-      mouse.y = -(touch.clientY / window.innerHeight) * 2 + 1;
+      // Encontrar plot más cercano
+      let closestPlot = null;
+      let minDistance = Infinity;
       
-      ray.setFromCamera(mouse, camera);
-      const inter = ray.intersectObject(ground);
+      plots.forEach((plot, index) => {
+        const distance = Math.hypot(point.x - plot.x, point.z - plot.z);
+        if (distance < plotSize / 2 && distance < minDistance) {
+          minDistance = distance;
+          closestPlot = {index, ...plot};
+        }
+      });
       
-      if(inter.length > 0) {
-        tryPlantAtPosition(inter[0].point);
+      if (closestPlot) {
+        // Verificar si ya hay una planta
+        const existing = state.plants.find(p => p.plotIndex === closestPlot.index);
+        if (existing) {
+          showToast('Ya hay una planta aquí 🌱');
+          return;
+        }
+        
+        // Plantar
+        state.seeds--;
+        state.plants.push({
+          plotIndex: closestPlot.index,
+          plantedAt: Date.now(),
+          type: 'basic'
+        });
+        
+        rebuildPlants();
+        updateUI();
+        showToast('¡Semilla plantada! 🌱');
+      } else {
+        showToast('Debes estar cerca de un plot para plantar');
       }
     }
-  }, {passive: true});
+  }
 
-  // ----- LOOP -----
-  let prev = performance.now();
-  function loop(){
-    requestAnimationFrame(loop);
-    const now = performance.now(); const dt = Math.min((now - prev)/1000, 0.05); prev = now;
-
-    // apply look velocities with damping
-    lookVelX *= 0.88; lookVelY *= 0.88;
-    yaw += lookVelX; pitch += lookVelY;
-    const PI2 = Math.PI/2 - 0.02; if(pitch < -PI2) pitch = -PI2; if(pitch > PI2) pitch = PI2;
-    applyCam();
-
-    // movement: forward computed only from yaw (CORREGIDO - cambié el signo)
-    const forward = joy.y; // ESTO ERA -joy.y, ahora es joy.y (corregido)
-    const right = joy.x;
-    const fwdVec = new THREE.Vector3(Math.sin(yaw),0,-Math.cos(yaw)).normalize();
-    const rightVec = new THREE.Vector3().crossVectors(new THREE.Vector3(0,1,0), fwdVec).normalize();
-    const SPEED = settings.speed || 10;
-    vel.x += (fwdVec.x * forward + rightVec.x * right) * SPEED * dt;
-    vel.z += (fwdVec.z * forward + rightVec.z * right) * SPEED * dt;
-    // damping & gravity
-    vel.x -= vel.x * 6 * dt; vel.z -= vel.z * 6 * dt; vel.y -= 18 * dt;
-    camera.position.x += vel.x * dt; camera.position.y += vel.y * dt; camera.position.z += vel.z * dt;
-    if(camera.position.y < 1.7){ camera.position.y = 1.7; vel.y = 0; canJump = true; }
-
-    // animate crops
-    const tms = Date.now();
-    for(const m of cropsGroup.children){
-      const age = Math.min(MAX_STAGE, Math.floor((tms - m.userData.plantedAt)/GROWTIME));
-      const target = 0.22 + (age/MAX_STAGE)*1.0;
-      m.scale.lerp(new THREE.Vector3(target,target,target), 0.08);
-      m.position.y = 0.12 + 0.15 * (m.scale.x - 0.22);
+  // Cosechar
+  function tryHarvest() {
+    raycaster.setFromCamera({x: 0, y: 0}, camera);
+    const intersects = raycaster.intersectObjects(cropsGroup.children, true);
+    
+    if (intersects.length > 0) {
+      const plant = intersects[0].object;
+      const data = plant.userData;
+      
+      if (data && data.plotIndex !== undefined) {
+        const plantIndex = state.plants.findIndex(p => p.plotIndex === data.plotIndex);
+        if (plantIndex !== -1) {
+          const plantData = state.plants[plantIndex];
+          const age = Date.now() - plantData.plantedAt;
+          const growTime = 12000; // 12 segundos
+          
+          if (age >= growTime) {
+            state.plants.splice(plantIndex, 1);
+            state.money += 5;
+            if (Math.random() < 0.3) state.seeds++;
+            
+            rebuildPlants();
+            updateUI();
+            showToast('¡Cosechado! +$5 💰');
+          } else {
+            showToast('La planta aún está creciendo 🌱');
+          }
+        }
+      }
+    } else {
+      showToast('Apunta a una planta madura para cosechar');
     }
+  }
 
+  // Reconstruir plantas
+  function rebuildPlants() {
+    // Limpiar plantas existentes
+    while (cropsGroup.children.length) {
+      cropsGroup.remove(cropsGroup.children[0]);
+    }
+    
+    const now = Date.now();
+    
+    state.plants.forEach(plant => {
+      const plot = plots[plant.plotIndex];
+      if (!plot) return;
+      
+      const age = now - plant.plantedAt;
+      const growTime = 12000; // 12 segundos
+      const growthStage = Math.min(age / growTime, 1);
+      
+      const size = 0.3 + growthStage * 0.7;
+      const color = growthStage >= 1 ? 0xffd54f : 0x4CAF50;
+      
+      const plantMesh = new THREE.Mesh(
+        new THREE.BoxGeometry(0.4 * size, 0.8 * size, 0.4 * size),
+        new THREE.MeshStandardMaterial({color})
+      );
+      
+      plantMesh.position.set(plot.x, 0.2 + (0.4 * size), plot.z);
+      plantMesh.castShadow = true;
+      plantMesh.userData = {plotIndex: plant.plotIndex, plantedAt: plant.plantedAt};
+      
+      cropsGroup.add(plantMesh);
+    });
+  }
+
+  // Actualizar UI
+  function updateUI() {
+    document.getElementById('money').textContent = state.money;
+    document.getElementById('seeds').textContent = state.seeds;
+    document.getElementById('farmName').textContent = state.farmName;
+  }
+
+  // Toast
+  function showToast(message, duration = 2000) {
+    const toast = document.getElementById('toast');
+    toast.textContent = message;
+    toast.style.display = 'block';
+    
+    setTimeout(() => {
+      toast.style.display = 'none';
+    }, duration);
+  }
+
+  // ----- EVENT LISTENERS -----
+  document.getElementById('btnInteract').addEventListener('click', tryInteract);
+  document.getElementById('btnPlant').addEventListener('click', tryPlant);
+  document.getElementById('btnHarvest').addEventListener('click', tryHarvest);
+  document.getElementById('btnJump').addEventListener('click', () => {
+    if (canJump) {
+      vel.y = 8;
+      canJump = false;
+    }
+  });
+
+  // Tienda
+  document.getElementById('closeStore').addEventListener('click', () => {
+    storePanel.style.display = 'none';
+  });
+
+  document.getElementById('viewCart').addEventListener('click', () => {
+    cartPanel.style.display = cartPanel.style.display === 'block' ? 'none' : 'block';
+  });
+
+  document.getElementById('closeCart').addEventListener('click', () => {
+    cartPanel.style.display = 'none';
+  });
+
+  document.getElementById('checkout').addEventListener('click', checkout);
+  document.getElementById('proceedCheckout').addEventListener('click', checkout);
+
+  // ----- GAME LOOP -----
+  let lastTime = performance.now();
+  
+  function gameLoop() {
+    requestAnimationFrame(gameLoop);
+    
+    const currentTime = performance.now();
+    const deltaTime = Math.min((currentTime - lastTime) / 1000, 0.05);
+    lastTime = currentTime;
+    
+    // Aplicar velocidades de look con damping
+    lookVelX *= 0.9;
+    lookVelY *= 0.9;
+    
+    yaw += lookVelX;
+    pitch += lookVelY;
+    
+    // Limitar pitch
+    const maxPitch = Math.PI / 2 - 0.1;
+    pitch = Math.max(-maxPitch, Math.min(maxPitch, pitch));
+    
+    applyCam();
+    
+    // Movimiento (CORREGIDO)
+    if (joy.active) {
+      const speed = 8;
+      
+      // Calcular direcciones basadas en la rotación de la cámara
+      const forward = new THREE.Vector3(
+        Math.sin(yaw), 
+        0, 
+        Math.cos(yaw) // CAMBIADO: era -Math.cos(yaw)
+      ).normalize();
+      
+      const right = new THREE.Vector3().crossVectors(
+        new THREE.Vector3(0, 1, 0), 
+        forward
+      ).normalize();
+      
+      // Aplicar movimiento
+      const moveForward = -joy.y; // NEGATIVO porque joy.y positivo es hacia abajo
+      const moveRight = joy.x;
+      
+      vel.x += (forward.x * moveForward + right.x * moveRight) * speed * deltaTime;
+      vel.z += (forward.z * moveForward + right.z * moveRight) * speed * deltaTime;
+    }
+    
+    // Fricción y gravedad
+    vel.x *= 0.9;
+    vel.z *= 0.9;
+    vel.y -= 25 * deltaTime;
+    
+    // Aplicar velocidad
+    camera.position.x += vel.x * deltaTime;
+    camera.position.y += vel.y * deltaTime;
+    camera.position.z += vel.z * deltaTime;
+    
+    // Colisión con suelo
+    if (camera.position.y < 1.7) {
+      camera.position.y = 1.7;
+      vel.y = 0;
+      canJump = true;
+    }
+    
+    // Animar plantas
+    cropsGroup.children.forEach(plant => {
+      plant.rotation.y += 0.01;
+    });
+    
+    // Animar NPC
+    if (npcGroup) {
+      npcGroup.rotation.y = Math.sin(currentTime * 0.001) * 0.1;
+    }
+    
     renderer.render(scene, camera);
   }
-  loop();
 
-  // ----- rebuild plants initial & UI sync -----
-  function rebuildAll(){ rebuildPlants(); moneyEl.textContent = state.money; seedsEl.textContent = state.seeds; farmNameEl.textContent = state.farmName; }
-  rebuildAll();
+  // ----- INICIALIZACIÓN -----
+  updateUI();
+  updateCartDisplay();
+  rebuildPlants();
+  gameLoop();
 
-  // ----- save periodically and on unload -----
-  setInterval(saveState, 5000);
-  window.addEventListener('beforeunload', saveState);
-
-  // ----- initial UI wiring -----
-  // open settings via corner icon
-  document.getElementById('openSettings').addEventListener('click', ()=>{ overlay.style.display='block'; });
-  document.getElementById('closeSettings').addEventListener('click', ()=>{ overlay.style.display='none'; applyAndSaveSettings(); });
-
-  // seeds display
-  moneyEl.textContent = state.money; seedsEl.textContent = state.seeds; farmNameEl.textContent = state.farmName;
-
-  // expose some global helpers for debugging (optional)
-  window._rbg = { state, settings, saveState, saveSettings, rebuildAll, applyGfxQuality };
+  // Resize handler
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
 
   </script>
 </body>
