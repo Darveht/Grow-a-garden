@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="es">
 <head>
@@ -67,7 +68,6 @@
   <div class="dock">
     <div class="dockInner">
       <button class="btn" id="btnJump">Saltar</button>
-      <button class="btn" id="btnPlant">Plantar</button>
       <button class="btn" id="btnHarvest">Cosechar</button>
       <button class="btn" id="btnInteract">Interactuar</button>
     </div>
@@ -259,22 +259,19 @@
     moneyEl.textContent = state.money; seedsEl.textContent = state.seeds; farmNameEl.textContent = state.farmName;
   }
 
-  function tryPlant(){
-    centerRay();
-    const inter = ray.intersectObject(ground);
-    if(!inter.length){ showToast('Apunta al suelo'); return; }
-    const pt = inter[0].point;
+  function tryPlantAtPosition(worldPos){
     let idx = -1;
     for(let i=0;i<plots.length;i++){
-      const d = Math.hypot(pt.x - plots[i].x, pt.z - plots[i].z);
+      const d = Math.hypot(worldPos.x - plots[i].x, worldPos.z - plots[i].z);
       if(d < plotSize/2) { idx = i; break; }
     }
-    if(idx === -1){ showToast('Debes apuntar a un parche'); return; }
-    if(state.plants.some(p=>p.plotIndex===idx)){ showToast('Parche ocupado'); return; }
-    if(state.seeds < PLANT_COST){ showToast('Sin semillas'); return; }
+    if(idx === -1) return false;
+    if(state.plants.some(p=>p.plotIndex===idx)){ showToast('Parche ocupado'); return false; }
+    if(state.seeds < PLANT_COST){ showToast('Sin semillas'); return false; }
     state.seeds -= PLANT_COST;
     state.plants.push({plotIndex: idx, plantedAt: Date.now()});
     saveState(); rebuildPlants(); showToast('Plantado 🌱');
+    return true;
   }
 
   function tryHarvest(){
@@ -350,7 +347,7 @@
   camera.rotation.order = 'YXZ';
   function applyCam(){ camera.rotation.set(pitch, yaw, 0, 'YXZ'); }
 
-  // movimiento con joystick (más responsivo)
+  // movimiento con joystick (CORREGIDO - invertido el forward)
   let joy = {x:0,y:0,active:false}, vel = new THREE.Vector3(), canJump=true;
   const joyEl = document.getElementById('joystick'), knob = document.getElementById('knob');
   joyEl.addEventListener('touchstart', (e)=>{ joy.active=true; e.preventDefault(); }, {passive:false});
@@ -366,7 +363,6 @@
   lookPad.addEventListener('touchend', ()=> lastLook = null);
 
   // botones
-  document.getElementById('btnPlant').addEventListener('click', tryPlant);
   document.getElementById('btnHarvest').addEventListener('click', tryHarvest);
   document.getElementById('btnJump').addEventListener('click', ()=>{ if(canJump){ vel.y = 6; canJump = false; }});
   document.getElementById('btnInteract').addEventListener('click', tryInteract);
@@ -414,6 +410,29 @@
 
   applyGfxQuality();
 
+  // ----- TAP TO PLANT -----
+  let lastTapTime = 0;
+  renderer.domElement.addEventListener('touchstart', (e) => {
+    if(e.touches.length === 1) {
+      const now = Date.now();
+      if(now - lastTapTime < 300) return; // prevent double tap
+      lastTapTime = now;
+      
+      // Get touch position and convert to world position
+      const touch = e.touches[0];
+      const mouse = new THREE.Vector2();
+      mouse.x = (touch.clientX / window.innerWidth) * 2 - 1;
+      mouse.y = -(touch.clientY / window.innerHeight) * 2 + 1;
+      
+      ray.setFromCamera(mouse, camera);
+      const inter = ray.intersectObject(ground);
+      
+      if(inter.length > 0) {
+        tryPlantAtPosition(inter[0].point);
+      }
+    }
+  }, {passive: true});
+
   // ----- LOOP -----
   let prev = performance.now();
   function loop(){
@@ -426,8 +445,9 @@
     const PI2 = Math.PI/2 - 0.02; if(pitch < -PI2) pitch = -PI2; if(pitch > PI2) pitch = PI2;
     applyCam();
 
-    // movement: forward computed only from yaw
-    const forward = -joy.y; const right = joy.x;
+    // movement: forward computed only from yaw (CORREGIDO - cambié el signo)
+    const forward = joy.y; // ESTO ERA -joy.y, ahora es joy.y (corregido)
+    const right = joy.x;
     const fwdVec = new THREE.Vector3(Math.sin(yaw),0,-Math.cos(yaw)).normalize();
     const rightVec = new THREE.Vector3().crossVectors(new THREE.Vector3(0,1,0), fwdVec).normalize();
     const SPEED = settings.speed || 10;
@@ -451,20 +471,9 @@
   }
   loop();
 
-  // ----- simple interactions: liquid detection for shelves, door, mailbox -----
-  function checkProximityHints(){
-    // optional: show toast hint when near door/kiosk or mailbox
-  }
-
   // ----- rebuild plants initial & UI sync -----
   function rebuildAll(){ rebuildPlants(); moneyEl.textContent = state.money; seedsEl.textContent = state.seeds; farmNameEl.textContent = state.farmName; }
   rebuildAll();
-
-  // ----- joystick behavior -----
-  joyEl.addEventListener('touchmove', ()=>{}); // already bound
-
-  // ----- raycasting helper for center interactions (tap) -----
-  renderer.domElement.addEventListener('touchstart', (e)=>{ if(e.touches.length===1){ /* could implement quick-tap harvest */ } }, {passive:true});
 
   // ----- save periodically and on unload -----
   setInterval(saveState, 5000);
@@ -475,7 +484,6 @@
   document.getElementById('openSettings').addEventListener('click', ()=>{ overlay.style.display='block'; });
   document.getElementById('closeSettings').addEventListener('click', ()=>{ overlay.style.display='none'; applyAndSaveSettings(); });
 
-  // shop opening: handled in tryInteract (when inside kiosk and near shelf)
   // seeds display
   moneyEl.textContent = state.money; seedsEl.textContent = state.seeds; farmNameEl.textContent = state.farmName;
 
