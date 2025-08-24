@@ -11,9 +11,275 @@
     --accent:#00d0ff;
     --accent2:#00ffa9;
     --wood:#8b5a2b;
+    --primary: #4CAF50;
+    --secondary: #FF6B35;
   }
   html,body{height:100%;margin:0;background:linear-gradient(180deg,#9ed7ff,#86c27a);font-family:system-ui,Segoe UI,Roboto,Arial;overflow:hidden}
   canvas{display:block; width:100%; height:100%; touch-action:none; -webkit-user-select:none; user-select:none;}
+  
+  /* ===== PANTALLA DE INICIO ===== */
+  .startScreen{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100vw;
+    height:100vh;
+    background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    z-index:1000;
+    color:white;
+  }
+  
+  .gameTitle{
+    font-size:clamp(2rem, 8vw, 4rem);
+    font-weight:900;
+    text-align:center;
+    margin-bottom:1rem;
+    background:linear-gradient(45deg, #00d0ff, #00ffa9);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    background-clip:text;
+    text-shadow:0 0 30px rgba(0,208,255,0.5);
+  }
+  
+  .gameSubtitle{
+    font-size:1.2rem;
+    opacity:0.9;
+    margin-bottom:3rem;
+    text-align:center;
+  }
+  
+  .mainMenu{
+    display:flex;
+    flex-direction:column;
+    gap:1rem;
+    min-width:300px;
+  }
+  
+  .menuBtn{
+    padding:15px 30px;
+    background:var(--glass);
+    backdrop-filter:blur(10px);
+    border:2px solid rgba(255,255,255,0.2);
+    border-radius:15px;
+    color:white;
+    font-size:1.1rem;
+    font-weight:600;
+    cursor:pointer;
+    transition:all 0.3s ease;
+    text-align:center;
+  }
+  
+  .menuBtn:hover{
+    background:rgba(255,255,255,0.1);
+    border-color:var(--accent);
+    transform:translateY(-2px);
+    box-shadow:0 10px 25px rgba(0,208,255,0.3);
+  }
+  
+  .menuBtn.primary{
+    background:linear-gradient(135deg, var(--primary), #45a049);
+    border-color:var(--primary);
+  }
+  
+  .menuBtn.secondary{
+    background:linear-gradient(135deg, var(--secondary), #e55a2b);
+    border-color:var(--secondary);
+  }
+  
+  /* ===== PANEL DE CONFIGURACIONES ===== */
+  .settingsPanel{
+    position:fixed;
+    top:50%;
+    left:50%;
+    transform:translate(-50%, -50%);
+    width:min(500px, 90vw);
+    max-height:80vh;
+    background:var(--glass);
+    backdrop-filter:blur(15px);
+    border:2px solid rgba(255,255,255,0.2);
+    border-radius:20px;
+    padding:2rem;
+    color:white;
+    display:none;
+    z-index:1100;
+    overflow-y:auto;
+  }
+  
+  .settingsHeader{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:2rem;
+    border-bottom:2px solid rgba(255,255,255,0.1);
+    padding-bottom:1rem;
+  }
+  
+  .settingsHeader h3{
+    margin:0;
+    font-size:1.5rem;
+    color:var(--accent);
+  }
+  
+  .closeBtn{
+    background:none;
+    border:none;
+    color:white;
+    font-size:1.5rem;
+    cursor:pointer;
+    padding:5px;
+    border-radius:50%;
+    width:35px;
+    height:35px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  
+  .closeBtn:hover{
+    background:rgba(255,255,255,0.1);
+  }
+  
+  .settingGroup{
+    margin-bottom:1.5rem;
+  }
+  
+  .settingLabel{
+    display:block;
+    margin-bottom:0.5rem;
+    font-weight:600;
+    color:var(--accent2);
+  }
+  
+  .settingControl{
+    width:100%;
+    padding:10px;
+    background:rgba(255,255,255,0.1);
+    border:1px solid rgba(255,255,255,0.2);
+    border-radius:8px;
+    color:white;
+    font-size:1rem;
+  }
+  
+  .settingControl:focus{
+    outline:none;
+    border-color:var(--accent);
+    box-shadow:0 0 10px rgba(0,208,255,0.3);
+  }
+  
+  .slider{
+    -webkit-appearance:none;
+    appearance:none;
+    height:6px;
+    background:rgba(255,255,255,0.2);
+    border-radius:3px;
+    outline:none;
+  }
+  
+  .slider::-webkit-slider-thumb{
+    -webkit-appearance:none;
+    appearance:none;
+    width:20px;
+    height:20px;
+    background:var(--accent);
+    border-radius:50%;
+    cursor:pointer;
+  }
+  
+  .checkbox{
+    width:auto;
+    margin-right:10px;
+  }
+  
+  /* ===== PANEL ONLINE ===== */
+  .onlinePanel{
+    position:fixed;
+    top:50%;
+    left:50%;
+    transform:translate(-50%, -50%);
+    width:min(600px, 90vw);
+    max-height:80vh;
+    background:var(--glass);
+    backdrop-filter:blur(15px);
+    border:2px solid rgba(255,255,255,0.2);
+    border-radius:20px;
+    padding:2rem;
+    color:white;
+    display:none;
+    z-index:1100;
+    overflow-y:auto;
+  }
+  
+  .onlineOptions{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(250px, 1fr));
+    gap:1rem;
+    margin-top:1rem;
+  }
+  
+  .onlineCard{
+    background:rgba(255,255,255,0.1);
+    border:2px solid rgba(255,255,255,0.2);
+    border-radius:15px;
+    padding:1.5rem;
+    text-align:center;
+    cursor:pointer;
+    transition:all 0.3s ease;
+  }
+  
+  .onlineCard:hover{
+    border-color:var(--accent);
+    transform:translateY(-5px);
+    box-shadow:0 15px 30px rgba(0,208,255,0.2);
+  }
+  
+  .onlineCard h4{
+    margin:0 0 1rem 0;
+    color:var(--accent2);
+    font-size:1.3rem;
+  }
+  
+  .onlineCard p{
+    opacity:0.8;
+    font-size:0.9rem;
+    line-height:1.4;
+  }
+  
+  .roomInput{
+    display:flex;
+    gap:10px;
+    margin-top:1rem;
+  }
+  
+  .roomInput input{
+    flex:1;
+    padding:10px;
+    background:rgba(255,255,255,0.1);
+    border:1px solid rgba(255,255,255,0.2);
+    border-radius:8px;
+    color:white;
+  }
+  
+  /* ===== ANIMACIONES ===== */
+  @keyframes fadeIn{
+    from{opacity:0;transform:translateY(20px)}
+    to{opacity:1;transform:translateY(0)}
+  }
+  
+  @keyframes slideIn{
+    from{transform:translate(-50%, -60%);opacity:0}
+    to{transform:translate(-50%, -50%);opacity:1}
+  }
+  
+  .fadeIn{animation:fadeIn 0.6s ease-out}
+  .slideIn{animation:slideIn 0.4s ease-out}
+  
+  /* ===== ESTILOS DEL JUEGO (cuando está activo) ===== */
+  .gameScreen{display:none}
+  .gameScreen.active{display:block}
   
   .hud{position:fixed;left:12px;right:12px;top:12px;display:flex;gap:8px;z-index:120;pointer-events:none}
   .chip{pointer-events:auto;background:var(--glass);backdrop-filter:blur(8px);color:#fff;padding:8px 10px;border-radius:12px;border:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:8px}
@@ -60,79 +326,229 @@
   
   .touchIndicator{position:absolute;pointer-events:none;width:30px;height:30px;border:3px solid var(--accent);border-radius:50%;animation:touchPulse 0.5s ease-out}
   @keyframes touchPulse{from{transform:scale(0);opacity:1}to{transform:scale(1);opacity:0}}
+  
+  .backBtn{
+    position:absolute;
+    top:20px;
+    left:20px;
+    background:var(--glass);
+    backdrop-filter:blur(10px);
+    border:2px solid rgba(255,255,255,0.2);
+    border-radius:10px;
+    color:white;
+    padding:10px 15px;
+    cursor:pointer;
+    font-weight:600;
+  }
+  
+  .backBtn:hover{
+    background:rgba(255,255,255,0.1);
+    border-color:var(--accent);
+  }
 </style>
 </head>
 <body>
-  <div class="hud">
-    <div class="chip">💰 <span class="val" id="money">50</span></div>
-    <div style="margin-left:auto" class="chip" id="farmTag">🏷️ <span id="farmName">Mi Granja</span></div>
-  </div>
-
-  <!-- Panel de Inventario -->
-  <div class="inventoryPanel">
-    <div class="inventoryTitle">📦 Inventario</div>
-    <div class="inventoryGrid" id="inventoryGrid">
-      <!-- Se genera dinámicamente -->
+  <!-- ===== PANTALLA DE INICIO ===== -->
+  <div class="startScreen" id="startScreen">
+    <div class="fadeIn">
+      <h1 class="gameTitle">🌱 Garden Simulator</h1>
+      <p class="gameSubtitle">Cultiva, comercia y construye tu imperio agrícola</p>
+      
+      <div class="mainMenu">
+        <button class="menuBtn primary" id="btnPlay">🎮 Jugar Solo</button>
+        <button class="menuBtn secondary" id="btnOnline">🌐 Modo Online</button>
+        <button class="menuBtn" id="btnSettings">⚙️ Configuraciones</button>
+        <button class="menuBtn" id="btnCredits">📜 Créditos</button>
+      </div>
     </div>
   </div>
 
-  <div class="dock">
-    <div class="dockInner">
-      <button class="btn" id="btnJump">Saltar</button>
-      <button class="btn" id="btnInteract">Interactuar</button>
+  <!-- ===== PANEL DE CONFIGURACIONES ===== -->
+  <div class="settingsPanel slideIn" id="settingsPanel">
+    <div class="settingsHeader">
+      <h3>⚙️ Configuraciones</h3>
+      <button class="closeBtn" id="closeSettings">✕</button>
     </div>
+    
+    <div class="settingGroup">
+      <label class="settingLabel">👤 Nombre del Jugador</label>
+      <input type="text" class="settingControl" id="playerName" placeholder="Ingresa tu nombre" value="Granjero">
+    </div>
+    
+    <div class="settingGroup">
+      <label class="settingLabel">🏷️ Nombre de la Granja</label>
+      <input type="text" class="settingControl" id="farmNameInput" placeholder="Nombre de tu granja" value="Mi Granja">
+    </div>
+    
+    <div class="settingGroup">
+      <label class="settingLabel">🔊 Volumen de Efectos: <span id="sfxValue">80</span>%</label>
+      <input type="range" class="settingControl slider" id="sfxVolume" min="0" max="100" value="80">
+    </div>
+    
+    <div class="settingGroup">
+      <label class="settingLabel">🎵 Volumen de Música: <span id="musicValue">60</span>%</label>
+      <input type="range" class="settingControl slider" id="musicVolume" min="0" max="100" value="60">
+    </div>
+    
+    <div class="settingGroup">
+      <label class="settingLabel">💰 Dinero Inicial</label>
+      <select class="settingControl" id="startingMoney">
+        <option value="50">Principiante - $50</option>
+        <option value="100">Intermedio - $100</option>
+        <option value="200">Avanzado - $200</option>
+        <option value="500">Experto - $500</option>
+      </select>
+    </div>
+    
+    <div class="settingGroup">
+      <label class="settingLabel">
+        <input type="checkbox" class="checkbox" id="autoSave" checked>
+        💾 Guardado Automático
+      </label>
+    </div>
+    
+    <div class="settingGroup">
+      <label class="settingLabel">
+        <input type="checkbox" class="checkbox" id="showTutorial" checked>
+        📖 Mostrar Tutorial
+      </label>
+    </div>
+    
+    <div class="settingGroup">
+      <label class="settingLabel">🎨 Tema Visual</label>
+      <select class="settingControl" id="visualTheme">
+        <option value="default">Clásico</option>
+        <option value="dark">Oscuro</option>
+        <option value="colorful">Colorido</option>
+        <option value="minimal">Minimalista</option>
+      </select>
+    </div>
+    
+    <button class="menuBtn primary" id="saveSettings" style="width:100%;margin-top:1rem">💾 Guardar Configuración</button>
   </div>
 
-  <div class="joystick" id="joystick"><div class="joyBase"></div><div class="joyKnob" id="knob"></div></div>
-  <div class="lookPad" id="lookPad"></div>
-
-  <!-- Tienda -->
-  <div class="storePanel" id="storePanel">
-    <div class="storeHeader">
-      <h3>🏪 Garden Mart - Semillas Premium</h3>
-      <button class="btn" id="closeStore">Cerrar</button>
+  <!-- ===== PANEL ONLINE ===== -->
+  <div class="onlinePanel slideIn" id="onlinePanel">
+    <div class="settingsHeader">
+      <h3>🌐 Modo Online</h3>
+      <button class="closeBtn" id="closeOnline">✕</button>
     </div>
-    <div class="seedGrid" id="seedGrid"></div>
-    <div style="display:flex;gap:12px;justify-content:center">
-      <button class="btn" id="viewCart">Ver Carrito (<span id="cartCount">0</span>)</button>
-      <button class="btn" id="checkout">Pagar</button>
+    
+    <div class="onlineOptions">
+      <div class="onlineCard" id="createRoom">
+        <h4>🏗️ Crear Sala</h4>
+        <p>Crea una nueva sala de juego y invita a tus amigos a cultivar juntos. Tú serás el host y podrás configurar las reglas.</p>
+      </div>
+      
+      <div class="onlineCard" id="joinRoom">
+        <h4>🚪 Unirse a Sala</h4>
+        <p>Únete a una sala existente usando un código de invitación. Colabora con otros jugadores en una gran granja comunitaria.</p>
+        <div class="roomInput">
+          <input type="text" placeholder="Código de sala" id="roomCode" maxlength="6">
+          <button class="menuBtn" id="joinRoomBtn">Unirse</button>
+        </div>
+      </div>
+      
+      <div class="onlineCard" id="quickMatch">
+        <h4>⚡ Partida Rápida</h4>
+        <p>Encuentra automáticamente una sala disponible y comienza a jugar inmediatamente con otros agricultores en línea.</p>
+      </div>
+      
+      <div class="onlineCard" id="leaderboard">
+        <h4>🏆 Clasificación</h4>
+        <p>Mira las mejores granjas del mundo, compite por ser el mejor agricultor y gana recompensas exclusivas.</p>
+      </div>
     </div>
+    
+    <button class="backBtn" id="backFromOnline">← Volver</button>
   </div>
 
-  <!-- Carrito -->
-  <div class="cartPanel" id="cartPanel">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-      <h4>🛒 Carrito</h4>
-      <button class="btn" id="closeCart">✕</button>
+  <!-- ===== JUEGO (Oculto inicialmente) ===== -->
+  <div class="gameScreen" id="gameScreen">
+    <div class="hud">
+      <div class="chip">💰 <span class="val" id="money">50</span></div>
+      <div style="margin-left:auto" class="chip" id="farmTag">🏷️ <span id="farmName">Mi Granja</span></div>
     </div>
-    <div id="cartItems"></div>
-    <div class="cartTotal">
-      Total: $<span id="cartTotalAmount">0</span>
+
+    <!-- Panel de Inventario -->
+    <div class="inventoryPanel">
+      <div class="inventoryTitle">📦 Inventario</div>
+      <div class="inventoryGrid" id="inventoryGrid">
+        <!-- Se genera dinámicamente -->
+      </div>
     </div>
-    <button class="btn" id="proceedCheckout" style="width:100%;margin-top:12px">Proceder al Pago</button>
-  </div>
 
-  <!-- Caja de Entrega -->
-  <div class="deliveryBox" id="deliveryBox">
-    <div>📦 ¡Tu Pedido Ha Llegado!</div>
-    <div class="ticketInfo">
-      <div>🧾 Ticket #<span id="orderNumber">001</span></div>
-      <div>📋 <span id="orderItems">Items del pedido</span></div>
+    <div class="dock">
+      <div class="dockInner">
+        <button class="btn" id="btnJump">Saltar</button>
+        <button class="btn" id="btnInteract">Interactuar</button>
+        <button class="btn" id="btnMenu">Menú</button>
+      </div>
     </div>
-    <div>👆 Toca para abrir la caja</div>
-  </div>
 
-  <!-- Diálogo del NPC -->
-  <div class="npcDialog" id="npcDialog">
-    <div class="npcName">Roberto - Vendedor</div>
-    <div id="npcMessage">¡Bienvenido a Garden Mart! ¿En qué puedo ayudarte?</div>
-  </div>
+    <div class="joystick" id="joystick"><div class="joyBase"></div><div class="joyKnob" id="knob"></div></div>
+    <div class="lookPad" id="lookPad"></div>
 
-  <div class="toast" id="toast"></div>
+    <!-- Tienda -->
+    <div class="storePanel" id="storePanel">
+      <div class="storeHeader">
+        <h3>🏪 Garden Mart - Semillas Premium</h3>
+        <button class="btn" id="closeStore">Cerrar</button>
+      </div>
+      <div class="seedGrid" id="seedGrid"></div>
+      <div style="display:flex;gap:12px;justify-content:center">
+        <button class="btn" id="viewCart">Ver Carrito (<span id="cartCount">0</span>)</button>
+        <button class="btn" id="checkout">Pagar</button>
+      </div>
+    </div>
+
+    <!-- Carrito -->
+    <div class="cartPanel" id="cartPanel">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <h4>🛒 Carrito</h4>
+        <button class="btn" id="closeCart">✕</button>
+      </div>
+      <div id="cartItems"></div>
+      <div class="cartTotal">
+        Total: $<span id="cartTotalAmount">0</span>
+      </div>
+      <button class="btn" id="proceedCheckout" style="width:100%;margin-top:12px">Proceder al Pago</button>
+    </div>
+
+    <!-- Caja de Entrega -->
+    <div class="deliveryBox" id="deliveryBox">
+      <div>📦 ¡Tu Pedido Ha Llegado!</div>
+      <div class="ticketInfo">
+        <div>🧾 Ticket #<span id="orderNumber">001</span></div>
+        <div>📋 <span id="orderItems">Items del pedido</span></div>
+      </div>
+      <div>👆 Toca para abrir la caja</div>
+    </div>
+
+    <!-- Diálogo del NPC -->
+    <div class="npcDialog" id="npcDialog">
+      <div class="npcName">Roberto - Vendedor</div>
+      <div id="npcMessage">¡Bienvenido a Garden Mart! ¿En qué puedo ayudarte?</div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/three@0.156.0/build/three.min.js"></script>
 
   <script>
+  // ----- CONFIGURACIÓN GLOBAL -----
+  let gameConfig = {
+    playerName: 'Granjero',
+    farmName: 'Mi Granja',
+    sfxVolume: 80,
+    musicVolume: 60,
+    startingMoney: 50,
+    autoSave: true,
+    showTutorial: true,
+    visualTheme: 'default'
+  };
+
   // ----- ESTADO DEL JUEGO -----
   let state = { 
     money: 50, 
@@ -148,7 +564,8 @@
       pepper: 0
     },
     orderCounter: 1,
-    npcState: 'idle' // idle, walking, delivering
+    npcState: 'idle', // idle, walking, delivering
+    gameStarted: false
   };
 
   // Catálogo de semillas expandido
@@ -161,279 +578,529 @@
     {id: 'pepper', name: 'Pimiento', price: 7, desc: 'Picante y colorido, alta ganancia', icon: '🌶️', color: '#F44336', growTime: 16000}
   ];
 
-  // ----- THREE.JS SETUP -----
-  const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x9ed7ff);
-  
-  const camera = new THREE.PerspectiveCamera(70, innerWidth/innerHeight, 0.1, 600);
-  camera.position.set(0, 1.7, 15);
-  
-  const renderer = new THREE.WebGLRenderer({antialias: true});
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-  renderer.setSize(innerWidth, innerHeight);
-  renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-  document.body.appendChild(renderer.domElement);
+  // ----- MANEJO DE PANTALLAS -----
+  const startScreen = document.getElementById('startScreen');
+  const gameScreen = document.getElementById('gameScreen');
+  const settingsPanel = document.getElementById('settingsPanel');
+  const onlinePanel = document.getElementById('onlinePanel');
 
-  // Iluminación mejorada
-  const lightHemi = new THREE.HemisphereLight(0xffffff, 0x4444ff, 0.8);
-  scene.add(lightHemi);
-  
-  const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
-  dirLight.position.set(10, 15, 5);
-  dirLight.castShadow = true;
-  dirLight.shadow.mapSize.width = 2048;
-  dirLight.shadow.mapSize.height = 2048;
-  scene.add(dirLight);
-
-  // Suelo
-  const ground = new THREE.Mesh(
-    new THREE.BoxGeometry(200, 0.4, 200), 
-    new THREE.MeshStandardMaterial({color: 0x6fbf5f})
-  );
-  ground.position.y = -0.2;
-  ground.receiveShadow = true;
-  scene.add(ground);
-
-  // ----- PLOTS -----
-  const plots = [];
-  const plotGroup = new THREE.Group();
-  scene.add(plotGroup);
-  
-  const plotSize = 2.2;
-  const gap = 0.8;
-  for(let rz = 0; rz < 3; rz++) {
-    for(let cx = 0; cx < 4; cx++) {
-      const x = -6 + cx * (plotSize + gap);
-      const z = -2 + rz * (plotSize + gap);
-      plots.push({x, z});
-      
-      // Suelo del plot
-      const soil = new THREE.Mesh(
-        new THREE.BoxGeometry(plotSize, 0.14, plotSize), 
-        new THREE.MeshStandardMaterial({color: 0x5a3d2b})
-      );
-      soil.position.set(x, 0.02, z);
-      soil.receiveShadow = true;
-      soil.userData = {type: 'plot', plotIndex: plots.length - 1};
-      plotGroup.add(soil);
-      
-      // Marco de madera
-      const frameMat = new THREE.MeshStandardMaterial({color: 0x8b5a2b});
-      const thickness = 0.16;
-      
-      const borders = [
-        {pos: [x, 0.2, z - plotSize/2 - thickness/2], size: [plotSize + thickness, 0.3, thickness]},
-        {pos: [x, 0.2, z + plotSize/2 + thickness/2], size: [plotSize + thickness, 0.3, thickness]},
-        {pos: [x - plotSize/2 - thickness/2, 0.2, z], size: [thickness, 0.3, plotSize + thickness]},
-        {pos: [x + plotSize/2 + thickness/2, 0.2, z], size: [thickness, 0.3, plotSize + thickness]}
-      ];
-      
-      borders.forEach(border => {
-        const frame = new THREE.Mesh(new THREE.BoxGeometry(...border.size), frameMat);
-        frame.position.set(...border.pos);
-        frame.castShadow = true;
-        plotGroup.add(frame);
-      });
+  // Cargar configuración guardada
+  function loadSettings() {
+    const saved = localStorage.getItem('gardenSimulatorConfig');
+    if (saved) {
+      gameConfig = {...gameConfig, ...JSON.parse(saved)};
+      applySettings();
     }
   }
 
-  // ----- TIENDA REALISTA -----
-  const storeGroup = new THREE.Group();
-  
-  // Edificio principal
-  const storeBase = new THREE.Mesh(
-    new THREE.BoxGeometry(12, 4, 8), 
-    new THREE.MeshStandardMaterial({color: 0xe3f2fd})
-  );
-  storeBase.position.set(0, 2, -15);
-  storeBase.castShadow = true;
-  storeBase.userData = {type: 'store'};
-  storeGroup.add(storeBase);
-
-  // Techo
-  const roof = new THREE.Mesh(
-    new THREE.BoxGeometry(13, 0.3, 9), 
-    new THREE.MeshStandardMaterial({color: 0x1976d2})
-  );
-  roof.position.set(0, 4.2, -15);
-  storeGroup.add(roof);
-
-  // Letrero
-  const sign = new THREE.Mesh(
-    new THREE.BoxGeometry(8, 1, 0.2), 
-    new THREE.MeshStandardMaterial({color: 0x4CAF50})
-  );
-  sign.position.set(0, 3.5, -10.9);
-  storeGroup.add(sign);
-
-  // Puerta de cristal
-  const door = new THREE.Mesh(
-    new THREE.BoxGeometry(2, 3, 0.1), 
-    new THREE.MeshStandardMaterial({
-      color: 0x81c784, 
-      transparent: true, 
-      opacity: 0.7
-    })
-  );
-  door.position.set(0, 1.5, -10.95);
-  door.userData = {type: 'store'};
-  storeGroup.add(door);
-
-  // NPC Vendedor
-  const npcGroup = new THREE.Group();
-  
-  // Cuerpo del NPC
-  const npcBody = new THREE.Mesh(
-    new THREE.BoxGeometry(0.6, 1.2, 0.4), 
-    new THREE.MeshStandardMaterial({color: 0x2196F3})
-  );
-  npcBody.position.y = 1.2;
-  npcGroup.add(npcBody);
-  
-  // Cabeza
-  const npcHead = new THREE.Mesh(
-    new THREE.BoxGeometry(0.4, 0.4, 0.4), 
-    new THREE.MeshStandardMaterial({color: 0xffdbcb})
-  );
-  npcHead.position.y = 2.0;
-  npcGroup.add(npcHead);
-  
-  // Brazos
-  const armLeft = new THREE.Mesh(
-    new THREE.BoxGeometry(0.2, 0.8, 0.2), 
-    new THREE.MeshStandardMaterial({color: 0xffdbcb})
-  );
-  armLeft.position.set(-0.5, 1.2, 0);
-  npcGroup.add(armLeft);
-  
-  const armRight = armLeft.clone();
-  armRight.position.set(0.5, 1.2, 0);
-  npcGroup.add(armRight);
-  
-  npcGroup.position.set(1.5, 0, -14);
-  npcGroup.userData = {type: 'npc'};
-  storeGroup.add(npcGroup);
-  
-  scene.add(storeGroup);
-
-  // ----- PLANTAS -----
-  const cropsGroup = new THREE.Group();
-  scene.add(cropsGroup);
-
-  // ----- MOVIMIENTO CORREGIDO -----
-  let yaw = 0, pitch = 0;
-  camera.rotation.order = 'YXZ';
-  
-  function applyCam() {
-    camera.rotation.set(pitch, yaw, 0, 'YXZ');
+  // Aplicar configuración a la UI
+  function applySettings() {
+    document.getElementById('playerName').value = gameConfig.playerName;
+    document.getElementById('farmNameInput').value = gameConfig.farmName;
+    document.getElementById('sfxVolume').value = gameConfig.sfxVolume;
+    document.getElementById('musicVolume').value = gameConfig.musicVolume;
+    document.getElementById('startingMoney').value = gameConfig.startingMoney;
+    document.getElementById('autoSave').checked = gameConfig.autoSave;
+    document.getElementById('showTutorial').checked = gameConfig.showTutorial;
+    document.getElementById('visualTheme').value = gameConfig.visualTheme;
+    
+    document.getElementById('sfxValue').textContent = gameConfig.sfxVolume;
+    document.getElementById('musicValue').textContent = gameConfig.musicVolume;
+    
+    // Aplicar configuración al juego
+    state.money = gameConfig.startingMoney;
+    state.farmName = gameConfig.farmName;
   }
 
-  // Joystick (MOVIMIENTO CORREGIDO)
+  // Guardar configuración
+  function saveSettings() {
+    gameConfig.playerName = document.getElementById('playerName').value;
+    gameConfig.farmName = document.getElementById('farmNameInput').value;
+    gameConfig.sfxVolume = document.getElementById('sfxVolume').value;
+    gameConfig.musicVolume = document.getElementById('musicVolume').value;
+    gameConfig.startingMoney = parseInt(document.getElementById('startingMoney').value);
+    gameConfig.autoSave = document.getElementById('autoSave').checked;
+    gameConfig.showTutorial = document.getElementById('showTutorial').checked;
+    gameConfig.visualTheme = document.getElementById('visualTheme').value;
+    
+    localStorage.setItem('gardenSimulatorConfig', JSON.stringify(gameConfig));
+    
+    // Aplicar cambios inmediatos
+    state.money = gameConfig.startingMoney;
+    state.farmName = gameConfig.farmName;
+    updateUI();
+    
+    showToast('¡Configuración guardada! ✅');
+  }
+
+  // Iniciar el juego
+  function startGame() {
+    startScreen.style.display = 'none';
+    gameScreen.classList.add('active');
+    state.gameStarted = true;
+    
+    // Inicializar el juego 3D
+    initializeGame();
+    
+    if (gameConfig.showTutorial) {
+      setTimeout(() => {
+        showToast('¡Bienvenido! Usa el joystick para moverte y toca los elementos para interactuar 🎮');
+      }, 1000);
+    }
+  }
+
+  // ----- EVENT LISTENERS PARA MENÚS -----
+  document.getElementById('btnPlay').addEventListener('click', startGame);
+
+  document.getElementById('btnSettings').addEventListener('click', () => {
+    settingsPanel.style.display = 'block';
+  });
+
+  document.getElementById('btnOnline').addEventListener('click', () => {
+    onlinePanel.style.display = 'block';
+  });
+
+  document.getElementById('btnCredits').addEventListener('click', () => {
+    showToast('Garden Simulator v1.0 - Desarrollado con ❤️ y Three.js');
+  });
+
+  document.getElementById('closeSettings').addEventListener('click', () => {
+    settingsPanel.style.display = 'none';
+  });
+
+  document.getElementById('closeOnline').addEventListener('click', () => {
+    onlinePanel.style.display = 'none';
+  });
+
+  document.getElementById('backFromOnline').addEventListener('click', () => {
+    onlinePanel.style.display = 'none';
+  });
+
+  document.getElementById('saveSettings').addEventListener('click', saveSettings);
+
+  // Sliders de volumen
+  document.getElementById('sfxVolume').addEventListener('input', (e) => {
+    document.getElementById('sfxValue').textContent = e.target.value;
+  });
+
+  document.getElementById('musicVolume').addEventListener('input', (e) => {
+    document.getElementById('musicValue').textContent = e.target.value;
+  });
+
+  // Opciones online
+  document.getElementById('createRoom').addEventListener('click', () => {
+    showToast('🏗️ Función de crear sala próximamente...');
+  });
+
+  document.getElementById('joinRoomBtn').addEventListener('click', () => {
+    const code = document.getElementById('roomCode').value;
+    if (code.length === 6) {
+      showToast(`🚪 Intentando unirse a sala: ${code}...`);
+    } else {
+      showToast('❌ Ingresa un código válido de 6 caracteres');
+    }
+  });
+
+  document.getElementById('quickMatch').addEventListener('click', () => {
+    showToast('⚡ Buscando partida rápida...');
+  });
+
+  document.getElementById('leaderboard').addEventListener('click', () => {
+    showToast('🏆 Tabla de clasificación próximamente...');
+  });
+
+  // Botón de menú en el juego
+  document.getElementById('btnMenu').addEventListener('click', () => {
+    if (confirm('¿Regresar al menú principal? (El progreso se guardará)')) {
+      if (gameConfig.autoSave) {
+        // Aquí se guardaría el progreso
+        localStorage.setItem('gardenSimulatorSave', JSON.stringify(state));
+      }
+      
+      startScreen.style.display = 'flex';
+      gameScreen.classList.remove('active');
+      state.gameStarted = false;
+    }
+  });
+
+  // ----- THREE.JS SETUP -----
+  let scene, camera, renderer;
+  let plots = [], cropsGroup, plotGroup, storeGroup, npcGroup;
+  let yaw = 0, pitch = 0;
   let joy = {x: 0, y: 0, active: false};
   let vel = new THREE.Vector3();
   let canJump = true;
-  
-  const joyEl = document.getElementById('joystick');
-  const knob = document.getElementById('knob');
-  
-  joyEl.addEventListener('touchstart', (e) => {
-    joy.active = true;
-    e.preventDefault();
-  }, {passive: false});
-  
-  joyEl.addEventListener('touchmove', (e) => {
-    e.preventDefault();
-    const touch = e.touches[0];
-    const rect = joyEl.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
-    
-    let dx = touch.clientX - centerX;
-    let dy = touch.clientY - centerY;
-    
-    const maxRadius = rect.width * 0.42;
-    const distance = Math.hypot(dx, dy);
-    const clamp = distance > maxRadius ? maxRadius / distance : 1;
-    
-    dx *= clamp;
-    dy *= clamp;
-    
-    knob.style.transform = `translate(${dx}px, ${dy}px)`;
-    
-    joy.x = dx / maxRadius;
-    joy.y = dy / maxRadius;
-  }, {passive: false});
-  
-  joyEl.addEventListener('touchend', () => {
-    joy.active = false;
-    joy.x = 0;
-    joy.y = 0;
-    knob.style.transform = 'translate(-50%, -50%)';
-  });
+  let currentDelivery = null;
 
-  // Look pad
-  const lookPad = document.getElementById('lookPad');
-  let lastLook = null;
-  let lookVelX = 0, lookVelY = 0;
-  
-  lookPad.addEventListener('touchstart', e => {
-    lastLook = e.touches[0];
-  }, {passive: true});
-  
-  lookPad.addEventListener('touchmove', e => {
-    const touch = e.touches[0];
-    if (!lastLook) {
-      lastLook = touch;
-      return;
+  function initializeGame() {
+    if (state.gameStarted && scene) return; // Ya inicializado
+
+    // ----- THREE.JS SETUP -----
+    scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x9ed7ff);
+    
+    camera = new THREE.PerspectiveCamera(70, innerWidth/innerHeight, 0.1, 600);
+    camera.position.set(0, 1.7, 15);
+    
+    renderer = new THREE.WebGLRenderer({antialias: true});
+    renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+    renderer.setSize(innerWidth, innerHeight);
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    
+    // Limpiar canvas previo si existe
+    const existingCanvas = document.querySelector('canvas');
+    if (existingCanvas) {
+      existingCanvas.remove();
     }
     
-    const dx = touch.clientX - lastLook.clientX;
-    const dy = touch.clientY - lastLook.clientY;
-    lastLook = touch;
+    gameScreen.appendChild(renderer.domElement);
+
+    // Iluminación mejorada
+    const lightHemi = new THREE.HemisphereLight(0xffffff, 0x4444ff, 0.8);
+    scene.add(lightHemi);
     
-    const sensitivity = 0.001;
-    lookVelX += (-dx * sensitivity);
-    lookVelY += (-dy * sensitivity);
-  }, {passive: true});
-  
-  lookPad.addEventListener('touchend', () => {
-    lastLook = null;
-  });
+    const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+    dirLight.position.set(10, 15, 5);
+    dirLight.castShadow = true;
+    dirLight.shadow.mapSize.width = 2048;
+    dirLight.shadow.mapSize.height = 2048;
+    scene.add(dirLight);
 
-  // ----- RAYCAST PARA TOQUE -----
-  const raycaster = new THREE.Raycaster();
-  const mouse = new THREE.Vector2();
+    // Suelo
+    const ground = new THREE.Mesh(
+      new THREE.BoxGeometry(200, 0.4, 200), 
+      new THREE.MeshStandardMaterial({color: 0x6fbf5f})
+    );
+    ground.position.y = -0.2;
+    ground.receiveShadow = true;
+    scene.add(ground);
 
-  // Toque en la pantalla principal
-  renderer.domElement.addEventListener('touchend', (e) => {
-    if (e.touches.length === 0 && e.changedTouches.length === 1) {
-      const touch = e.changedTouches[0];
-      
-      // Calcular posición normalizada
-      mouse.x = (touch.clientX / window.innerWidth) * 2 - 1;
-      mouse.y = -(touch.clientY / window.innerHeight) * 2 + 1;
-      
-      // Hacer raycast
-      raycaster.setFromCamera(mouse, camera);
-      const intersects = raycaster.intersectObjects(scene.children, true);
-      
-      if (intersects.length > 0) {
-        handleTouch(intersects[0], touch);
+    // ----- PLOTS -----
+    plots = [];
+    plotGroup = new THREE.Group();
+    scene.add(plotGroup);
+    
+    const plotSize = 2.2;
+    const gap = 0.8;
+    for(let rz = 0; rz < 3; rz++) {
+      for(let cx = 0; cx < 4; cx++) {
+        const x = -6 + cx * (plotSize + gap);
+        const z = -2 + rz * (plotSize + gap);
+        plots.push({x, z});
+        
+        // Suelo del plot
+        const soil = new THREE.Mesh(
+          new THREE.BoxGeometry(plotSize, 0.14, plotSize), 
+          new THREE.MeshStandardMaterial({color: 0x5a3d2b})
+        );
+        soil.position.set(x, 0.02, z);
+        soil.receiveShadow = true;
+        soil.userData = {type: 'plot', plotIndex: plots.length - 1};
+        plotGroup.add(soil);
+        
+        // Marco de madera
+        const frameMat = new THREE.MeshStandardMaterial({color: 0x8b5a2b});
+        const thickness = 0.16;
+        
+        const borders = [
+          {pos: [x, 0.2, z - plotSize/2 - thickness/2], size: [plotSize + thickness, 0.3, thickness]},
+          {pos: [x, 0.2, z + plotSize/2 + thickness/2], size: [plotSize + thickness, 0.3, thickness]},
+          {pos: [x - plotSize/2 - thickness/2, 0.2, z], size: [thickness, 0.3, plotSize + thickness]},
+          {pos: [x + plotSize/2 + thickness/2, 0.2, z], size: [thickness, 0.3, plotSize + thickness]}
+        ];
+        
+        borders.forEach(border => {
+          const frame = new THREE.Mesh(new THREE.BoxGeometry(...border.size), frameMat);
+          frame.position.set(...border.pos);
+          frame.castShadow = true;
+          plotGroup.add(frame);
+        });
       }
     }
-  });
 
-  // Manejar toques
+    // ----- TIENDA REALISTA -----
+    storeGroup = new THREE.Group();
+    
+    // Edificio principal
+    const storeBase = new THREE.Mesh(
+      new THREE.BoxGeometry(12, 4, 8), 
+      new THREE.MeshStandardMaterial({color: 0xe3f2fd})
+    );
+    storeBase.position.set(0, 2, -15);
+    storeBase.castShadow = true;
+    storeBase.userData = {type: 'store'};
+    storeGroup.add(storeBase);
+
+    // Techo
+    const roof = new THREE.Mesh(
+      new THREE.BoxGeometry(13, 0.3, 9), 
+      new THREE.MeshStandardMaterial({color: 0x1976d2})
+    );
+    roof.position.set(0, 4.2, -15);
+    storeGroup.add(roof);
+
+    // Letrero
+    const sign = new THREE.Mesh(
+      new THREE.BoxGeometry(8, 1, 0.2), 
+      new THREE.MeshStandardMaterial({color: 0x4CAF50})
+    );
+    sign.position.set(0, 3.5, -10.9);
+    storeGroup.add(sign);
+
+    // Puerta de cristal
+    const door = new THREE.Mesh(
+      new THREE.BoxGeometry(2, 3, 0.1), 
+      new THREE.MeshStandardMaterial({
+        color: 0x81c784, 
+        transparent: true, 
+        opacity: 0.7
+      })
+    );
+    door.position.set(0, 1.5, -10.95);
+    door.userData = {type: 'store'};
+    storeGroup.add(door);
+
+    // NPC Vendedor
+    npcGroup = new THREE.Group();
+    
+    // Cuerpo del NPC
+    const npcBody = new THREE.Mesh(
+      new THREE.BoxGeometry(0.6, 1.2, 0.4), 
+      new THREE.MeshStandardMaterial({color: 0x2196F3})
+    );
+    npcBody.position.y = 1.2;
+    npcGroup.add(npcBody);
+    
+    // Cabeza
+    const npcHead = new THREE.Mesh(
+      new THREE.BoxGeometry(0.4, 0.4, 0.4), 
+      new THREE.MeshStandardMaterial({color: 0xffdbcb})
+    );
+    npcHead.position.y = 2.0;
+    npcGroup.add(npcHead);
+    
+    // Brazos
+    const armLeft = new THREE.Mesh(
+      new THREE.BoxGeometry(0.2, 0.8, 0.2), 
+      new THREE.MeshStandardMaterial({color: 0xffdbcb})
+    );
+    armLeft.position.set(-0.5, 1.2, 0);
+    npcGroup.add(armLeft);
+    
+    const armRight = armLeft.clone();
+    armRight.position.set(0.5, 1.2, 0);
+    npcGroup.add(armRight);
+    
+    npcGroup.position.set(1.5, 0, -14);
+    npcGroup.userData = {type: 'npc'};
+    storeGroup.add(npcGroup);
+    
+    scene.add(storeGroup);
+
+    // ----- PLANTAS -----
+    cropsGroup = new THREE.Group();
+    scene.add(cropsGroup);
+
+    // Configurar controles
+    setupControls();
+    
+    // Inicializar UI del juego
+    updateUI();
+    updateInventory();
+    updateCartDisplay();
+    rebuildPlants();
+    
+    // Iniciar game loop
+    gameLoop();
+  }
+
+  // [RESTO DEL CÓDIGO DEL JUEGO - CONTROLES, LÓGICA, ETC.]
+  function setupControls() {
+    camera.rotation.order = 'YXZ';
+    
+    function applyCam() {
+      camera.rotation.set(pitch, yaw, 0, 'YXZ');
+    }
+
+    // Joystick
+    const joyEl = document.getElementById('joystick');
+    const knob = document.getElementById('knob');
+    
+    joyEl.addEventListener('touchstart', (e) => {
+      joy.active = true;
+      e.preventDefault();
+    }, {passive: false});
+    
+    joyEl.addEventListener('touchmove', (e) => {
+      e.preventDefault();
+      const touch = e.touches[0];
+      const rect = joyEl.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      
+      let dx = touch.clientX - centerX;
+      let dy = touch.clientY - centerY;
+      
+      const maxRadius = rect.width * 0.42;
+      const distance = Math.hypot(dx, dy);
+      const clamp = distance > maxRadius ? maxRadius / distance : 1;
+      
+      dx *= clamp;
+      dy *= clamp;
+      
+      knob.style.transform = `translate(${dx}px, ${dy}px)`;
+      
+      joy.x = dx / maxRadius;
+      joy.y = dy / maxRadius;
+    }, {passive: false});
+    
+    joyEl.addEventListener('touchend', () => {
+      joy.active = false;
+      joy.x = 0;
+      joy.y = 0;
+      knob.style.transform = 'translate(-50%, -50%)';
+    });
+
+    // Look pad
+    const lookPad = document.getElementById('lookPad');
+    let lastLook = null;
+    let lookVelX = 0, lookVelY = 0;
+    
+    lookPad.addEventListener('touchstart', e => {
+      lastLook = e.touches[0];
+    }, {passive: true});
+    
+    lookPad.addEventListener('touchmove', e => {
+      const touch = e.touches[0];
+      if (!lastLook) {
+        lastLook = touch;
+        return;
+      }
+      
+      const dx = touch.clientX - lastLook.clientX;
+      const dy = touch.clientY - lastLook.clientY;
+      lastLook = touch;
+      
+      const sensitivity = 0.001;
+      lookVelX += (-dx * sensitivity);
+      lookVelY += (-dy * sensitivity);
+    }, {passive: true});
+    
+    lookPad.addEventListener('touchend', () => {
+      lastLook = null;
+    });
+
+    // Raycast para toque
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2();
+
+    renderer.domElement.addEventListener('touchend', (e) => {
+      if (e.touches.length === 0 && e.changedTouches.length === 1) {
+        const touch = e.changedTouches[0];
+        
+        mouse.x = (touch.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(touch.clientY / window.innerHeight) * 2 + 1;
+        
+        raycaster.setFromCamera(mouse, camera);
+        const intersects = raycaster.intersectObjects(scene.children, true);
+        
+        if (intersects.length > 0) {
+          handleTouch(intersects[0], touch);
+        }
+      }
+    });
+
+    // Game loop interno
+    let lastTime = performance.now();
+    
+    window.gameLoop = function() {
+      if (!state.gameStarted) return;
+      
+      requestAnimationFrame(gameLoop);
+      
+      const currentTime = performance.now();
+      const deltaTime = Math.min((currentTime - lastTime) / 1000, 0.05);
+      lastTime = currentTime;
+      
+      // Aplicar velocidades de look con damping
+      lookVelX *= 0.9;
+      lookVelY *= 0.9;
+      
+      yaw += lookVelX;
+      pitch += lookVelY;
+      
+      const maxPitch = Math.PI / 2 - 0.1;
+      pitch = Math.max(-maxPitch, Math.min(maxPitch, pitch));
+      
+      applyCam();
+      
+      // Movimiento
+      if (joy.active) {
+        const speed = 8;
+        
+        const forward = new THREE.Vector3(
+          Math.sin(yaw), 
+          0, 
+          Math.cos(yaw)
+        ).normalize();
+        
+        const right = new THREE.Vector3().crossVectors(
+          new THREE.Vector3(0, 1, 0), 
+          forward
+        ).normalize();
+        
+        const moveForward = -joy.y;
+        const moveRight = joy.x;
+        
+        vel.x += (forward.x * moveForward + right.x * moveRight) * speed * deltaTime;
+        vel.z += (forward.z * moveForward + right.z * moveRight) * speed * deltaTime;
+      }
+      
+      // Fricción y gravedad
+      vel.x *= 0.9;
+      vel.z *= 0.9;
+      vel.y -= 25 * deltaTime;
+      
+      // Aplicar velocidad
+      camera.position.x += vel.x * deltaTime;
+      camera.position.y += vel.y * deltaTime;
+      camera.position.z += vel.z * deltaTime;
+      
+      // Colisión con suelo
+      if (camera.position.y < 1.7) {
+        camera.position.y = 1.7;
+        vel.y = 0;
+        canJump = true;
+      }
+      
+      // Actualizar sistema de entrega
+      updateDelivery();
+      
+      // Animar plantas
+      if (cropsGroup) {
+        cropsGroup.children.forEach(plant => {
+          plant.rotation.y += 0.01;
+        });
+      }
+      
+      // Animar NPC
+      if (state.npcState === 'idle' && npcGroup) {
+        npcGroup.rotation.y = Math.sin(currentTime * 0.001) * 0.1;
+      }
+      
+      renderer.render(scene, camera);
+    };
+  }
+
+  // [RESTO DE FUNCIONES DEL JUEGO - handleTouch, updateInventory, etc.]
   function handleTouch(intersect, touch) {
     const object = intersect.object;
     const userData = object.userData;
     
-    // Mostrar indicador visual de toque
     showTouchIndicator(touch.clientX, touch.clientY);
     
     if (userData.type === 'store' || userData.type === 'npc') {
-      // Verificar distancia antes de abrir tienda
       const distance = camera.position.distanceTo(intersect.point);
       if (distance < 8) {
         openStore();
@@ -447,7 +1114,6 @@
     }
   }
 
-  // Indicador visual de toque
   function showTouchIndicator(x, y) {
     const indicator = document.createElement('div');
     indicator.className = 'touchIndicator';
@@ -460,7 +1126,6 @@
     }, 500);
   }
 
-  // Manejar toque en plot
   function handlePlotTouch(plotIndex) {
     const existing = state.plants.find(p => p.plotIndex === plotIndex);
     if (existing) {
@@ -468,7 +1133,6 @@
       return;
     }
     
-    // Buscar una semilla disponible en el inventario
     const availableSeed = Object.keys(state.inventory).find(seedId => state.inventory[seedId] > 0);
     
     if (!availableSeed) {
@@ -476,7 +1140,6 @@
       return;
     }
     
-    // Plantar
     state.inventory[availableSeed]--;
     state.plants.push({
       plotIndex: plotIndex,
@@ -490,7 +1153,6 @@
     showToast(`¡${seedCatalog.find(s => s.id === availableSeed).name} plantada! 🌱`);
   }
 
-  // Manejar toque en planta
   function handlePlantTouch(plotIndex) {
     const plantIndex = state.plants.findIndex(p => p.plotIndex === plotIndex);
     if (plantIndex === -1) return;
@@ -501,11 +1163,9 @@
     const growTime = seedInfo ? seedInfo.growTime : 12000;
     
     if (age >= growTime) {
-      // Cosechar
       state.plants.splice(plantIndex, 1);
       state.money += 5;
       
-      // Posibilidad de obtener semillas
       if (Math.random() < 0.3) {
         state.inventory[plantData.type] = (state.inventory[plantData.type] || 0) + 1;
       }
@@ -520,7 +1180,6 @@
     }
   }
 
-  // ----- INVENTARIO -----
   function updateInventory() {
     const grid = document.getElementById('inventoryGrid');
     grid.innerHTML = '';
@@ -536,225 +1195,9 @@
     });
   }
 
-  // ----- SISTEMA DE TIENDA -----
-  const storePanel = document.getElementById('storePanel');
-  const cartPanel = document.getElementById('cartPanel');
-  const seedGrid = document.getElementById('seedGrid');
-  const cartItems = document.getElementById('cartItems');
-  const cartCount = document.getElementById('cartCount');
-  const cartTotalAmount = document.getElementById('cartTotalAmount');
-  const npcDialog = document.getElementById('npcDialog');
-  const npcMessage = document.getElementById('npcMessage');
-
-  function openStore() {
-    storePanel.style.display = 'block';
-    renderSeedCatalog();
-    showNPCDialog('¡Bienvenido a Garden Mart! Tenemos las mejores semillas 🌱');
-  }
-
-  // Renderizar catálogo de semillas
-  function renderSeedCatalog() {
-    seedGrid.innerHTML = '';
-    seedCatalog.forEach(seed => {
-      const div = document.createElement('div');
-      div.className = 'seedDisplay';
-      div.innerHTML = `
-        <div class="seedIcon" style="background: linear-gradient(45deg, ${seed.color}, ${seed.color}aa)">${seed.icon}</div>
-        <div class="seedName">${seed.name}</div>
-        <div class="seedPrice">$${seed.price}</div>
-        <div class="seedDesc">${seed.desc}</div>
-        <button class="btn addToCart" data-seed-id="${seed.id}">Agregar al Carrito</button>
-      `;
-      seedGrid.appendChild(div);
-    });
-  }
-
-  // Agregar al carrito
-  seedGrid.addEventListener('click', (e) => {
-    if (e.target.classList.contains('addToCart')) {
-      const seedId = e.target.dataset.seedId;
-      const seed = seedCatalog.find(s => s.id === seedId);
-      
-      const existing = state.cart.find(item => item.id === seedId);
-      if (existing) {
-        existing.quantity++;
-      } else {
-        state.cart.push({...seed, quantity: 1});
-      }
-      
-      updateCartDisplay();
-      showToast(`${seed.name} agregado al carrito!`);
-    }
-  });
-
-  // Actualizar display del carrito
-  function updateCartDisplay() {
-    cartItems.innerHTML = '';
-    let total = 0;
-    
-    state.cart.forEach(item => {
-      const div = document.createElement('div');
-      div.className = 'cartItem';
-      div.innerHTML = `
-        <div>
-          <div>${item.icon} ${item.name}</div>
-          <div style="font-size:12px">Cantidad: ${item.quantity}</div>
-        </div>
-        <div>
-          <div>$${item.price * item.quantity}</div>
-          <button class="btn removeItem" data-seed-id="${item.id}" style="font-size:12px;padding:2px 6px">-</button>
-        </div>
-      `;
-      cartItems.appendChild(div);
-      total += item.price * item.quantity;
-    });
-    
-    cartCount.textContent = state.cart.reduce((sum, item) => sum + item.quantity, 0);
-    cartTotalAmount.textContent = total;
-  }
-
-  // Remover del carrito
-  cartItems.addEventListener('click', (e) => {
-    if (e.target.classList.contains('removeItem')) {
-      const seedId = e.target.dataset.seedId;
-      const index = state.cart.findIndex(item => item.id === seedId);
-      if (index !== -1) {
-        if (state.cart[index].quantity > 1) {
-          state.cart[index].quantity--;
-        } else {
-          state.cart.splice(index, 1);
-        }
-        updateCartDisplay();
-      }
-    }
-  });
-
-  // ----- SISTEMA DE ENTREGA INTERACTIVO -----
-  let currentDelivery = null;
-
-  function startDelivery() {
-    if (currentDelivery) return;
-    
-    const orderNumber = state.orderCounter++;
-    const orderItems = state.cart.map(item => `${item.quantity}x ${item.name}`).join(', ');
-    
-    currentDelivery = {
-      orderNumber,
-      orderItems,
-      items: [...state.cart],
-      npcStartPos: {...npcGroup.position},
-      npcTargetPos: {x: 0, y: 0, z: 5}, // Cerca del jugador/granja
-      deliveryStartTime: Date.now(),
-      phase: 'walking' // walking, delivered, completed
-    };
-    
-    state.npcState = 'walking';
-    showNPCDialog(`¡Perfecto! Llevaré tu pedido #${orderNumber} a tu granja. ¡Espérame allí! 🚶‍♂️`);
-  }
-
-  function updateDelivery() {
-    if (!currentDelivery || state.npcState !== 'walking') return;
-    
-    const elapsed = Date.now() - currentDelivery.deliveryStartTime;
-    const walkDuration = 5000; // 5 segundos de caminata
-    const progress = Math.min(elapsed / walkDuration, 1);
-    
-    // Mover NPC hacia la granja
-    npcGroup.position.x = currentDelivery.npcStartPos.x + 
-      (currentDelivery.npcTargetPos.x - currentDelivery.npcStartPos.x) * progress;
-    npcGroup.position.z = currentDelivery.npcStartPos.z + 
-      (currentDelivery.npcTargetPos.z - currentDelivery.npcStartPos.z) * progress;
-    
-    // Animación de caminar
-    npcGroup.rotation.y = Math.sin(elapsed * 0.01) * 0.1;
-    
-    if (progress >= 1 && currentDelivery.phase === 'walking') {
-      // NPC llegó, mostrar caja de entrega
-      currentDelivery.phase = 'delivered';
-      state.npcState = 'delivering';
-      showDeliveryBox();
-    }
-  }
-
-  function showDeliveryBox() {
-    const deliveryBox = document.getElementById('deliveryBox');
-    const orderNumber = document.getElementById('orderNumber');
-    const orderItems = document.getElementById('orderItems');
-    
-    orderNumber.textContent = currentDelivery.orderNumber.toString().padStart(3, '0');
-    orderItems.textContent = currentDelivery.orderItems;
-    
-    deliveryBox.style.display = 'block';
-    showNPCDialog('¡Tu pedido ha llegado! Toca la caja para abrir tu paquete 📦');
-  }
-
-  // Clic en la caja de entrega
-  document.getElementById('deliveryBox').addEventListener('click', () => {
-    if (!currentDelivery || currentDelivery.phase !== 'delivered') return;
-    
-    // Agregar items al inventario
-    currentDelivery.items.forEach(item => {
-      state.inventory[item.id] = (state.inventory[item.id] || 0) + item.quantity;
-    });
-    
-    // Ocultar caja
-    document.getElementById('deliveryBox').style.display = 'none';
-    
-    // Completar entrega
-    currentDelivery.phase = 'completed';
-    state.npcState = 'returning';
-    
-    // NPC regresa a la tienda
-    setTimeout(() => {
-      npcGroup.position.set(1.5, 0, -14);
-      state.npcState = 'idle';
-      currentDelivery = null;
-    }, 2000);
-    
-    updateInventory();
-    updateUI();
-    showToast('¡Semillas agregadas a tu inventario! 📦✨');
-    showNPCDialog('¡Gracias por tu compra! ¡Que tengas una excelente cosecha! 🌱');
-  });
-
-  // Checkout
-  function checkout() {
-    const total = state.cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-    
-    if (state.money < total) {
-      showToast('No tienes suficiente dinero 💰');
-      return;
-    }
-    
-    if (state.cart.length === 0) {
-      showToast('El carrito está vacío 🛒');
-      return;
-    }
-    
-    state.money -= total;
-    storePanel.style.display = 'none';
-    cartPanel.style.display = 'none';
-    
-    startDelivery();
-    
-    state.cart = [];
-    updateCartDisplay();
-    updateUI();
-  }
-
-  // Diálogo del NPC
-  function showNPCDialog(message, duration = 3000) {
-    npcMessage.textContent = message;
-    npcDialog.style.display = 'block';
-    
-    setTimeout(() => {
-      npcDialog.style.display = 'none';
-    }, duration);
-  }
-
-  // Reconstruir plantas
   function rebuildPlants() {
-    // Limpiar plantas existentes
+    if (!cropsGroup) return;
+    
     while (cropsGroup.children.length) {
       cropsGroup.remove(cropsGroup.children[0]);
     }
@@ -786,13 +1229,11 @@
     });
   }
 
-  // Actualizar UI
   function updateUI() {
     document.getElementById('money').textContent = state.money;
     document.getElementById('farmName').textContent = state.farmName;
   }
 
-  // Toast
   function showToast(message, duration = 2000) {
     const toast = document.getElementById('toast');
     toast.textContent = message;
@@ -803,9 +1244,23 @@
     }, duration);
   }
 
-  // ----- EVENT LISTENERS -----
+  // Funciones de tienda simplificadas
+  function openStore() {
+    document.getElementById('storePanel').style.display = 'block';
+    showToast('¡Bienvenido a Garden Mart! 🏪');
+  }
+
+  function updateCartDisplay() {
+    document.getElementById('cartCount').textContent = state.cart.reduce((sum, item) => sum + item.quantity, 0);
+    document.getElementById('cartTotalAmount').textContent = state.cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  }
+
+  function updateDelivery() {
+    // Placeholder para sistema de entrega
+  }
+
+  // Event listeners adicionales del juego
   document.getElementById('btnInteract').addEventListener('click', () => {
-    // Buscar objetos interactuables cerca
     const playerPos = camera.position;
     const storeDistance = playerPos.distanceTo(new THREE.Vector3(0, 1.7, -12));
     
@@ -823,115 +1278,22 @@
     }
   });
 
-  // Tienda
   document.getElementById('closeStore').addEventListener('click', () => {
-    storePanel.style.display = 'none';
+    document.getElementById('storePanel').style.display = 'none';
   });
-
-  document.getElementById('viewCart').addEventListener('click', () => {
-    cartPanel.style.display = cartPanel.style.display === 'block' ? 'none' : 'block';
-  });
-
-  document.getElementById('closeCart').addEventListener('click', () => {
-    cartPanel.style.display = 'none';
-  });
-
-  document.getElementById('checkout').addEventListener('click', checkout);
-  document.getElementById('proceedCheckout').addEventListener('click', checkout);
-
-  // ----- GAME LOOP -----
-  let lastTime = performance.now();
-  
-  function gameLoop() {
-    requestAnimationFrame(gameLoop);
-    
-    const currentTime = performance.now();
-    const deltaTime = Math.min((currentTime - lastTime) / 1000, 0.05);
-    lastTime = currentTime;
-    
-    // Aplicar velocidades de look con damping
-    lookVelX *= 0.9;
-    lookVelY *= 0.9;
-    
-    yaw += lookVelX;
-    pitch += lookVelY;
-    
-    // Limitar pitch
-    const maxPitch = Math.PI / 2 - 0.1;
-    pitch = Math.max(-maxPitch, Math.min(maxPitch, pitch));
-    
-    applyCam();
-    
-    // Movimiento
-    if (joy.active) {
-      const speed = 8;
-      
-      // Calcular direcciones basadas en la rotación de la cámara
-      const forward = new THREE.Vector3(
-        Math.sin(yaw), 
-        0, 
-        Math.cos(yaw)
-      ).normalize();
-      
-      const right = new THREE.Vector3().crossVectors(
-        new THREE.Vector3(0, 1, 0), 
-        forward
-      ).normalize();
-      
-      // Aplicar movimiento
-      const moveForward = -joy.y;
-      const moveRight = joy.x;
-      
-      vel.x += (forward.x * moveForward + right.x * moveRight) * speed * deltaTime;
-      vel.z += (forward.z * moveForward + right.z * moveRight) * speed * deltaTime;
-    }
-    
-    // Fricción y gravedad
-    vel.x *= 0.9;
-    vel.z *= 0.9;
-    vel.y -= 25 * deltaTime;
-    
-    // Aplicar velocidad
-    camera.position.x += vel.x * deltaTime;
-    camera.position.y += vel.y * deltaTime;
-    camera.position.z += vel.z * deltaTime;
-    
-    // Colisión con suelo
-    if (camera.position.y < 1.7) {
-      camera.position.y = 1.7;
-      vel.y = 0;
-      canJump = true;
-    }
-    
-    // Actualizar sistema de entrega
-    updateDelivery();
-    
-    // Animar plantas
-    cropsGroup.children.forEach(plant => {
-      plant.rotation.y += 0.01;
-    });
-    
-    // Animar NPC
-    if (state.npcState === 'idle') {
-      npcGroup.rotation.y = Math.sin(currentTime * 0.001) * 0.1;
-    }
-    
-    renderer.render(scene, camera);
-  }
-
-  // ----- INICIALIZACIÓN -----
-  updateUI();
-  updateInventory();
-  updateCartDisplay();
-  rebuildPlants();
-  gameLoop();
 
   // Resize handler
   window.addEventListener('resize', () => {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    if (camera && renderer) {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    }
   });
+
+  // ----- INICIALIZACIÓN -----
+  loadSettings();
+  applySettings();
 
   </script>
 </body>
