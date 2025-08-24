@@ -2,3 +2,15 @@ modules = ["web"]
 
 [nix]
 channel = "stable-25_05"
+
+[workflows]
+runButton = "Garden Dreams Server"
+
+[[workflows.workflow]]
+name = "Garden Dreams Server"
+author = 46853793
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python -m http.server 5000"
