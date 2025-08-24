@@ -4,26 +4,28 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
-<title>🌸 Garden Dreams - Aventura Mágica de Plantas</title>
+<title>🌟 Garden Dreams - Aventura Mágica de Plantas</title>
 <style>
   :root{
-    --glass: rgba(255, 192, 203, 0.3);
-    --accent:#ff69b4;
-    --accent2:#ffb6c1;
-    --primary: #ff1493;
-    --secondary: #ffc0cb;
-    --pastel-pink: #ffb3ba;
-    --pastel-purple: #bae1ff;
-    --pastel-green: #baffc9;
-    --pastel-yellow: #ffffba;
+    --glass: rgba(59, 130, 246, 0.15);
+    --accent: #1877f2;
+    --accent2: #42a5f5;
+    --primary: #1565c0;
+    --secondary: #64b5f6;
+    --blue-primary: #1877f2;
+    --blue-secondary: #42a5f5;
+    --blue-light: #bbdefb;
+    --blue-dark: #0d47a1;
+    --success: #4caf50;
+    --warning: #ff9800;
   }
   
   html,body{
     height:100%;
     margin:0;
-    font-family:'Comic Sans MS', cursive, system-ui;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     overflow:hidden;
-    background: linear-gradient(135deg, #ffb3ba 0%, #ffdfba 25%, #ffffba 50%, #baffc9 75%, #bae1ff 100%);
+    background: linear-gradient(135deg, #1565c0 0%, #42a5f5 50%, #64b5f6 100%);
   }
   
   canvas{
@@ -35,14 +37,14 @@
     user-select:none;
   }
   
-  /* ===== INTRO ANIMADO PRE-JUEGO ===== */
+  /* ===== INTRO ANIMADO CON VISTA 3D DE DRONE ===== */
   .preIntro{
     position:fixed;
     top:0;
     left:0;
     width:100vw;
     height:100vh;
-    background: linear-gradient(45deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+    background: linear-gradient(45deg, #0d47a1 0%, #1565c0 30%, #1877f2 70%, #42a5f5 100%);
     display:flex;
     flex-direction:column;
     align-items:center;
@@ -52,173 +54,38 @@
     overflow:hidden;
   }
   
-  .introScene{
+  .droneView{
     position:relative;
     width:100%;
     height:100%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    flex-direction:column;
-  }
-  
-  .sky{
-    position:absolute;
-    top:0;
-    left:0;
-    width:100%;
-    height:60%;
-    background: linear-gradient(to bottom, #87CEEB 0%, #98FB98 100%);
     overflow:hidden;
-  }
-  
-  .cloud{
-    position:absolute;
-    background:white;
-    border-radius:50px;
-    opacity:0.8;
-    animation: moveClouds 3s linear infinite;
-  }
-  
-  .cloud:before,
-  .cloud:after{
-    content:'';
-    position:absolute;
-    background:white;
-    border-radius:50px;
-  }
-  
-  .cloud1{
-    width:80px;
-    height:30px;
-    top:20%;
-    animation-duration:4s;
-    animation-delay:-1s;
-  }
-  
-  .cloud1:before{
-    width:40px;
-    height:40px;
-    top:-20px;
-    left:10px;
-  }
-  
-  .cloud1:after{
-    width:50px;
-    height:50px;
-    top:-25px;
-    right:10px;
-  }
-  
-  .cloud2{
-    width:60px;
-    height:25px;
-    top:40%;
-    animation-duration:3s;
-    animation-delay:-2s;
-  }
-  
-  .cloud2:before{
-    width:30px;
-    height:30px;
-    top:-15px;
-    left:15px;
-  }
-  
-  .cloud2:after{
-    width:35px;
-    height:35px;
-    top:-18px;
-    right:15px;
-  }
-  
-  @keyframes moveClouds{
-    0%{transform:translateX(-100px)}
-    100%{transform:translateX(calc(100vw + 100px))}
-  }
-  
-  .ground{
-    position:absolute;
-    bottom:0;
-    left:0;
-    width:100%;
-    height:40%;
-    background: linear-gradient(to bottom, #98FB98 0%, #228B22 100%);
-  }
-  
-  .plantContainer{
-    position:relative;
-    z-index:10;
-    display:flex;
-    align-items:flex-end;
-    height:200px;
-  }
-  
-  .plant{
-    font-size:4rem;
-    animation:growPlant 3s ease-in-out;
-    transform-origin:bottom center;
-  }
-  
-  @keyframes growPlant{
-    0%{transform:scaleY(0) scaleX(0); opacity:0}
-    50%{transform:scaleY(0.5) scaleX(0.5); opacity:0.5}
-    100%{transform:scaleY(1) scaleX(1); opacity:1}
-  }
-  
-  .rainDrop{
-    position:absolute;
-    width:2px;
-    height:20px;
-    background: linear-gradient(to bottom, transparent 0%, #4169E1 100%);
-    animation:fall linear infinite;
-  }
-  
-  @keyframes fall{
-    0%{transform:translateY(-100vh)}
-    100%{transform:translateY(100vh)}
-  }
-  
-  .lightning{
-    position:absolute;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background:white;
-    opacity:0;
-    animation:flash 0.1s ease-in-out;
-    pointer-events:none;
-  }
-  
-  @keyframes flash{
-    0%, 100%{opacity:0}
-    50%{opacity:0.8}
   }
   
   .skipButton{
     position:absolute;
-    bottom:30px;
-    right:30px;
-    padding:15px 25px;
-    background:rgba(255,255,255,0.2);
-    backdrop-filter:blur(10px);
-    border:2px solid rgba(255,255,255,0.3);
-    border-radius:25px;
+    bottom:40px;
+    right:40px;
+    padding:18px 30px;
+    background:rgba(255,255,255,0.1);
+    backdrop-filter:blur(15px);
+    border:2px solid rgba(255,255,255,0.2);
+    border-radius:30px;
     color:white;
-    font-size:1rem;
+    font-size:1.1rem;
     font-weight:bold;
     cursor:pointer;
     transition:all 0.3s ease;
     z-index:20;
+    text-shadow:0 2px 4px rgba(0,0,0,0.3);
   }
   
   .skipButton:hover{
-    background:rgba(255,255,255,0.3);
-    transform:scale(1.1);
+    background:rgba(255,255,255,0.2);
+    transform:scale(1.05);
+    box-shadow:0 8px 25px rgba(0,0,0,0.3);
   }
   
-  /* ===== PANTALLA DE INICIO ===== */
+  /* ===== PANTALLA DE INICIO ESTILO ROBLOX ===== */
   .startScreen{
     position:fixed;
     top:0;
@@ -226,85 +93,96 @@
     width:100vw;
     height:100vh;
     background: 
-      radial-gradient(circle at 20% 80%, rgba(255,179,186,0.6) 0%, transparent 50%),
-      radial-gradient(circle at 80% 20%, rgba(186,225,255,0.6) 0%, transparent 50%),
-      radial-gradient(circle at 40% 40%, rgba(255,255,186,0.4) 0%, transparent 50%),
-      linear-gradient(135deg, #ffccd5 0%, #ffccd5 25%, #ffd1ff 50%, #e1d5ff 75%, #d5e1ff 100%);
+      radial-gradient(circle at 20% 80%, rgba(24,119,242,0.4) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(66,165,245,0.4) 0%, transparent 50%),
+      radial-gradient(circle at 40% 40%, rgba(13,71,161,0.3) 0%, transparent 50%),
+      linear-gradient(135deg, #0d47a1 0%, #1565c0 25%, #1877f2 50%, #42a5f5 75%, #64b5f6 100%);
     display:none;
     flex-direction:column;
     align-items:center;
     justify-content:center;
     z-index:1000;
-    color:#fff;
+    color:white;
   }
   
   .gameTitle{
-    font-size:clamp(2rem, 8vw, 4rem);
+    font-size:clamp(2.5rem, 10vw, 5rem);
     font-weight:900;
     text-align:center;
     margin-bottom:1rem;
-    background:linear-gradient(45deg, #ff1493, #ff69b4, #ffc0cb);
+    background:linear-gradient(45deg, #ffffff, #bbdefb, #64b5f6);
     -webkit-background-clip:text;
     -webkit-text-fill-color:transparent;
     background-clip:text;
-    text-shadow:0 0 30px rgba(255,20,147,0.5);
+    text-shadow:0 0 40px rgba(255,255,255,0.5);
     animation:titleGlow 2s ease-in-out infinite alternate;
   }
   
   @keyframes titleGlow{
-    0%{filter:drop-shadow(0 0 10px rgba(255,20,147,0.3))}
-    100%{filter:drop-shadow(0 0 20px rgba(255,20,147,0.8))}
+    0%{filter:drop-shadow(0 0 20px rgba(255,255,255,0.4))}
+    100%{filter:drop-shadow(0 0 40px rgba(187,222,251,0.8))}
   }
   
   .gameSubtitle{
-    font-size:1.4rem;
+    font-size:1.6rem;
     opacity:0.9;
     margin-bottom:3rem;
     text-align:center;
-    color:#ff69b4;
-    text-shadow:2px 2px 4px rgba(0,0,0,0.1);
+    color:#bbdefb;
+    text-shadow:2px 2px 8px rgba(0,0,0,0.3);
+    font-weight:600;
   }
   
   .mainMenu{
     display:flex;
     flex-direction:column;
-    gap:1.5rem;
-    min-width:350px;
+    gap:2rem;
+    min-width:400px;
   }
   
   .menuBtn{
-    padding:18px 35px;
-    background:rgba(255,182,193,0.4);
-    backdrop-filter:blur(15px);
-    border:3px solid rgba(255,105,180,0.3);
-    border-radius:25px;
-    color:#ff1493;
-    font-size:1.2rem;
-    font-weight:800;
+    padding:20px 40px;
+    background:rgba(255,255,255,0.1);
+    backdrop-filter:blur(20px);
+    border:3px solid rgba(255,255,255,0.2);
+    border-radius:15px;
+    color:white;
+    font-size:1.3rem;
+    font-weight:700;
     cursor:pointer;
     transition:all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     text-align:center;
-    text-shadow:1px 1px 2px rgba(255,255,255,0.5);
-    box-shadow:0 8px 20px rgba(255,20,147,0.15);
+    text-shadow:2px 2px 4px rgba(0,0,0,0.3);
+    box-shadow:0 10px 30px rgba(0,0,0,0.2);
   }
   
   .menuBtn:hover{
-    background:rgba(255,182,193,0.6);
-    border-color:#ff69b4;
-    transform:translateY(-5px) scale(1.05);
-    box-shadow:0 15px 30px rgba(255,20,147,0.3);
+    background:rgba(255,255,255,0.2);
+    border-color:rgba(255,255,255,0.4);
+    transform:translateY(-8px) scale(1.05);
+    box-shadow:0 20px 40px rgba(0,0,0,0.3);
   }
   
   .menuBtn.primary{
-    background:linear-gradient(135deg, var(--pastel-pink), #ff69b4);
-    border-color:#ff1493;
-    color:white;
+    background:linear-gradient(135deg, #1877f2, #42a5f5);
+    border-color:#1565c0;
+    box-shadow:0 10px 30px rgba(24,119,242,0.4);
+  }
+  
+  .menuBtn.primary:hover{
+    background:linear-gradient(135deg, #1565c0, #1877f2);
+    box-shadow:0 20px 40px rgba(24,119,242,0.6);
   }
   
   .menuBtn.secondary{
-    background:linear-gradient(135deg, var(--pastel-purple), #da70d6);
-    border-color:#ba55d3;
-    color:white;
+    background:linear-gradient(135deg, #42a5f5, #64b5f6);
+    border-color:#1976d2;
+    box-shadow:0 10px 30px rgba(66,165,245,0.4);
+  }
+  
+  .menuBtn.secondary:hover{
+    background:linear-gradient(135deg, #1976d2, #42a5f5);
+    box-shadow:0 20px 40px rgba(66,165,245,0.6);
   }
   
   /* ===== PANEL DE CONFIGURACIONES ===== */
@@ -313,18 +191,18 @@
     top:50%;
     left:50%;
     transform:translate(-50%, -50%);
-    width:min(500px, 90vw);
-    max-height:80vh;
-    background:rgba(255,182,193,0.4);
-    backdrop-filter:blur(20px);
-    border:3px solid rgba(255,105,180,0.4);
-    border-radius:25px;
-    padding:2rem;
-    color:#ff1493;
+    width:min(550px, 90vw);
+    max-height:85vh;
+    background:rgba(13,71,161,0.95);
+    backdrop-filter:blur(25px);
+    border:3px solid rgba(66,165,245,0.4);
+    border-radius:20px;
+    padding:2.5rem;
+    color:white;
     display:none;
     z-index:1100;
     overflow-y:auto;
-    box-shadow:0 20px 60px rgba(255,20,147,0.2);
+    box-shadow:0 25px 80px rgba(0,0,0,0.4);
   }
   
   .settingsHeader{
@@ -332,91 +210,95 @@
     justify-content:space-between;
     align-items:center;
     margin-bottom:2rem;
-    border-bottom:2px solid rgba(255,105,180,0.3);
+    border-bottom:2px solid rgba(66,165,245,0.3);
     padding-bottom:1rem;
   }
   
   .settingsHeader h3{
     margin:0;
-    font-size:1.8rem;
-    color:#ff1493;
-    text-shadow:1px 1px 2px rgba(255,255,255,0.3);
+    font-size:2rem;
+    color:white;
+    text-shadow:2px 2px 4px rgba(0,0,0,0.3);
   }
   
   .closeBtn{
-    background:rgba(255,182,193,0.3);
-    border:2px solid rgba(255,105,180,0.4);
-    color:#ff1493;
+    background:rgba(255,255,255,0.1);
+    border:2px solid rgba(255,255,255,0.3);
+    color:white;
     font-size:1.5rem;
     cursor:pointer;
-    padding:8px;
+    padding:10px;
     border-radius:50%;
-    width:40px;
-    height:40px;
+    width:45px;
+    height:45px;
     display:flex;
     align-items:center;
     justify-content:center;
     font-weight:bold;
+    transition:all 0.3s ease;
   }
   
   .closeBtn:hover{
-    background:rgba(255,182,193,0.5);
+    background:rgba(255,255,255,0.2);
     transform:scale(1.1);
   }
   
   .settingGroup{
-    margin-bottom:1.5rem;
+    margin-bottom:2rem;
   }
   
   .settingLabel{
     display:block;
-    margin-bottom:0.5rem;
-    font-weight:700;
-    color:#ff1493;
-    text-shadow:1px 1px 2px rgba(255,255,255,0.3);
+    margin-bottom:0.8rem;
+    font-weight:600;
+    color:#bbdefb;
+    text-shadow:1px 1px 2px rgba(0,0,0,0.3);
+    font-size:1.1rem;
   }
   
   .settingControl{
     width:100%;
-    padding:12px;
-    background:rgba(255,255,255,0.3);
-    border:2px solid rgba(255,105,180,0.3);
-    border-radius:15px;
-    color:#ff1493;
+    padding:15px;
+    background:rgba(255,255,255,0.1);
+    border:2px solid rgba(66,165,245,0.3);
+    border-radius:10px;
+    color:white;
     font-size:1rem;
-    font-weight:600;
+    font-weight:500;
+    backdrop-filter:blur(10px);
   }
   
   .settingControl:focus{
     outline:none;
-    border-color:#ff69b4;
-    box-shadow:0 0 15px rgba(255,105,180,0.4);
+    border-color:#42a5f5;
+    box-shadow:0 0 20px rgba(66,165,245,0.4);
+    background:rgba(255,255,255,0.15);
   }
   
   .slider{
     -webkit-appearance:none;
     appearance:none;
-    height:8px;
-    background:rgba(255,182,193,0.4);
-    border-radius:4px;
+    height:10px;
+    background:rgba(66,165,245,0.3);
+    border-radius:5px;
     outline:none;
   }
   
   .slider::-webkit-slider-thumb{
     -webkit-appearance:none;
     appearance:none;
-    width:24px;
-    height:24px;
-    background:linear-gradient(135deg, #ff69b4, #ff1493);
+    width:26px;
+    height:26px;
+    background:linear-gradient(135deg, #1877f2, #42a5f5);
     border-radius:50%;
     cursor:pointer;
-    box-shadow:0 3px 10px rgba(255,20,147,0.3);
+    box-shadow:0 4px 15px rgba(24,119,242,0.5);
   }
   
   .checkbox{
     width:auto;
-    margin-right:10px;
-    transform:scale(1.2);
+    margin-right:12px;
+    transform:scale(1.3);
   }
   
   /* ===== PANEL ONLINE ===== */
@@ -425,128 +307,130 @@
     top:50%;
     left:50%;
     transform:translate(-50%, -50%);
-    width:min(600px, 90vw);
-    max-height:80vh;
-    background:rgba(255,182,193,0.4);
-    backdrop-filter:blur(20px);
-    border:3px solid rgba(255,105,180,0.4);
-    border-radius:25px;
-    padding:2rem;
-    color:#ff1493;
+    width:min(650px, 90vw);
+    max-height:85vh;
+    background:rgba(13,71,161,0.95);
+    backdrop-filter:blur(25px);
+    border:3px solid rgba(66,165,245,0.4);
+    border-radius:20px;
+    padding:2.5rem;
+    color:white;
     display:none;
     z-index:1100;
     overflow-y:auto;
-    box-shadow:0 20px 60px rgba(255,20,147,0.2);
+    box-shadow:0 25px 80px rgba(0,0,0,0.4);
   }
   
   .onlineOptions{
     display:grid;
-    grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));
-    gap:1.5rem;
-    margin-top:1rem;
+    grid-template-columns:repeat(auto-fit, minmax(300px, 1fr));
+    gap:2rem;
+    margin-top:1.5rem;
   }
   
   .onlineCard{
-    background:rgba(255,255,255,0.3);
-    border:3px solid rgba(255,105,180,0.3);
-    border-radius:20px;
-    padding:2rem;
+    background:rgba(255,255,255,0.1);
+    border:3px solid rgba(66,165,245,0.3);
+    border-radius:15px;
+    padding:2.5rem;
     text-align:center;
     cursor:pointer;
     transition:all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    backdrop-filter:blur(15px);
   }
   
   .onlineCard:hover{
-    border-color:#ff69b4;
-    transform:translateY(-8px) scale(1.03);
-    box-shadow:0 20px 40px rgba(255,105,180,0.3);
+    border-color:#42a5f5;
+    transform:translateY(-10px) scale(1.03);
+    box-shadow:0 25px 50px rgba(66,165,245,0.3);
+    background:rgba(255,255,255,0.15);
   }
   
   .onlineCard h4{
-    margin:0 0 1rem 0;
-    color:#ff1493;
-    font-size:1.4rem;
-    text-shadow:1px 1px 2px rgba(255,255,255,0.3);
+    margin:0 0 1.5rem 0;
+    color:white;
+    font-size:1.5rem;
+    text-shadow:2px 2px 4px rgba(0,0,0,0.3);
   }
   
   .onlineCard p{
-    color:#ff69b4;
-    font-size:1rem;
-    line-height:1.5;
-    font-weight:600;
+    color:#bbdefb;
+    font-size:1.1rem;
+    line-height:1.6;
+    font-weight:500;
   }
   
   .roomInput{
     display:flex;
-    gap:12px;
-    margin-top:1rem;
+    gap:15px;
+    margin-top:1.5rem;
   }
   
   .roomInput input{
     flex:1;
-    padding:12px;
-    background:rgba(255,255,255,0.4);
-    border:2px solid rgba(255,105,180,0.3);
-    border-radius:15px;
-    color:#ff1493;
-    font-weight:600;
+    padding:15px;
+    background:rgba(255,255,255,0.1);
+    border:2px solid rgba(66,165,245,0.3);
+    border-radius:10px;
+    color:white;
+    font-weight:500;
   }
   
   /* ===== ANIMACIONES ===== */
   @keyframes fadeIn{
-    from{opacity:0;transform:translateY(30px) scale(0.9)}
+    from{opacity:0;transform:translateY(40px) scale(0.9)}
     to{opacity:1;transform:translateY(0) scale(1)}
   }
   
   @keyframes slideIn{
-    from{transform:translate(-50%, -70%);opacity:0;scale:0.8}
+    from{transform:translate(-50%, -80%);opacity:0;scale:0.8}
     to{transform:translate(-50%, -50%);opacity:1;scale:1}
   }
   
-  .fadeIn{animation:fadeIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275)}
-  .slideIn{animation:slideIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275)}
+  .fadeIn{animation:fadeIn 1s cubic-bezier(0.175, 0.885, 0.32, 1.275)}
+  .slideIn{animation:slideIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275)}
   
   /* ===== ESTILOS DEL JUEGO ===== */
   .gameScreen{
     display:none;
-    background: radial-gradient(circle at center, rgba(255,179,186,0.1) 0%, transparent 70%);
+    background: radial-gradient(circle at center, rgba(66,165,245,0.1) 0%, transparent 70%);
   }
   .gameScreen.active{display:block}
   
   .hud{
     position:fixed;
-    left:15px;
-    right:15px;
-    top:15px;
+    left:20px;
+    right:20px;
+    top:20px;
     display:flex;
-    gap:10px;
+    gap:15px;
     z-index:120;
     pointer-events:none;
   }
   
   .chip{
     pointer-events:auto;
-    background:rgba(255,182,193,0.6);
-    backdrop-filter:blur(15px);
-    color:#ff1493;
-    padding:12px 15px;
-    border-radius:20px;
-    border:2px solid rgba(255,105,180,0.3);
+    background:rgba(13,71,161,0.9);
+    backdrop-filter:blur(20px);
+    color:white;
+    padding:15px 20px;
+    border-radius:25px;
+    border:2px solid rgba(66,165,245,0.4);
     display:flex;
     align-items:center;
-    gap:10px;
-    font-weight:800;
-    text-shadow:1px 1px 2px rgba(255,255,255,0.3);
-    box-shadow:0 5px 15px rgba(255,20,147,0.15);
+    gap:12px;
+    font-weight:700;
+    text-shadow:1px 1px 3px rgba(0,0,0,0.3);
+    box-shadow:0 8px 25px rgba(0,0,0,0.2);
   }
   
-  .val{font-weight:900; color:#ff1493}
+  .val{font-weight:900; color:#bbdefb}
   
   .dock{
     position:fixed;
     left:0;
     right:0;
-    bottom:15px;
+    bottom:20px;
     display:flex;
     justify-content:center;
     z-index:130;
@@ -555,41 +439,42 @@
   
   .dockInner{
     pointer-events:auto;
-    background:rgba(255,182,193,0.6);
-    backdrop-filter:blur(15px);
-    padding:12px;
-    border-radius:25px;
+    background:rgba(13,71,161,0.9);
+    backdrop-filter:blur(20px);
+    padding:15px;
+    border-radius:30px;
     display:flex;
-    gap:12px;
-    border:2px solid rgba(255,105,180,0.3);
-    box-shadow:0 10px 30px rgba(255,20,147,0.2);
+    gap:15px;
+    border:2px solid rgba(66,165,245,0.4);
+    box-shadow:0 15px 40px rgba(0,0,0,0.3);
   }
   
   .btn{
-    min-width:70px;
-    padding:12px 18px;
-    border-radius:18px;
-    background:linear-gradient(135deg, rgba(255,182,193,0.8), rgba(255,105,180,0.6));
-    color:#ff1493;
-    font-weight:800;
-    border:2px solid rgba(255,105,180,0.4);
+    min-width:80px;
+    padding:15px 25px;
+    border-radius:20px;
+    background:linear-gradient(135deg, rgba(24,119,242,0.8), rgba(66,165,245,0.6));
+    color:white;
+    font-weight:700;
+    border:2px solid rgba(66,165,245,0.4);
     cursor:pointer;
     transition:all 0.3s ease;
-    text-shadow:1px 1px 2px rgba(255,255,255,0.3);
+    text-shadow:1px 1px 3px rgba(0,0,0,0.3);
   }
   
   .btn:hover{
-    transform:translateY(-2px) scale(1.05);
-    box-shadow:0 8px 20px rgba(255,20,147,0.3);
+    transform:translateY(-3px) scale(1.05);
+    box-shadow:0 10px 30px rgba(24,119,242,0.4);
+    background:linear-gradient(135deg, rgba(21,101,192,0.9), rgba(24,119,242,0.7));
   }
   
   .joystick{
     position:fixed;
-    left:15px;
-    bottom:120px;
+    left:20px;
+    bottom:140px;
     z-index:160;
-    width:150px;
-    height:150px;
+    width:160px;
+    height:160px;
     pointer-events:auto;
   }
   
@@ -597,9 +482,9 @@
     width:100%;
     height:100%;
     border-radius:50%;
-    background:radial-gradient(circle at 30% 30%, rgba(255,182,193,0.4), rgba(255,105,180,0.2));
-    border:3px solid rgba(255,105,180,0.3);
-    box-shadow:inset 0 5px 15px rgba(255,20,147,0.1);
+    background:radial-gradient(circle at 30% 30%, rgba(13,71,161,0.6), rgba(24,119,242,0.3));
+    border:3px solid rgba(66,165,245,0.4);
+    box-shadow:inset 0 8px 25px rgba(0,0,0,0.2);
   }
   
   .joyKnob{
@@ -607,12 +492,12 @@
     left:50%;
     top:50%;
     transform:translate(-50%,-50%);
-    width:70px;
-    height:70px;
+    width:80px;
+    height:80px;
     border-radius:50%;
-    background:linear-gradient(135deg, rgba(255,182,193,0.9), rgba(255,105,180,0.7));
-    border:3px solid rgba(255,105,180,0.5);
-    box-shadow:0 5px 15px rgba(255,20,147,0.2);
+    background:linear-gradient(135deg, rgba(24,119,242,0.9), rgba(66,165,245,0.7));
+    border:3px solid rgba(66,165,245,0.6);
+    box-shadow:0 8px 25px rgba(0,0,0,0.3);
   }
   
   .lookPad{
@@ -620,64 +505,64 @@
     right:0;
     top:0;
     bottom:0;
-    width:46vw;
+    width:50vw;
     z-index:100;
     pointer-events:auto;
   }
   
   .inventoryPanel{
     position:fixed;
-    right:15px;
-    top:90px;
-    width:220px;
-    background:rgba(255,182,193,0.6);
-    color:#ff1493;
-    padding:15px;
-    border-radius:20px;
+    right:20px;
+    top:100px;
+    width:240px;
+    background:rgba(13,71,161,0.9);
+    color:white;
+    padding:20px;
+    border-radius:25px;
     z-index:140;
-    backdrop-filter:blur(15px);
-    border:2px solid rgba(255,105,180,0.3);
-    box-shadow:0 10px 30px rgba(255,20,147,0.15);
+    backdrop-filter:blur(20px);
+    border:2px solid rgba(66,165,245,0.4);
+    box-shadow:0 15px 40px rgba(0,0,0,0.2);
   }
   
   .inventoryTitle{
     font-weight:800;
-    margin-bottom:12px;
+    margin-bottom:15px;
     text-align:center;
-    color:#ff1493;
-    font-size:1.1rem;
-    text-shadow:1px 1px 2px rgba(255,255,255,0.3);
+    color:#bbdefb;
+    font-size:1.2rem;
+    text-shadow:1px 1px 3px rgba(0,0,0,0.3);
   }
   
   .inventoryGrid{
     display:grid;
     grid-template-columns:repeat(3,1fr);
-    gap:6px;
+    gap:8px;
   }
   
   .inventorySlot{
     aspect-ratio:1;
-    background:rgba(255,255,255,0.3);
-    border-radius:12px;
+    background:rgba(255,255,255,0.1);
+    border-radius:15px;
     display:flex;
     flex-direction:column;
     align-items:center;
     justify-content:center;
-    font-size:18px;
-    border:2px solid rgba(255,105,180,0.3);
+    font-size:20px;
+    border:2px solid rgba(66,165,245,0.3);
     transition:all 0.3s ease;
   }
   
   .inventorySlot.has-item{
-    background:rgba(186,255,201,0.6);
-    border-color:#ff69b4;
-    box-shadow:0 3px 10px rgba(255,105,180,0.2);
+    background:rgba(76,175,80,0.3);
+    border-color:#4caf50;
+    box-shadow:0 5px 15px rgba(76,175,80,0.3);
   }
   
   .slotCount{
-    font-size:11px;
+    font-size:12px;
     font-weight:800;
-    color:#ff1493;
+    color:#bbdefb;
   }
   
   .storePanel{
@@ -685,290 +570,259 @@
     left:50%;
     top:50%;
     transform:translate(-50%,-50%);
-    width:min(650px,95vw);
-    max-height:80vh;
-    background:rgba(255,182,193,0.6);
-    color:#ff1493;
-    padding:20px;
+    width:min(700px,95vw);
+    max-height:85vh;
+    background:rgba(13,71,161,0.95);
+    color:white;
+    padding:25px;
     border-radius:25px;
     display:none;
     z-index:900;
     overflow-y:auto;
-    backdrop-filter:blur(20px);
-    border:3px solid rgba(255,105,180,0.4);
-    box-shadow:0 20px 60px rgba(255,20,147,0.2);
+    backdrop-filter:blur(25px);
+    border:3px solid rgba(66,165,245,0.4);
+    box-shadow:0 25px 80px rgba(0,0,0,0.4);
   }
   
   .storeHeader{
     display:flex;
     align-items:center;
     justify-content:space-between;
-    margin-bottom:20px;
-    border-bottom:2px solid rgba(255,105,180,0.3);
-    padding-bottom:15px;
+    margin-bottom:25px;
+    border-bottom:2px solid rgba(66,165,245,0.3);
+    padding-bottom:20px;
   }
   
   .storeHeader h3{
-    color:#ff1493;
-    font-size:1.5rem;
-    text-shadow:1px 1px 2px rgba(255,255,255,0.3);
+    color:white;
+    font-size:1.8rem;
+    text-shadow:2px 2px 4px rgba(0,0,0,0.3);
   }
   
   .seedGrid{
     display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-    gap:15px;
-    margin-bottom:20px;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
+    margin-bottom:25px;
   }
   
   .seedDisplay{
-    background:rgba(255,255,255,0.3);
-    border-radius:18px;
-    padding:15px;
+    background:rgba(255,255,255,0.1);
+    border-radius:20px;
+    padding:20px;
     text-align:center;
-    border:3px solid rgba(255,105,180,0.3);
+    border:3px solid rgba(66,165,245,0.3);
     transition:all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     cursor:pointer;
+    backdrop-filter:blur(15px);
   }
   
   .seedDisplay:hover{
-    border-color:#ff69b4;
-    transform:translateY(-5px) scale(1.03);
-    box-shadow:0 15px 30px rgba(255,105,180,0.3);
+    border-color:#42a5f5;
+    transform:translateY(-8px) scale(1.03);
+    box-shadow:0 20px 40px rgba(66,165,245,0.4);
+    background:rgba(255,255,255,0.15);
   }
   
   .seedIcon{
-    width:70px;
-    height:70px;
-    margin:0 auto 12px;
-    background:linear-gradient(45deg, var(--pastel-green), #90EE90);
-    border-radius:15px;
+    width:80px;
+    height:80px;
+    margin:0 auto 15px;
+    background:linear-gradient(45deg, #4caf50, #8bc34a);
+    border-radius:20px;
     display:flex;
     align-items:center;
     justify-content:center;
-    font-size:32px;
-    box-shadow:0 5px 15px rgba(144,238,144,0.3);
+    font-size:36px;
+    box-shadow:0 8px 25px rgba(76,175,80,0.4);
   }
   
   .seedName{
     font-weight:800;
-    margin-bottom:6px;
-    color:#ff1493;
-    text-shadow:1px 1px 2px rgba(255,255,255,0.3);
-  }
-  
-  .seedPrice{
-    color:#ff69b4;
-    font-weight:800;
-    margin-bottom:10px;
+    margin-bottom:8px;
+    color:white;
+    text-shadow:1px 1px 3px rgba(0,0,0,0.3);
     font-size:1.1rem;
   }
   
+  .seedPrice{
+    color:#bbdefb;
+    font-weight:700;
+    margin-bottom:12px;
+    font-size:1.2rem;
+  }
+  
   .seedDesc{
-    font-size:0.9rem;
-    color:#ff69b4;
-    margin-bottom:10px;
-    line-height:1.4;
+    font-size:1rem;
+    color:#bbdefb;
+    margin-bottom:15px;
+    line-height:1.5;
   }
   
   .cartPanel{
     position:fixed;
-    right:15px;
+    right:20px;
     top:50%;
     transform:translateY(-50%);
-    width:320px;
-    background:rgba(255,182,193,0.6);
-    color:#ff1493;
-    padding:20px;
-    border-radius:20px;
+    width:350px;
+    background:rgba(13,71,161,0.95);
+    color:white;
+    padding:25px;
+    border-radius:25px;
     display:none;
     z-index:910;
-    backdrop-filter:blur(15px);
-    border:3px solid rgba(255,105,180,0.4);
-    box-shadow:0 15px 40px rgba(255,20,147,0.2);
+    backdrop-filter:blur(25px);
+    border:3px solid rgba(66,165,245,0.4);
+    box-shadow:0 20px 60px rgba(0,0,0,0.3);
   }
   
   .cartItem{
     display:flex;
     justify-content:space-between;
     align-items:center;
-    padding:10px;
-    background:rgba(255,255,255,0.3);
-    border-radius:12px;
-    margin-bottom:10px;
-    border:2px solid rgba(255,105,180,0.2);
+    padding:12px;
+    background:rgba(255,255,255,0.1);
+    border-radius:15px;
+    margin-bottom:12px;
+    border:2px solid rgba(66,165,245,0.2);
   }
   
   .cartTotal{
-    border-top:2px solid rgba(255,105,180,0.4);
-    padding-top:15px;
-    margin-top:15px;
+    border-top:2px solid rgba(66,165,245,0.4);
+    padding-top:20px;
+    margin-top:20px;
     font-weight:800;
-    font-size:1.2rem;
-    color:#ff1493;
+    font-size:1.3rem;
+    color:#bbdefb;
     text-align:center;
   }
   
   .deliveryBox{
     position:fixed;
     left:50%;
-    bottom:25px;
+    bottom:30px;
     transform:translateX(-50%);
-    background:rgba(255,182,193,0.8);
-    color:#ff1493;
-    padding:20px;
-    border-radius:20px;
+    background:rgba(13,71,161,0.95);
+    color:white;
+    padding:25px;
+    border-radius:25px;
     display:none;
     z-index:920;
     text-align:center;
     cursor:pointer;
-    border:3px solid #ff69b4;
-    backdrop-filter:blur(15px);
+    border:3px solid #42a5f5;
+    backdrop-filter:blur(20px);
     transition:all 0.3s ease;
-    box-shadow:0 10px 30px rgba(255,20,147,0.2);
+    box-shadow:0 15px 40px rgba(0,0,0,0.3);
   }
   
   .deliveryBox:hover{
-    background:rgba(255,182,193,0.9);
+    background:rgba(21,101,192,0.95);
     transform:translateX(-50%) scale(1.05);
-    box-shadow:0 15px 40px rgba(255,20,147,0.3);
+    box-shadow:0 20px 50px rgba(0,0,0,0.4);
   }
   
   .ticketInfo{
-    background:rgba(255,255,255,0.4);
-    padding:10px;
-    border-radius:12px;
-    margin:10px 0;
-    font-size:0.9rem;
-    border:2px solid rgba(255,105,180,0.3);
+    background:rgba(255,255,255,0.1);
+    padding:12px;
+    border-radius:15px;
+    margin:12px 0;
+    font-size:1rem;
+    border:2px solid rgba(66,165,245,0.3);
   }
   
   .toast{
     position:fixed;
     left:50%;
-    top:100px;
+    top:120px;
     transform:translateX(-50%);
-    background:rgba(255,182,193,0.9);
-    color:#ff1493;
-    padding:12px 20px;
-    border-radius:18px;
+    background:rgba(13,71,161,0.95);
+    color:white;
+    padding:15px 25px;
+    border-radius:20px;
     display:none;
     z-index:920;
-    font-weight:700;
-    backdrop-filter:blur(15px);
-    border:2px solid rgba(255,105,180,0.4);
-    box-shadow:0 8px 25px rgba(255,20,147,0.2);
-    text-shadow:1px 1px 2px rgba(255,255,255,0.3);
+    font-weight:600;
+    backdrop-filter:blur(20px);
+    border:2px solid rgba(66,165,245,0.4);
+    box-shadow:0 10px 35px rgba(0,0,0,0.3);
+    text-shadow:1px 1px 3px rgba(0,0,0,0.3);
   }
   
   .npcDialog{
     position:fixed;
     left:50%;
-    bottom:180px;
+    bottom:200px;
     transform:translateX(-50%);
-    background:rgba(255,255,255,0.95);
-    color:#ff1493;
-    padding:15px 20px;
-    border-radius:20px;
+    background:rgba(255,255,255,0.98);
+    color:#0d47a1;
+    padding:20px 25px;
+    border-radius:25px;
     display:none;
     z-index:930;
-    max-width:350px;
+    max-width:380px;
     text-align:center;
-    border:3px solid rgba(255,105,180,0.4);
-    box-shadow:0 10px 30px rgba(255,20,147,0.2);
+    border:3px solid rgba(66,165,245,0.4);
+    box-shadow:0 15px 40px rgba(0,0,0,0.3);
   }
   
   .npcName{
     font-weight:800;
-    color:#ff1493;
-    margin-bottom:8px;
-    font-size:1.1rem;
+    color:#1565c0;
+    margin-bottom:10px;
+    font-size:1.2rem;
   }
   
   .touchIndicator{
     position:absolute;
     pointer-events:none;
-    width:35px;
-    height:35px;
-    border:4px solid #ff69b4;
+    width:40px;
+    height:40px;
+    border:4px solid #42a5f5;
     border-radius:50%;
-    animation:touchPulse 0.6s ease-out;
+    animation:touchPulse 0.8s ease-out;
+    box-shadow:0 0 20px rgba(66,165,245,0.6);
   }
   
   @keyframes touchPulse{
     from{transform:scale(0);opacity:1}
-    to{transform:scale(1.2);opacity:0}
+    to{transform:scale(1.3);opacity:0}
   }
   
   .backBtn{
     position:absolute;
-    top:25px;
-    left:25px;
-    background:rgba(255,182,193,0.6);
-    backdrop-filter:blur(15px);
-    border:3px solid rgba(255,105,180,0.4);
-    border-radius:18px;
-    color:#ff1493;
-    padding:12px 18px;
+    top:30px;
+    left:30px;
+    background:rgba(13,71,161,0.9);
+    backdrop-filter:blur(20px);
+    border:3px solid rgba(66,165,245,0.4);
+    border-radius:20px;
+    color:white;
+    padding:15px 25px;
     cursor:pointer;
-    font-weight:700;
+    font-weight:600;
     transition:all 0.3s ease;
-    text-shadow:1px 1px 2px rgba(255,255,255,0.3);
+    text-shadow:1px 1px 3px rgba(0,0,0,0.3);
   }
   
   .backBtn:hover{
-    background:rgba(255,182,193,0.8);
-    border-color:#ff69b4;
+    background:rgba(21,101,192,0.9);
+    border-color:#42a5f5;
     transform:scale(1.05);
-  }
-
-  /* ===== CONFIGURAR WORKFLOW ===== */
-  .configureRunBtn{
-    position:fixed;
-    top:20px;
-    left:50%;
-    transform:translateX(-50%);
-    background:linear-gradient(135deg, var(--pastel-yellow), #ffd700);
-    border:3px solid #ffb347;
-    border-radius:20px;
-    color:#ff8c00;
-    padding:12px 20px;
-    cursor:pointer;
-    font-weight:800;
-    z-index:200;
-    box-shadow:0 5px 15px rgba(255,140,0,0.3);
-    transition:all 0.3s ease;
-  }
-  
-  .configureRunBtn:hover{
-    transform:translateX(-50%) scale(1.05);
-    box-shadow:0 8px 25px rgba(255,140,0,0.4);
   }
 </style>
 </head>
 <body>
-  <!-- ===== INTRO ANIMADO PRE-JUEGO ===== -->
+  <!-- ===== INTRO ANIMADO CON VISTA 3D DE DRONE ===== -->
   <div class="preIntro" id="preIntro">
-    <div class="sky" id="sky">
-      <div class="cloud cloud1"></div>
-      <div class="cloud cloud2"></div>
-    </div>
-    
-    <div class="ground"></div>
-    
-    <div class="plantContainer">
-      <div class="plant" id="introPlant">🌱</div>
-    </div>
-    
-    <div class="lightning" id="lightning"></div>
-    
-    <button class="skipButton" id="skipIntro">⏭️ Omitir</button>
+    <div class="droneView" id="droneView"></div>
+    <button class="skipButton" id="skipIntro">⏭️ Omitir Vista</button>
   </div>
 
   <!-- ===== PANTALLA DE INICIO ===== -->
   <div class="startScreen" id="startScreen">
     <div class="fadeIn">
-      <h1 class="gameTitle">🌸 Garden Dreams</h1>
+      <h1 class="gameTitle">🌟 Garden Dreams</h1>
       <p class="gameSubtitle">✨ Aventura Mágica de Plantas ✨</p>
       
       <div class="mainMenu">
@@ -1034,14 +888,14 @@
     <div class="settingGroup">
       <label class="settingLabel">🎨 Tema Visual Encantado</label>
       <select class="settingControl" id="visualTheme">
-        <option value="default">Reino de Ensueños</option>
-        <option value="dark">Bosque Misterioso</option>
-        <option value="colorful">Arcoíris Mágico</option>
-        <option value="minimal">Jardín Zen</option>
+        <option value="default">Reino Azul Clásico</option>
+        <option value="dark">Océano Profundo</option>
+        <option value="colorful">Aurora Boreal</option>
+        <option value="minimal">Cielo Minimalista</option>
       </select>
     </div>
     
-    <button class="menuBtn primary" id="saveSettings" style="width:100%;margin-top:1rem">💾 Guardar Magia</button>
+    <button class="menuBtn primary" id="saveSettings" style="width:100%;margin-top:1.5rem">💾 Guardar Configuración</button>
   </div>
 
   <!-- ===== PANEL ONLINE ===== -->
@@ -1112,14 +966,14 @@
         <button class="btn" id="closeStore">Cerrar</button>
       </div>
       <div class="seedGrid" id="seedGrid"></div>
-      <div style="display:flex;gap:15px;justify-content:center">
+      <div style="display:flex;gap:20px;justify-content:center">
         <button class="btn" id="viewCart">🛒 Carrito (<span id="cartCount">0</span>)</button>
         <button class="btn" id="checkout">💫 Comprar</button>
       </div>
     </div>
 
     <div class="cartPanel" id="cartPanel">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
         <h4>🛒 Carrito Mágico</h4>
         <button class="btn" id="closeCart">✕</button>
       </div>
@@ -1127,7 +981,7 @@
       <div class="cartTotal">
         Total Mágico: <span id="cartTotalAmount">0</span> monedas ✨
       </div>
-      <button class="btn" id="proceedCheckout" style="width:100%;margin-top:15px">💫 Finalizar Compra</button>
+      <button class="btn" id="proceedCheckout" style="width:100%;margin-top:20px">💫 Finalizar Compra</button>
     </div>
 
     <div class="deliveryBox" id="deliveryBox">
@@ -1196,72 +1050,191 @@
   const gameScreen = document.getElementById('gameScreen');
   const settingsPanel = document.getElementById('settingsPanel');
   const onlinePanel = document.getElementById('onlinePanel');
+  const droneView = document.getElementById('droneView');
 
-  // ----- INTRO ANIMADO -----
-  let introStep = 0;
-  let introPlant = document.getElementById('introPlant');
-  let sky = document.getElementById('sky');
-  let lightning = document.getElementById('lightning');
+  // ----- INTRO ANIMADO CON VISTA 3D DE DRONE -----
+  let droneScene, droneCamera, droneRenderer;
+  let dronePlots = [], droneCrops, droneStoreBuilding;
+  let droneAnimationId;
 
-  function startIntroAnimation() {
-    setTimeout(() => {
-      // Paso 1: Planta crece y florece
-      introPlant.style.animation = 'growPlant 3s ease-in-out';
-      setTimeout(() => {
-        introPlant.textContent = '🌻';
-        introPlant.style.transform = 'scale(1.2)';
-      }, 2500);
-      
-      // Paso 2: Nubes se mueven rápido
-      setTimeout(() => {
-        const clouds = document.querySelectorAll('.cloud');
-        clouds.forEach(cloud => {
-          cloud.style.animationDuration = '1s';
+  function createDroneIntro() {
+    // Configurar Three.js para la vista de drone
+    droneScene = new THREE.Scene();
+    droneScene.background = new THREE.Color(0x87CEEB);
+    
+    droneCamera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+    droneCamera.position.set(0, 25, 30);
+    
+    droneRenderer = new THREE.WebGLRenderer({antialias: true});
+    droneRenderer.setSize(window.innerWidth, window.innerHeight);
+    droneRenderer.shadowMap.enabled = true;
+    droneRenderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    
+    droneView.appendChild(droneRenderer.domElement);
+    
+    // Iluminación para la vista de drone
+    const hemiLight = new THREE.HemisphereLight(0x87CEEB, 0x4CAF50, 0.8);
+    droneScene.add(hemiLight);
+    
+    const dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
+    dirLight.position.set(20, 30, 10);
+    dirLight.castShadow = true;
+    dirLight.shadow.mapSize.width = 2048;
+    dirLight.shadow.mapSize.height = 2048;
+    droneScene.add(dirLight);
+    
+    // Suelo del jardín
+    const groundGeometry = new THREE.PlaneGeometry(100, 100);
+    const groundMaterial = new THREE.MeshLambertMaterial({ color: 0x4CAF50 });
+    const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+    ground.rotation.x = -Math.PI / 2;
+    ground.receiveShadow = true;
+    droneScene.add(ground);
+    
+    // Crear plots de siembra con mejor color
+    const plotSize = 3;
+    const gap = 1;
+    for(let rz = 0; rz < 4; rz++) {
+      for(let cx = 0; cx < 5; cx++) {
+        const x = -8 + cx * (plotSize + gap);
+        const z = -6 + rz * (plotSize + gap);
+        
+        // Suelo de la parcela con color tierra más natural
+        const plotGeo = new THREE.BoxGeometry(plotSize, 0.2, plotSize);
+        const plotMat = new THREE.MeshLambertMaterial({ color: 0x8B4513 }); // Marrón tierra
+        const plot = new THREE.Mesh(plotGeo, plotMat);
+        plot.position.set(x, 0.1, z);
+        plot.castShadow = true;
+        plot.receiveShadow = true;
+        droneScene.add(plot);
+        
+        // Bordes de la parcela con color azul
+        const frameMat = new THREE.MeshLambertMaterial({ color: 0x1877f2 });
+        const frameThickness = 0.3;
+        const frameHeight = 0.4;
+        
+        // Crear marcos alrededor de cada parcela
+        const frames = [
+          { pos: [x, frameHeight/2, z - plotSize/2 - frameThickness/2], size: [plotSize + frameThickness, frameHeight, frameThickness] },
+          { pos: [x, frameHeight/2, z + plotSize/2 + frameThickness/2], size: [plotSize + frameThickness, frameHeight, frameThickness] },
+          { pos: [x - plotSize/2 - frameThickness/2, frameHeight/2, z], size: [frameThickness, frameHeight, plotSize] },
+          { pos: [x + plotSize/2 + frameThickness/2, frameHeight/2, z], size: [frameThickness, frameHeight, plotSize] }
+        ];
+        
+        frames.forEach(frame => {
+          const frameGeo = new THREE.BoxGeometry(...frame.size);
+          const frameMesh = new THREE.Mesh(frameGeo, frameMat);
+          frameMesh.position.set(...frame.pos);
+          frameMesh.castShadow = true;
+          droneScene.add(frameMesh);
         });
-      }, 4000);
-      
-      // Paso 3: Lluvia
-      setTimeout(() => {
-        createRain();
-      }, 6000);
-      
-      // Paso 4: Truenos y relámpagos
-      setTimeout(() => {
-        createLightning();
-      }, 8000);
-      
-      // Paso 5: Ir a pantalla principal
-      setTimeout(() => {
-        endIntro();
-      }, 11000);
-      
-    }, 1000);
-  }
-
-  function createRain() {
-    for(let i = 0; i < 50; i++) {
-      const rainDrop = document.createElement('div');
-      rainDrop.className = 'rainDrop';
-      rainDrop.style.left = Math.random() * 100 + '%';
-      rainDrop.style.animationDuration = (Math.random() * 1 + 0.5) + 's';
-      rainDrop.style.animationDelay = Math.random() * 2 + 's';
-      sky.appendChild(rainDrop);
-    }
-  }
-
-  function createLightning() {
-    let flashCount = 0;
-    const interval = setInterval(() => {
-      lightning.style.animation = 'flash 0.1s ease-in-out';
-      flashCount++;
-      if(flashCount >= 3) {
-        clearInterval(interval);
+        
+        // Agregar algunas plantas aleatorias para que se vea vivo
+        if (Math.random() < 0.6) {
+          const plantGeo = new THREE.BoxGeometry(0.8, 1.5, 0.8);
+          const plantMat = new THREE.MeshLambertMaterial({ color: 0x2E7D32 });
+          const plant = new THREE.Mesh(plantGeo, plantMat);
+          plant.position.set(
+            x + (Math.random() - 0.5) * plotSize * 0.6,
+            0.75,
+            z + (Math.random() - 0.5) * plotSize * 0.6
+          );
+          plant.castShadow = true;
+          droneScene.add(plant);
+        }
       }
-    }, 500);
+    }
+    
+    // Tienda con colores azules
+    const storeBase = new THREE.Mesh(
+      new THREE.BoxGeometry(15, 6, 10),
+      new THREE.MeshLambertMaterial({ color: 0x1877f2 })
+    );
+    storeBase.position.set(0, 3, -25);
+    storeBase.castShadow = true;
+    droneScene.add(storeBase);
+    
+    const roof = new THREE.Mesh(
+      new THREE.BoxGeometry(16, 0.5, 11),
+      new THREE.MeshLambertMaterial({ color: 0x0d47a1 })
+    );
+    roof.position.set(0, 6.25, -25);
+    droneScene.add(roof);
+    
+    // Letrero de la tienda
+    const signGeo = new THREE.BoxGeometry(10, 1.5, 0.3);
+    const signMat = new THREE.MeshLambertMaterial({ color: 0x42a5f5 });
+    const sign = new THREE.Mesh(signGeo, signMat);
+    sign.position.set(0, 4.5, -19.8);
+    droneScene.add(sign);
+    
+    // Árboles decorativos
+    for(let i = 0; i < 8; i++) {
+      const treeX = (Math.random() - 0.5) * 80;
+      const treeZ = (Math.random() - 0.5) * 80;
+      
+      // Evitar que los árboles estén muy cerca de las parcelas o la tienda
+      if (Math.abs(treeX) < 20 && Math.abs(treeZ + 10) < 20) continue;
+      
+      const trunkGeo = new THREE.CylinderGeometry(0.5, 0.8, 4);
+      const trunkMat = new THREE.MeshLambertMaterial({ color: 0x8B4513 });
+      const trunk = new THREE.Mesh(trunkGeo, trunkMat);
+      trunk.position.set(treeX, 2, treeZ);
+      trunk.castShadow = true;
+      droneScene.add(trunk);
+      
+      const leavesGeo = new THREE.SphereGeometry(3);
+      const leavesMat = new THREE.MeshLambertMaterial({ color: 0x2E7D32 });
+      const leaves = new THREE.Mesh(leavesGeo, leavesMat);
+      leaves.position.set(treeX, 5, treeZ);
+      leaves.castShadow = true;
+      droneScene.add(leaves);
+    }
+    
+    // Iniciar animación de drone
+    startDroneAnimation();
+  }
+
+  function startDroneAnimation() {
+    const startTime = Date.now();
+    let angle = 0;
+    
+    function animateDrone() {
+      if (!state.introCompleted) {
+        const elapsed = Date.now() - startTime;
+        
+        // Movimiento circular de drone elevándose gradualmente
+        const radius = 35 - (elapsed * 0.005); // Se acerca gradualmente
+        const height = 25 + Math.sin(elapsed * 0.001) * 5; // Movimiento vertical suave
+        
+        angle += 0.008; // Velocidad de rotación
+        
+        droneCamera.position.x = Math.sin(angle) * radius;
+        droneCamera.position.z = Math.cos(angle) * radius;
+        droneCamera.position.y = height;
+        
+        // La cámara siempre mira hacia el centro del jardín
+        droneCamera.lookAt(0, 0, 0);
+        
+        // Renderizar la escena
+        droneRenderer.render(droneScene, droneCamera);
+        
+        // Continuar animación
+        droneAnimationId = requestAnimationFrame(animateDrone);
+      }
+    }
+    
+    animateDrone();
   }
 
   function endIntro() {
     state.introCompleted = true;
+    if (droneAnimationId) {
+      cancelAnimationFrame(droneAnimationId);
+    }
+    if (droneRenderer && droneRenderer.domElement) {
+      droneView.removeChild(droneRenderer.domElement);
+    }
     preIntro.style.display = 'none';
     startScreen.style.display = 'flex';
   }
@@ -1308,7 +1281,7 @@
     state.farmName = gameConfig.farmName;
     updateUI();
     
-    showToast('¡Configuración guardada con magia! ✨🌟');
+    showToast('¡Configuración guardada exitosamente! ✨🌟');
   }
 
   // ----- INICIAR JUEGO -----
@@ -1321,7 +1294,7 @@
     
     if (gameConfig.showTutorial) {
       setTimeout(() => {
-        showToast('¡Bienvenido al Reino Mágico! 🌟 Usa el joystick rosado para moverte y toca elementos para interactuar ✨');
+        showToast('¡Bienvenido al Reino Mágico! 🌟 Usa el joystick azul para moverte y toca elementos para interactuar ✨');
       }, 1000);
     }
   }
@@ -1336,7 +1309,7 @@
     onlinePanel.style.display = 'block';
   });
   document.getElementById('btnCredits').addEventListener('click', () => {
-    showToast('🌸 Garden Dreams v1.0 - Creado con amor y magia 💖✨');
+    showToast('🌟 Garden Dreams v2.0 - Rediseñado con estilo Roblox 💎✨');
   });
   document.getElementById('closeSettings').addEventListener('click', () => {
     settingsPanel.style.display = 'none';
@@ -1399,7 +1372,7 @@
     if (state.gameStarted && scene) return;
 
     scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xffb3ba);
+    scene.background = new THREE.Color(0x87CEEB);
     
     camera = new THREE.PerspectiveCamera(70, innerWidth/innerHeight, 0.1, 600);
     camera.position.set(0, 1.7, 15);
@@ -1410,13 +1383,13 @@
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     
-    const existingCanvas = document.querySelector('canvas');
+    const existingCanvas = document.querySelector('#gameScreen canvas');
     if (existingCanvas) existingCanvas.remove();
     
     gameScreen.appendChild(renderer.domElement);
 
     // Iluminación mágica
-    const lightHemi = new THREE.HemisphereLight(0xffb3ba, 0xbae1ff, 0.9);
+    const lightHemi = new THREE.HemisphereLight(0x87CEEB, 0x4CAF50, 0.9);
     scene.add(lightHemi);
     
     const dirLight = new THREE.DirectionalLight(0xffffff, 0.9);
@@ -1429,13 +1402,13 @@
     // Suelo mágico
     const ground = new THREE.Mesh(
       new THREE.BoxGeometry(200, 0.4, 200), 
-      new THREE.MeshStandardMaterial({color: 0xbaffc9})
+      new THREE.MeshStandardMaterial({color: 0x4CAF50})
     );
     ground.position.y = -0.2;
     ground.receiveShadow = true;
     scene.add(ground);
 
-    // Plots con marco rosado
+    // Plots con marco azul estilo Roblox
     plots = [];
     plotGroup = new THREE.Group();
     scene.add(plotGroup);
@@ -1450,15 +1423,15 @@
         
         const soil = new THREE.Mesh(
           new THREE.BoxGeometry(plotSize, 0.14, plotSize), 
-          new THREE.MeshStandardMaterial({color: 0x8b4513})
+          new THREE.MeshStandardMaterial({color: 0x8B4513}) // Marrón tierra
         );
         soil.position.set(x, 0.02, z);
         soil.receiveShadow = true;
         soil.userData = {type: 'plot', plotIndex: plots.length - 1};
         plotGroup.add(soil);
         
-        // Marco rosado
-        const frameMat = new THREE.MeshStandardMaterial({color: 0xff69b4});
+        // Marco azul estilo Roblox
+        const frameMat = new THREE.MeshStandardMaterial({color: 0x1877f2});
         const thickness = 0.16;
         
         const borders = [
@@ -1477,12 +1450,12 @@
       }
     }
 
-    // Tienda mágica
+    // Tienda mágica con colores azules
     storeGroup = new THREE.Group();
     
     const storeBase = new THREE.Mesh(
       new THREE.BoxGeometry(12, 4, 8), 
-      new THREE.MeshStandardMaterial({color: 0xffb3ba})
+      new THREE.MeshStandardMaterial({color: 0x1877f2})
     );
     storeBase.position.set(0, 2, -15);
     storeBase.castShadow = true;
@@ -1491,14 +1464,14 @@
 
     const roof = new THREE.Mesh(
       new THREE.BoxGeometry(13, 0.3, 9), 
-      new THREE.MeshStandardMaterial({color: 0xff69b4})
+      new THREE.MeshStandardMaterial({color: 0x0d47a1})
     );
     roof.position.set(0, 4.2, -15);
     storeGroup.add(roof);
 
     const sign = new THREE.Mesh(
       new THREE.BoxGeometry(8, 1, 0.2), 
-      new THREE.MeshStandardMaterial({color: 0xbaffc9})
+      new THREE.MeshStandardMaterial({color: 0x42a5f5})
     );
     sign.position.set(0, 3.5, -10.9);
     storeGroup.add(sign);
@@ -1506,7 +1479,7 @@
     const door = new THREE.Mesh(
       new THREE.BoxGeometry(2, 3, 0.1), 
       new THREE.MeshStandardMaterial({
-        color: 0xbae1ff, 
+        color: 0x64b5f6, 
         transparent: true, 
         opacity: 0.7
       })
@@ -1515,12 +1488,12 @@
     door.userData = {type: 'store'};
     storeGroup.add(door);
 
-    // NPC Mago
+    // NPC Mago con colores azules
     npcGroup = new THREE.Group();
     
     const npcBody = new THREE.Mesh(
       new THREE.BoxGeometry(0.6, 1.2, 0.4), 
-      new THREE.MeshStandardMaterial({color: 0xff69b4})
+      new THREE.MeshStandardMaterial({color: 0x1877f2})
     );
     npcBody.position.y = 1.2;
     npcGroup.add(npcBody);
@@ -1532,10 +1505,10 @@
     npcHead.position.y = 2.0;
     npcGroup.add(npcHead);
     
-    // Sombrero mágico
+    // Sombrero mágico azul
     const hat = new THREE.Mesh(
       new THREE.ConeGeometry(0.3, 0.5), 
-      new THREE.MeshStandardMaterial({color: 0x9370db})
+      new THREE.MeshStandardMaterial({color: 0x0d47a1})
     );
     hat.position.y = 2.5;
     npcGroup.add(hat);
@@ -1754,13 +1727,13 @@
   function showTouchIndicator(x, y) {
     const indicator = document.createElement('div');
     indicator.className = 'touchIndicator';
-    indicator.style.left = (x - 17) + 'px';
-    indicator.style.top = (y - 17) + 'px';
+    indicator.style.left = (x - 20) + 'px';
+    indicator.style.top = (y - 20) + 'px';
     document.body.appendChild(indicator);
     
     setTimeout(() => {
       document.body.removeChild(indicator);
-    }, 600);
+    }, 800);
   }
 
   function handlePlotTouch(plotIndex) {
@@ -1917,7 +1890,7 @@
         <span>${item.icon} ${item.name}</span>
         <span>x${item.quantity}</span>
         <span>${item.price * item.quantity} monedas</span>
-        <button class="btn" onclick="removeFromCart(${index})" style="padding:5px;">❌</button>
+        <button class="btn" onclick="removeFromCart(${index})" style="padding:8px;">❌</button>
       `;
       cartItems.appendChild(itemDiv);
     });
@@ -1938,7 +1911,7 @@
     document.getElementById('farmName').textContent = state.farmName;
   }
 
-  function showToast(message, duration = 3000) {
+  function showToast(message, duration = 3500) {
     const toast = document.getElementById('toast');
     toast.textContent = message;
     toast.style.display = 'block';
@@ -2021,14 +1994,19 @@
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
     }
+    if (droneCamera && droneRenderer) {
+      droneCamera.aspect = window.innerWidth / window.innerHeight;
+      droneCamera.updateProjectionMatrix();
+      droneRenderer.setSize(window.innerWidth, window.innerHeight);
+    }
   });
 
   // ----- INICIALIZACIÓN -----
   loadSettings();
   applySettings();
   
-  // Iniciar intro automáticamente
-  startIntroAnimation();
+  // Iniciar intro de drone automáticamente
+  createDroneIntro();
 
   </script>
 </body>
