@@ -1502,6 +1502,10 @@
     
     // Posicionar el muñeco sobre la superficie, alineado con la tienda
     giantRobloxCharacter.position.set(60, 4, -25); // Y=4 para que esté sobre el suelo, Z=-25 para línea recta hacia la tienda
+    
+    // ORIENTAR EL PERSONAJE HACIA LA TIENDA (mirando hacia x=0, z=-25)
+    giantRobloxCharacter.rotation.y = Math.PI; // Rotación 180 grados para que mire hacia la tienda
+    
     giantRobloxCharacter.castShadow = true;
     
     droneScene.add(giantRobloxCharacter);
@@ -1566,12 +1570,15 @@
       droneCamera.position.set(10, 15, -5);
       droneCamera.lookAt(0, 0, -15);
     }
-    // Celebración de victoria (segundos 10-13)
-    else if (sequenceTime <= 13000 && !victorySequenceStarted) {
+    // Levantamiento lento de la mano (segundos 10-12)
+    else if (sequenceTime <= 12000 && !victorySequenceStarted) {
       victorySequenceStarted = true;
       
-      // Brazo derecho se levanta en señal de victoria
-      giantRobloxCharacter.children[6].rotation.z = -Math.PI / 2; // Brazo derecho arriba
+      const handRaiseProgress = (sequenceTime - 10000) / 2000; // Progreso de 0 a 1 en 2 segundos
+      
+      // Brazo derecho se levanta LENTAMENTE
+      const targetRotation = -Math.PI / 2; // 90 grados hacia arriba
+      giantRobloxCharacter.children[6].rotation.z = targetRotation * handRaiseProgress;
       giantRobloxCharacter.children[6].rotation.x = 0;
       
       // Pierna vuelve a posición normal
@@ -1581,10 +1588,18 @@
       droneCamera.position.set(15, 20, -10);
       droneCamera.lookAt(giantRobloxCharacter.position);
       
-      // Después de 1 segundo, mostrar calavera y efecto blanco y negro
-      setTimeout(() => {
-        showSkullAndBlackWhiteEffect();
-      }, 1000);
+      // Cuando termine el levantamiento de la mano (a los 12 segundos), mostrar calavera
+      if (handRaiseProgress >= 1) {
+        setTimeout(() => {
+          showSkullAndBlackWhiteEffect();
+        }, 500); // Pequeña pausa después de levantar completamente la mano
+      }
+    }
+    // Mantener la mano arriba después de levantarla (segundos 12-15)
+    else if (sequenceTime > 12000 && sequenceTime <= 15000) {
+      // Mantener brazo completamente levantado
+      giantRobloxCharacter.children[6].rotation.z = -Math.PI / 2;
+      giantRobloxCharacter.children[6].rotation.x = 0;
     }
   }
 
