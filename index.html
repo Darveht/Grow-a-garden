@@ -1292,42 +1292,42 @@
     // Crear muñeco gigante estilo Roblox/Lego según descripción detallada
     giantRobloxCharacter = new THREE.Group();
     
-    // ===== CABEZA AMARILLA =====
-    const headGeo = new THREE.BoxGeometry(6, 6, 6);
+    // ===== CABEZA AMARILLA (MÁS GRANDE ESTILO ROBLOX) =====
+    const headGeo = new THREE.BoxGeometry(8, 8, 8); // Cabeza más grande
     const headMat = new THREE.MeshLambertMaterial({ color: 0xffeb3b }); // Amarillo
     const head = new THREE.Mesh(headGeo, headMat);
-    head.position.y = 15;
+    head.position.y = 16; // Más alta
     giantRobloxCharacter.add(head);
     
-    // OJOS GRANDES Y BLANCOS
-    const eyeWhiteGeo = new THREE.BoxGeometry(1.5, 1.5, 0.3);
+    // OJOS GRANDES Y BLANCOS (AJUSTADOS A LA CABEZA MÁS GRANDE)
+    const eyeWhiteGeo = new THREE.BoxGeometry(2, 2, 0.4); // Ojos más grandes
     const eyeWhiteMat = new THREE.MeshLambertMaterial({ color: 0xffffff });
     
     const leftEyeWhite = new THREE.Mesh(eyeWhiteGeo, eyeWhiteMat);
-    leftEyeWhite.position.set(-1.5, 15.8, 3.1);
+    leftEyeWhite.position.set(-2, 16.5, 4.2); // Ajustado para cabeza más grande
     giantRobloxCharacter.add(leftEyeWhite);
     
     const rightEyeWhite = new THREE.Mesh(eyeWhiteGeo, eyeWhiteMat);
-    rightEyeWhite.position.set(1.5, 15.8, 3.1);
+    rightEyeWhite.position.set(2, 16.5, 4.2); // Ajustado para cabeza más grande
     giantRobloxCharacter.add(rightEyeWhite);
     
     // Pupilas negras dentro de los ojos blancos
-    const pupilGeo = new THREE.BoxGeometry(0.8, 0.8, 0.2);
+    const pupilGeo = new THREE.BoxGeometry(1, 1, 0.3);
     const pupilMat = new THREE.MeshLambertMaterial({ color: 0x000000 });
     
     const leftPupil = new THREE.Mesh(pupilGeo, pupilMat);
-    leftPupil.position.set(-1.5, 15.8, 3.2);
+    leftPupil.position.set(-2, 16.5, 4.3);
     giantRobloxCharacter.add(leftPupil);
     
     const rightPupil = new THREE.Mesh(pupilGeo, pupilMat);
-    rightPupil.position.set(1.5, 15.8, 3.2);
+    rightPupil.position.set(2, 16.5, 4.3);
     giantRobloxCharacter.add(rightPupil);
     
-    // BOCA SONRIENTE NEGRA
-    const smileGeo = new THREE.BoxGeometry(3, 0.8, 0.2);
+    // BOCA SONRIENTE NEGRA (MÁS GRANDE)
+    const smileGeo = new THREE.BoxGeometry(4, 1, 0.3);
     const smileMat = new THREE.MeshLambertMaterial({ color: 0x000000 });
     const smile = new THREE.Mesh(smileGeo, smileMat);
-    smile.position.set(0, 14, 3.1);
+    smile.position.set(0, 15, 4.2);
     giantRobloxCharacter.add(smile);
     
     // PEQUEÑA ARAÑA NEGRA EN LA MEJILLA IZQUIERDA
@@ -1522,23 +1522,41 @@
       giantRobloxCharacter.position.x = 60 - (walkProgress * 60); // Camina de x=60 a x=0
       giantRobloxCharacter.position.z = -25; // Mantener Z fijo para caminar derecho hacia la tienda
       
-      // Animación de caminar más realista (balanceo de brazos y piernas)
-      const walkCycle = Math.sin(sequenceTime * 0.015) * 0.4;
-      const walkBounce = Math.abs(Math.sin(sequenceTime * 0.02)) * 0.2;
+      // Animación de caminar MUY VISIBLE y estilo Roblox
+      const walkSpeed = 0.03; // Más rápido para que se vea mejor
+      const walkCycle = Math.sin(sequenceTime * walkSpeed);
+      const walkBounce = Math.abs(Math.sin(sequenceTime * walkSpeed * 2)) * 0.3;
       
-      // Movimiento vertical de rebote al caminar
+      // Movimiento vertical de rebote al caminar (más pronunciado)
       giantRobloxCharacter.position.y = 4 + walkBounce;
       
-      // Buscar índices correctos de brazos y piernas después de agregar ojos y boca
-      let leftArmIndex = 5, rightArmIndex = 6, leftLegIndex = 7, rightLegIndex = 8;
+      // ANIMACIÓN EXTREMA DE BRAZOS Y PIERNAS ESTILO ROBLOX
+      // Los brazos se mueven MUCHO más para que se vea claramente
+      const armSwing = walkCycle * 1.2; // Movimiento muy exagerado
+      const legSwing = walkCycle * 0.8; // Piernas menos exageradas pero visibles
       
-      // Animación de brazos (opuesta a las piernas)
-      giantRobloxCharacter.children[leftArmIndex].rotation.x = -walkCycle; // Brazo izquierdo
-      giantRobloxCharacter.children[rightArmIndex].rotation.x = walkCycle; // Brazo derecho
+      // ENCONTRAR LOS ÍNDICES CORRECTOS DE LAS PARTES DEL CUERPO
+      // Cabeza: 0, ojos: 1-2, pupilas: 3-4, sonrisa: 5, araña: 6-10, sombrero: 11, torso: 12
+      // cadena: 13, amuleto: 14-22, brazos: 23-24, manos: 25-26, dedos: 27-32, piernas: 33-34, katana: 35-38
       
-      // Animación de piernas
-      giantRobloxCharacter.children[leftLegIndex].rotation.x = walkCycle; // Pierna izquierda
-      giantRobloxCharacter.children[rightLegIndex].rotation.x = -walkCycle; // Pierna derecha
+      const leftArmIndex = 23;
+      const rightArmIndex = 24;
+      const leftLegIndex = 33;
+      const rightLegIndex = 34;
+      
+      // BRAZOS SE MUEVEN OPUESTO A LAS PIERNAS (como caminar real)
+      giantRobloxCharacter.children[leftArmIndex].rotation.x = -armSwing; // Brazo izquierdo hacia atrás/adelante
+      giantRobloxCharacter.children[rightArmIndex].rotation.x = armSwing; // Brazo derecho opuesto
+      
+      // PIERNAS SE MUEVEN ALTERNANDO
+      giantRobloxCharacter.children[leftLegIndex].rotation.x = legSwing; // Pierna izquierda adelante/atrás
+      giantRobloxCharacter.children[rightLegIndex].rotation.x = -legSwing; // Pierna derecha opuesta
+      
+      // MANOS también se mueven un poco
+      const leftHandIndex = 25;
+      const rightHandIndex = 26;
+      giantRobloxCharacter.children[leftHandIndex].rotation.x = -armSwing * 0.5;
+      giantRobloxCharacter.children[rightHandIndex].rotation.x = armSwing * 0.5;
       
       // SOMBRERO FIJO - sin balanceo
       if (robloxRedHat) {
@@ -1576,106 +1594,163 @@
       
       const handRaiseProgress = (sequenceTime - 10000) / 2000; // Progreso de 0 a 1 en 2 segundos
       
-      // Brazo derecho se levanta LENTAMENTE
+      // Brazo derecho se levanta LENTAMENTE (índice correcto)
+      const rightArmIndex = 24; // Índice correcto del brazo derecho
       const targetRotation = -Math.PI / 2; // 90 grados hacia arriba
-      giantRobloxCharacter.children[6].rotation.z = targetRotation * handRaiseProgress;
-      giantRobloxCharacter.children[6].rotation.x = 0;
+      giantRobloxCharacter.children[rightArmIndex].rotation.z = targetRotation * handRaiseProgress;
+      giantRobloxCharacter.children[rightArmIndex].rotation.x = 0;
       
-      // Pierna vuelve a posición normal
-      giantRobloxCharacter.children[8].rotation.x = 0;
+      // Piernas vuelven a posición normal (índices correctos)
+      giantRobloxCharacter.children[33].rotation.x = 0; // Pierna izquierda
+      giantRobloxCharacter.children[34].rotation.x = 0; // Pierna derecha
+      
+      // Brazos vuelven a posición normal excepto el que se levanta
+      giantRobloxCharacter.children[23].rotation.x = 0; // Brazo izquierdo
       
       // Cámara captura la pose épica
       droneCamera.position.set(15, 20, -10);
       droneCamera.lookAt(giantRobloxCharacter.position);
       
-      // Cuando termine el levantamiento de la mano (a los 12 segundos), mostrar calavera
-      if (handRaiseProgress >= 1) {
-        setTimeout(() => {
-          showSkullAndBlackWhiteEffect();
-        }, 500); // Pequeña pausa después de levantar completamente la mano
+      // Cuando termine el levantamiento de la mano (solo una vez)
+      if (handRaiseProgress >= 1 && sequenceTime > 11900) { // Cerca del final
+        showSkullAndBlackWhiteEffect();
       }
     }
     // Mantener la mano arriba después de levantarla (segundos 12-15)
     else if (sequenceTime > 12000 && sequenceTime <= 15000) {
-      // Mantener brazo completamente levantado
-      giantRobloxCharacter.children[6].rotation.z = -Math.PI / 2;
-      giantRobloxCharacter.children[6].rotation.x = 0;
+      // Mantener brazo derecho completamente levantado
+      const rightArmIndex = 24;
+      giantRobloxCharacter.children[rightArmIndex].rotation.z = -Math.PI / 2;
+      giantRobloxCharacter.children[rightArmIndex].rotation.x = 0;
+      
+      // Mantener otras partes inmóviles
+      giantRobloxCharacter.children[23].rotation.x = 0; // Brazo izquierdo
+      giantRobloxCharacter.children[33].rotation.x = 0; // Pierna izquierda
+      giantRobloxCharacter.children[34].rotation.x = 0; // Pierna derecha
     }
   }
 
+  let skullShown = false; // Prevenir múltiples ejecuciones
+  
   function showSkullAndBlackWhiteEffect() {
+    if (skullShown) return; // Evitar que se ejecute múltiples veces
+    skullShown = true;
+    
     // Crear overlay de calavera
     const skullOverlay = document.createElement('div');
+    skullOverlay.id = 'skullOverlay';
     skullOverlay.style.position = 'fixed';
     skullOverlay.style.top = '50%';
     skullOverlay.style.left = '50%';
     skullOverlay.style.transform = 'translate(-50%, -50%)';
-    skullOverlay.style.fontSize = '100px';
+    skullOverlay.style.fontSize = '120px';
     skullOverlay.style.zIndex = '2500';
-    skullOverlay.style.animation = 'skullAppear 1s ease-out, skullPulse 1.5s ease-in-out infinite 1s';
-    skullOverlay.style.textShadow = '0 0 20px rgba(255, 255, 255, 0.8), 0 0 40px rgba(128, 0, 128, 0.6)';
+    skullOverlay.style.animation = 'skullAppear 1s ease-out, skullPulse 2s ease-in-out infinite 1s';
+    skullOverlay.style.textShadow = '0 0 30px rgba(255, 255, 255, 1), 0 0 60px rgba(128, 0, 128, 0.8)';
     skullOverlay.textContent = '💀';
     
-    // CSS para la animación de calavera con palpitación fantasmal
-    const skullStyle = document.createElement('style');
-    skullStyle.textContent = `
-      @keyframes skullAppear {
-        from { transform: translate(-50%, -50%) scale(0) rotate(180deg); opacity: 0; }
-        to { transform: translate(-50%, -50%) scale(1) rotate(0deg); opacity: 1; }
-      }
-      
-      @keyframes skullPulse {
-        0%, 100% { 
-          transform: translate(-50%, -50%) scale(1); 
-          opacity: 1; 
-          text-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 0 0 40px rgba(128, 0, 128, 0.6);
+    // CSS para la animación de calavera con palpitación fantasmal MEJORADA
+    if (!document.getElementById('skullAnimationStyles')) {
+      const skullStyle = document.createElement('style');
+      skullStyle.id = 'skullAnimationStyles';
+      skullStyle.textContent = `
+        @keyframes skullAppear {
+          0% { 
+            transform: translate(-50%, -50%) scale(0) rotate(360deg); 
+            opacity: 0; 
+            filter: hue-rotate(180deg);
+          }
+          50% {
+            transform: translate(-50%, -50%) scale(1.3) rotate(180deg); 
+            opacity: 0.8;
+            filter: hue-rotate(90deg);
+          }
+          100% { 
+            transform: translate(-50%, -50%) scale(1) rotate(0deg); 
+            opacity: 1; 
+            filter: hue-rotate(0deg);
+          }
         }
-        50% { 
-          transform: translate(-50%, -50%) scale(1.2); 
-          opacity: 0.7; 
-          text-shadow: 0 0 30px rgba(255, 255, 255, 1), 0 0 60px rgba(128, 0, 128, 0.8), 0 0 80px rgba(255, 0, 0, 0.4);
+        
+        @keyframes skullPulse {
+          0%, 100% { 
+            transform: translate(-50%, -50%) scale(1); 
+            opacity: 1; 
+            text-shadow: 0 0 30px rgba(255, 255, 255, 1), 0 0 60px rgba(128, 0, 128, 0.8);
+          }
+          25% {
+            transform: translate(-50%, -50%) scale(1.1); 
+            opacity: 0.9; 
+            text-shadow: 0 0 40px rgba(255, 100, 100, 1), 0 0 80px rgba(255, 0, 0, 0.8);
+          }
+          50% { 
+            transform: translate(-50%, -50%) scale(1.3); 
+            opacity: 0.6; 
+            text-shadow: 0 0 50px rgba(255, 255, 255, 1), 0 0 100px rgba(128, 0, 128, 1), 0 0 120px rgba(255, 0, 0, 0.6);
+          }
+          75% {
+            transform: translate(-50%, -50%) scale(1.15); 
+            opacity: 0.8; 
+            text-shadow: 0 0 35px rgba(100, 255, 100, 1), 0 0 70px rgba(0, 128, 0, 0.8);
+          }
         }
-      }
-    `;
-    document.head.appendChild(skullStyle);
+      `;
+      document.head.appendChild(skullStyle);
+    }
     
     document.body.appendChild(skullOverlay);
     
     // Efecto blanco y negro en toda la vista
     const blackWhiteFilter = document.createElement('div');
+    blackWhiteFilter.id = 'blackWhiteFilter';
     blackWhiteFilter.style.position = 'fixed';
     blackWhiteFilter.style.top = '0';
     blackWhiteFilter.style.left = '0';
     blackWhiteFilter.style.width = '100vw';
     blackWhiteFilter.style.height = '100vh';
-    blackWhiteFilter.style.background = 'rgba(0, 0, 0, 0.3)';
-    blackWhiteFilter.style.backdropFilter = 'grayscale(100%) contrast(150%)';
+    blackWhiteFilter.style.background = 'rgba(0, 0, 0, 0.4)';
+    blackWhiteFilter.style.backdropFilter = 'grayscale(100%) contrast(200%) brightness(80%)';
     blackWhiteFilter.style.zIndex = '2400';
     blackWhiteFilter.style.animation = 'blackWhiteAppear 2s ease-in-out';
     
-    const filterStyle = document.createElement('style');
-    filterStyle.textContent = `
-      @keyframes blackWhiteAppear {
-        from { opacity: 0; backdrop-filter: grayscale(0%) contrast(100%); }
-        to { opacity: 1; backdrop-filter: grayscale(100%) contrast(150%); }
-      }
-    `;
-    document.head.appendChild(filterStyle);
+    if (!document.getElementById('filterAnimationStyles')) {
+      const filterStyle = document.createElement('style');
+      filterStyle.id = 'filterAnimationStyles';
+      filterStyle.textContent = `
+        @keyframes blackWhiteAppear {
+          0% { 
+            opacity: 0; 
+            backdrop-filter: grayscale(0%) contrast(100%) brightness(100%); 
+          }
+          50% {
+            opacity: 0.7; 
+            backdrop-filter: grayscale(50%) contrast(150%) brightness(90%); 
+          }
+          100% { 
+            opacity: 1; 
+            backdrop-filter: grayscale(100%) contrast(200%) brightness(80%); 
+          }
+        }
+      `;
+      document.head.appendChild(filterStyle);
+    }
     
     document.body.appendChild(blackWhiteFilter);
     
     // Cambiar el fondo de la escena 3D a blanco y negro
     if (droneScene) {
-      droneScene.background = new THREE.Color(0x808080); // Gris para efecto B&N
+      droneScene.background = new THREE.Color(0x606060); // Gris más oscuro para efecto B&N
     }
     
-    // Después de 3 segundos, terminar el intro
+    // Después de 4 segundos, terminar el intro
     setTimeout(() => {
       endIntro();
-      // Limpiar elementos
-      document.body.removeChild(skullOverlay);
-      document.body.removeChild(blackWhiteFilter);
-    }, 3000);
+      // Limpiar elementos de forma segura
+      const skullElement = document.getElementById('skullOverlay');
+      const filterElement = document.getElementById('blackWhiteFilter');
+      if (skullElement) document.body.removeChild(skullElement);
+      if (filterElement) document.body.removeChild(filterElement);
+    }, 4000);
   }
 
   function endIntro() {
