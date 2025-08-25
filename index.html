@@ -1292,41 +1292,60 @@
     // Crear muñeco gigante estilo Roblox
     giantRobloxCharacter = new THREE.Group();
     
-    // Cuerpo principal - grande y cuadrado estilo Roblox
+    // Torso rojo estilo Roblox
     const bodyGeo = new THREE.BoxGeometry(8, 12, 4);
-    const bodyMat = new THREE.MeshLambertMaterial({ color: 0x1877f2 }); // Azul Roblox
+    const bodyMat = new THREE.MeshLambertMaterial({ color: 0xcc0000 }); // Rojo brillante
     const body = new THREE.Mesh(bodyGeo, bodyMat);
     body.position.y = 6;
     giantRobloxCharacter.add(body);
     
-    // Cabeza cuadrada
+    // Cabeza amarilla característica de Roblox
     const headGeo = new THREE.BoxGeometry(6, 6, 6);
-    const headMat = new THREE.MeshLambertMaterial({ color: 0xffdbcb }); // Color piel
+    const headMat = new THREE.MeshLambertMaterial({ color: 0xffeb3b }); // Amarillo Roblox
     const head = new THREE.Mesh(headGeo, headMat);
     head.position.y = 15;
     giantRobloxCharacter.add(head);
     
-    // Sombrero rojo épico
+    // Ojos negros simples estilo Roblox
+    const eyeGeo = new THREE.BoxGeometry(0.8, 0.8, 0.2);
+    const eyeMat = new THREE.MeshLambertMaterial({ color: 0x000000 });
+    
+    const leftEye = new THREE.Mesh(eyeGeo, eyeMat);
+    leftEye.position.set(-1.2, 15.5, 3.1);
+    giantRobloxCharacter.add(leftEye);
+    
+    const rightEye = new THREE.Mesh(eyeGeo, eyeMat);
+    rightEye.position.set(1.2, 15.5, 3.1);
+    giantRobloxCharacter.add(rightEye);
+    
+    // Boca simple
+    const mouthGeo = new THREE.BoxGeometry(2, 0.4, 0.2);
+    const mouthMat = new THREE.MeshLambertMaterial({ color: 0x000000 });
+    const mouth = new THREE.Mesh(mouthGeo, mouthMat);
+    mouth.position.set(0, 14.2, 3.1);
+    giantRobloxCharacter.add(mouth);
+    
+    // Sombrero rojo clásico estilo antiguo
     robloxRedHat = new THREE.Group();
     const hatBase = new THREE.Mesh(
       new THREE.CylinderGeometry(4, 4, 1),
-      new THREE.MeshLambertMaterial({ color: 0xcc0000 }) // Rojo brillante
+      new THREE.MeshLambertMaterial({ color: 0x8b0000 }) // Rojo más oscuro
     );
     hatBase.position.y = 18.5;
     robloxRedHat.add(hatBase);
     
     const hatTop = new THREE.Mesh(
-      new THREE.CylinderGeometry(3, 3, 3),
-      new THREE.MeshLambertMaterial({ color: 0xaa0000 }) // Rojo más oscuro
+      new THREE.CylinderGeometry(2.5, 2.5, 3),
+      new THREE.MeshLambertMaterial({ color: 0xcc0000 }) // Rojo brillante
     );
     hatTop.position.y = 20;
     robloxRedHat.add(hatTop);
     
     giantRobloxCharacter.add(robloxRedHat);
     
-    // Brazos cuadrados
+    // Brazos amarillos estilo Roblox
     const armGeo = new THREE.BoxGeometry(3, 10, 3);
-    const armMat = new THREE.MeshLambertMaterial({ color: 0xffdbcb });
+    const armMat = new THREE.MeshLambertMaterial({ color: 0xffeb3b }); // Amarillo
     
     const leftArm = new THREE.Mesh(armGeo, armMat);
     leftArm.position.set(-6, 8, 0);
@@ -1336,9 +1355,9 @@
     rightArm.position.set(6, 8, 0);
     giantRobloxCharacter.add(rightArm);
     
-    // Piernas cuadradas
+    // Piernas rojas estilo Roblox
     const legGeo = new THREE.BoxGeometry(3, 8, 3);
-    const legMat = new THREE.MeshLambertMaterial({ color: 0x333333 }); // Pantalones oscuros
+    const legMat = new THREE.MeshLambertMaterial({ color: 0xcc0000 }); // Rojo para pantalones
     
     const leftLeg = new THREE.Mesh(legGeo, legMat);
     leftLeg.position.set(-2, -4, 0);
@@ -1348,8 +1367,8 @@
     rightLeg.position.set(2, -4, 0);
     giantRobloxCharacter.add(rightLeg);
     
-    // Posicionar el muñeco lejos de la tienda inicialmente
-    giantRobloxCharacter.position.set(60, 0, -25);
+    // Posicionar el muñeco sobre la superficie, no debajo
+    giantRobloxCharacter.position.set(60, 4, -25); // Y=4 para que esté sobre el suelo
     giantRobloxCharacter.castShadow = true;
     
     droneScene.add(giantRobloxCharacter);
@@ -1362,15 +1381,27 @@
     if (sequenceTime <= 8000) {
       const walkProgress = sequenceTime / 8000;
       
-      // Movimiento hacia la tienda
+      // Movimiento hacia la tienda - mantiene Y=4 para caminar sobre la superficie
       giantRobloxCharacter.position.x = 60 - (walkProgress * 60); // Camina de x=60 a x=0
+      giantRobloxCharacter.position.y = 4; // Mantener sobre la superficie
       
-      // Animación de caminar (balanceo de brazos y piernas)
-      const walkCycle = Math.sin(sequenceTime * 0.01) * 0.3;
-      giantRobloxCharacter.children[3].rotation.x = walkCycle; // Brazo izquierdo
-      giantRobloxCharacter.children[4].rotation.x = -walkCycle; // Brazo derecho
-      giantRobloxCharacter.children[5].rotation.x = -walkCycle; // Pierna izquierda
-      giantRobloxCharacter.children[6].rotation.x = walkCycle; // Pierna derecha
+      // Animación de caminar más realista (balanceo de brazos y piernas)
+      const walkCycle = Math.sin(sequenceTime * 0.015) * 0.4;
+      const walkBounce = Math.abs(Math.sin(sequenceTime * 0.02)) * 0.2;
+      
+      // Movimiento vertical de rebote al caminar
+      giantRobloxCharacter.position.y = 4 + walkBounce;
+      
+      // Buscar índices correctos de brazos y piernas después de agregar ojos y boca
+      let leftArmIndex = 5, rightArmIndex = 6, leftLegIndex = 7, rightLegIndex = 8;
+      
+      // Animación de brazos (opuesta a las piernas)
+      giantRobloxCharacter.children[leftArmIndex].rotation.x = -walkCycle; // Brazo izquierdo
+      giantRobloxCharacter.children[rightArmIndex].rotation.x = walkCycle; // Brazo derecho
+      
+      // Animación de piernas
+      giantRobloxCharacter.children[leftLegIndex].rotation.x = walkCycle; // Pierna izquierda
+      giantRobloxCharacter.children[rightLegIndex].rotation.x = -walkCycle; // Pierna derecha
       
       // Sombrero se balancea ligeramente
       if (robloxRedHat) {
@@ -1389,8 +1420,8 @@
     else if (sequenceTime <= 10000) {
       const crushProgress = (sequenceTime - 8000) / 2000;
       
-      // El muñeco levanta el pie
-      giantRobloxCharacter.children[6].rotation.x = crushProgress * 1.5; // Pierna derecha se levanta
+      // El muñeco levanta el pie derecho para aplastar
+      giantRobloxCharacter.children[8].rotation.x = crushProgress * 1.5; // Pierna derecha se levanta
       
       // La tienda se aplasta gradualmente
       if (storeBase) {
@@ -1407,11 +1438,11 @@
       victorySequenceStarted = true;
       
       // Brazo derecho se levanta en señal de victoria
-      giantRobloxCharacter.children[4].rotation.z = -Math.PI / 2; // Brazo derecho arriba
-      giantRobloxCharacter.children[4].rotation.x = 0;
+      giantRobloxCharacter.children[6].rotation.z = -Math.PI / 2; // Brazo derecho arriba
+      giantRobloxCharacter.children[6].rotation.x = 0;
       
       // Pierna vuelve a posición normal
-      giantRobloxCharacter.children[6].rotation.x = 0;
+      giantRobloxCharacter.children[8].rotation.x = 0;
       
       // Cámara captura la pose épica
       droneCamera.position.set(15, 20, -10);
@@ -1860,12 +1891,53 @@
 
     // Suelo mágico
     const ground = new THREE.Mesh(
-      new THREE.BoxGeometry(200, 0.4, 200), 
+      new THREE.BoxGeometry(80, 0.4, 80), 
       new THREE.MeshStandardMaterial({color: 0x4CAF50})
     );
     ground.position.y = -0.2;
     ground.receiveShadow = true;
     scene.add(ground);
+
+    // Paredes para delimitar el área
+    const wallHeight = 8;
+    const wallThickness = 1;
+    const areaSize = 80;
+    
+    // Pared norte
+    const northWall = new THREE.Mesh(
+      new THREE.BoxGeometry(areaSize + wallThickness, wallHeight, wallThickness),
+      new THREE.MeshStandardMaterial({color: 0x1877f2})
+    );
+    northWall.position.set(0, wallHeight/2, -areaSize/2);
+    northWall.castShadow = true;
+    scene.add(northWall);
+    
+    // Pared sur
+    const southWall = new THREE.Mesh(
+      new THREE.BoxGeometry(areaSize + wallThickness, wallHeight, wallThickness),
+      new THREE.MeshStandardMaterial({color: 0x1877f2})
+    );
+    southWall.position.set(0, wallHeight/2, areaSize/2);
+    southWall.castShadow = true;
+    scene.add(southWall);
+    
+    // Pared oeste
+    const westWall = new THREE.Mesh(
+      new THREE.BoxGeometry(wallThickness, wallHeight, areaSize),
+      new THREE.MeshStandardMaterial({color: 0x1877f2})
+    );
+    westWall.position.set(-areaSize/2, wallHeight/2, 0);
+    westWall.castShadow = true;
+    scene.add(westWall);
+    
+    // Pared este
+    const eastWall = new THREE.Mesh(
+      new THREE.BoxGeometry(wallThickness, wallHeight, areaSize),
+      new THREE.MeshStandardMaterial({color: 0x1877f2})
+    );
+    eastWall.position.set(areaSize/2, wallHeight/2, 0);
+    eastWall.castShadow = true;
+    scene.add(eastWall);
 
     // Plots con marco azul estilo Roblox
     plots = [];
