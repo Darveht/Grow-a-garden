@@ -1289,61 +1289,113 @@
   }
 
   function createSpaceshipSequence() {
-    // Crear nave espacial
+    // Crear nave espacial MÁS DETALLADA
     spaceship = new THREE.Group();
     
-    // Cuerpo principal de la nave (plateado)
-    const bodyGeo = new THREE.CylinderGeometry(2, 4, 12);
+    // Cuerpo principal de la nave (plateado con más detalle)
+    const bodyGeo = new THREE.CylinderGeometry(2.5, 4.5, 15);
     const bodyMat = new THREE.MeshLambertMaterial({ color: 0xc0c0c0 });
     const body = new THREE.Mesh(bodyGeo, bodyMat);
-    body.position.y = 6;
+    body.position.y = 7;
     spaceship.add(body);
     
-    // Punta de la nave (dorada)
-    const tipGeo = new THREE.ConeGeometry(2, 4);
+    // Secciones del cuerpo para más detalle
+    for(let i = 0; i < 4; i++) {
+      const sectionGeo = new THREE.CylinderGeometry(2.3, 2.3, 0.5);
+      const sectionMat = new THREE.MeshLambertMaterial({ color: 0x888888 });
+      const section = new THREE.Mesh(sectionGeo, sectionMat);
+      section.position.y = 2 + (i * 3);
+      spaceship.add(section);
+    }
+    
+    // Punta de la nave (dorada con más detalle)
+    const tipGeo = new THREE.ConeGeometry(2.5, 5);
     const tipMat = new THREE.MeshLambertMaterial({ color: 0xffd700 });
     const tip = new THREE.Mesh(tipGeo, tipMat);
-    tip.position.y = 14;
+    tip.position.y = 17;
     spaceship.add(tip);
     
-    // Alas laterales
-    const wingGeo = new THREE.BoxGeometry(8, 1, 3);
+    // Antena en la punta
+    const antennaGeo = new THREE.CylinderGeometry(0.1, 0.1, 2);
+    const antennaMat = new THREE.MeshLambertMaterial({ color: 0xff0000 });
+    const antenna = new THREE.Mesh(antennaGeo, antennaMat);
+    antenna.position.y = 20.5;
+    spaceship.add(antenna);
+    
+    // Alas laterales MÁS GRANDES Y DETALLADAS
+    const wingGeo = new THREE.BoxGeometry(12, 1.5, 4);
     const wingMat = new THREE.MeshLambertMaterial({ color: 0x1877f2 });
     
     const leftWing = new THREE.Mesh(wingGeo, wingMat);
-    leftWing.position.set(-4, 8, 0);
+    leftWing.position.set(-6, 8, 0);
     spaceship.add(leftWing);
     
     const rightWing = new THREE.Mesh(wingGeo, wingMat);
-    rightWing.position.set(4, 8, 0);
+    rightWing.position.set(6, 8, 0);
     spaceship.add(rightWing);
     
-    // Cabina (transparente azul)
-    const cabinGeo = new THREE.SphereGeometry(1.5);
+    // Motores en las alas
+    for(let side = 0; side < 2; side++) {
+      const engineGeo = new THREE.CylinderGeometry(0.8, 1.2, 3);
+      const engineMat = new THREE.MeshLambertMaterial({ color: 0x333333 });
+      const engine = new THREE.Mesh(engineGeo, engineMat);
+      engine.position.set(side === 0 ? -8 : 8, 7, 0);
+      spaceship.add(engine);
+    }
+    
+    // Cabina (transparente azul MÁS GRANDE)
+    const cabinGeo = new THREE.SphereGeometry(2);
     const cabinMat = new THREE.MeshLambertMaterial({ 
       color: 0x42a5f5, 
       transparent: true, 
-      opacity: 0.6 
+      opacity: 0.7 
     });
     const cabin = new THREE.Mesh(cabinGeo, cabinMat);
-    cabin.position.y = 10;
+    cabin.position.y = 12;
     spaceship.add(cabin);
     
-    // Propulsores en la base
-    for(let i = 0; i < 3; i++) {
-      const thrusterGeo = new THREE.CylinderGeometry(0.5, 0.8, 2);
-      const thrusterMat = new THREE.MeshLambertMaterial({ color: 0x444444 });
-      const thruster = new THREE.Mesh(thrusterGeo, thrusterMat);
-      const angle = (i / 3) * Math.PI * 2;
-      thruster.position.set(
-        Math.cos(angle) * 2,
-        -1,
-        Math.sin(angle) * 2
+    // Ventanas de la cabina
+    for(let i = 0; i < 6; i++) {
+      const windowGeo = new THREE.CircleGeometry(0.3);
+      const windowMat = new THREE.MeshBasicMaterial({ color: 0xffffff, emissive: 0x444444 });
+      const window = new THREE.Mesh(windowGeo, windowMat);
+      const angle = (i / 6) * Math.PI * 2;
+      window.position.set(
+        Math.cos(angle) * 1.8,
+        12,
+        Math.sin(angle) * 1.8
       );
-      spaceship.add(thruster);
+      window.lookAt(0, 12, 0);
+      spaceship.add(window);
     }
     
-    spaceship.position.set(0, 0, 0);
+    // Propulsores en la base MÁS GRANDES
+    for(let i = 0; i < 4; i++) {
+      const thrusterGeo = new THREE.CylinderGeometry(0.8, 1.2, 3);
+      const thrusterMat = new THREE.MeshLambertMaterial({ color: 0x222222 });
+      const thruster = new THREE.Mesh(thrusterGeo, thrusterMat);
+      const angle = (i / 4) * Math.PI * 2;
+      thruster.position.set(
+        Math.cos(angle) * 3,
+        -2,
+        Math.sin(angle) * 3
+      );
+      spaceship.add(thruster);
+      
+      // Tubos de escape internos
+      const pipeGeo = new THREE.CylinderGeometry(0.4, 0.6, 2);
+      const pipeMat = new THREE.MeshBasicMaterial({ color: 0xff4400, emissive: 0x442200 });
+      const pipe = new THREE.Mesh(pipeGeo, pipeMat);
+      pipe.position.set(
+        Math.cos(angle) * 3,
+        -2.5,
+        Math.sin(angle) * 3
+      );
+      spaceship.add(pipe);
+    }
+    
+    // POSICIONAR FUERA DEL ÁREA DEL JUEGO
+    spaceship.position.set(-50, 0, -50); // Lejos del huerto
     droneScene.add(spaceship);
     
     // Crear sistema de partículas de fuego
@@ -1359,29 +1411,60 @@
   function createFireSystem() {
     fireParticles = new THREE.Group();
     
-    for(let i = 0; i < 50; i++) {
-      const flameGeo = new THREE.SphereGeometry(0.3);
+    // MÁS PARTÍCULAS DE FUEGO Y MÁS REALISTAS
+    for(let i = 0; i < 150; i++) {
+      const flameGeo = new THREE.SphereGeometry(0.2 + Math.random() * 0.4);
+      const hue = 0.15 - Math.random() * 0.15; // Más variedad en colores de fuego
       const flameMat = new THREE.MeshBasicMaterial({ 
-        color: new THREE.Color().setHSL(0.1 - Math.random() * 0.1, 1, 0.5),
+        color: new THREE.Color().setHSL(hue, 1, 0.5 + Math.random() * 0.3),
         transparent: true,
-        opacity: 0.8
+        opacity: 0.7 + Math.random() * 0.3
       });
       const flame = new THREE.Mesh(flameGeo, flameMat);
       
-      // Posicionar llamas aleatoriamente debajo de la nave
+      // Posicionar llamas aleatoriamente debajo de la nave (FUERA DEL HUERTO)
       flame.position.set(
-        (Math.random() - 0.5) * 10,
-        -3 - Math.random() * 5,
-        (Math.random() - 0.5) * 10
+        -50 + (Math.random() - 0.5) * 15, // Centrado en la nueva posición de la nave
+        -3 - Math.random() * 8,
+        -50 + (Math.random() - 0.5) * 15
       );
       
       flame.userData = {
         initialY: flame.position.y,
-        speed: 1 + Math.random() * 2,
-        life: Math.random()
+        initialX: flame.position.x,
+        initialZ: flame.position.z,
+        speed: 1.5 + Math.random() * 3,
+        life: Math.random(),
+        bobSpeed: 0.5 + Math.random() * 1.5
       };
       
       fireParticles.add(flame);
+    }
+    
+    // Humo adicional
+    for(let i = 0; i < 30; i++) {
+      const smokeGeo = new THREE.SphereGeometry(0.5 + Math.random() * 0.5);
+      const smokeMat = new THREE.MeshBasicMaterial({ 
+        color: 0x555555,
+        transparent: true,
+        opacity: 0.3 + Math.random() * 0.4
+      });
+      const smoke = new THREE.Mesh(smokeGeo, smokeMat);
+      
+      smoke.position.set(
+        -50 + (Math.random() - 0.5) * 20,
+        2 + Math.random() * 10,
+        -50 + (Math.random() - 0.5) * 20
+      );
+      
+      smoke.userData = {
+        initialY: smoke.position.y,
+        speed: 0.5 + Math.random() * 1,
+        life: Math.random(),
+        isSmoke: true
+      };
+      
+      fireParticles.add(smoke);
     }
     
     fireParticles.visible = false;
@@ -1413,36 +1496,78 @@
   function createMagicTree() {
     magicTree = new THREE.Group();
     
-    // Tronco del árbol
-    const trunkGeo = new THREE.CylinderGeometry(1, 2, 8);
+    // Tronco del árbol MÁS DETALLADO
+    const trunkGeo = new THREE.CylinderGeometry(1.5, 2.5, 12);
     const trunkMat = new THREE.MeshLambertMaterial({ color: 0x8B4513 });
     const trunk = new THREE.Mesh(trunkGeo, trunkMat);
-    trunk.position.y = 4;
+    trunk.position.y = 6;
     magicTree.add(trunk);
     
-    // Copa del árbol
-    const leavesGeo = new THREE.SphereGeometry(6);
+    // Textura del tronco con anillos
+    for(let i = 0; i < 6; i++) {
+      const ringGeo = new THREE.CylinderGeometry(1.6, 1.6, 0.3);
+      const ringMat = new THREE.MeshLambertMaterial({ color: 0x654321 });
+      const ring = new THREE.Mesh(ringGeo, ringMat);
+      ring.position.y = 2 + (i * 2);
+      magicTree.add(ring);
+    }
+    
+    // Copa del árbol MÁS GRANDE Y DETALLADA
+    const leavesGeo = new THREE.SphereGeometry(8);
     const leavesMat = new THREE.MeshLambertMaterial({ color: 0x228B22 });
     const leaves = new THREE.Mesh(leavesGeo, leavesMat);
-    leaves.position.y = 10;
+    leaves.position.y = 14;
     magicTree.add(leaves);
     
-    // Ramas adicionales
-    for(let i = 0; i < 8; i++) {
-      const branchGeo = new THREE.CylinderGeometry(0.2, 0.5, 3);
+    // Copas adicionales para más volumen
+    for(let i = 0; i < 4; i++) {
+      const extraLeavesGeo = new THREE.SphereGeometry(4 + Math.random() * 2);
+      const extraLeavesMat = new THREE.MeshLambertMaterial({ color: 0x32CD32 });
+      const extraLeaves = new THREE.Mesh(extraLeavesGeo, extraLeavesMat);
+      const angle = (i / 4) * Math.PI * 2;
+      extraLeaves.position.set(
+        Math.cos(angle) * 5,
+        12 + Math.random() * 4,
+        Math.sin(angle) * 5
+      );
+      magicTree.add(extraLeaves);
+    }
+    
+    // Ramas principales MÁS GRUESAS
+    for(let i = 0; i < 12; i++) {
+      const branchGeo = new THREE.CylinderGeometry(0.3, 0.8, 5);
       const branchMat = new THREE.MeshLambertMaterial({ color: 0x654321 });
       const branch = new THREE.Mesh(branchGeo, branchMat);
-      const angle = (i / 8) * Math.PI * 2;
+      const angle = (i / 12) * Math.PI * 2;
+      const height = 8 + Math.random() * 6;
       branch.position.set(
-        Math.cos(angle) * 3,
-        6 + Math.random() * 4,
-        Math.sin(angle) * 3
+        Math.cos(angle) * (3 + Math.random() * 2),
+        height,
+        Math.sin(angle) * (3 + Math.random() * 2)
       );
-      branch.rotation.z = angle;
+      branch.rotation.z = angle + (Math.random() - 0.5) * 0.5;
+      branch.rotation.x = (Math.random() - 0.5) * 0.3;
       magicTree.add(branch);
     }
     
-    magicTree.position.set(0, 0, 0);
+    // Raíces visibles
+    for(let i = 0; i < 6; i++) {
+      const rootGeo = new THREE.CylinderGeometry(0.8, 0.4, 3);
+      const rootMat = new THREE.MeshLambertMaterial({ color: 0x8B4513 });
+      const root = new THREE.Mesh(rootGeo, rootMat);
+      const angle = (i / 6) * Math.PI * 2;
+      root.position.set(
+        Math.cos(angle) * 2.5,
+        -0.5,
+        Math.sin(angle) * 2.5
+      );
+      root.rotation.z = angle;
+      root.rotation.x = Math.PI / 6;
+      magicTree.add(root);
+    }
+    
+    // POSICIONAR FUERA DEL ÁREA DEL JUEGO
+    magicTree.position.set(30, 0, 30); // Lejos del huerto, en otra área
     magicTree.scale.set(0.1, 0.1, 0.1); // Comienza muy pequeño
     magicTree.visible = false;
     droneScene.add(magicTree);
@@ -1454,24 +1579,69 @@
   function createLightningSystem() {
     lightning = new THREE.Group();
     
-    // Crear múltiples rayos
-    for(let i = 0; i < 5; i++) {
-      const lightningGeo = new THREE.CylinderGeometry(0.2, 0.2, 25);
+    // Crear múltiples rayos MÁS REALISTAS Y DETALLADOS
+    for(let i = 0; i < 12; i++) {
+      // Rayo principal
+      const lightningGeo = new THREE.CylinderGeometry(0.1, 0.3, 35);
       const lightningMat = new THREE.MeshBasicMaterial({ 
         color: 0xffffff,
         emissive: 0xffffff,
-        emissiveIntensity: 0.8
+        emissiveIntensity: 1.2
       });
       const bolt = new THREE.Mesh(lightningGeo, lightningMat);
+      
+      // Posicionar rayos SOBRE EL ÁRBOL (fuera del huerto)
       bolt.position.set(
-        (Math.random() - 0.5) * 20,
-        30,
-        (Math.random() - 0.5) * 20
+        30 + (Math.random() - 0.5) * 25, // Centrado en la nueva posición del árbol
+        40,
+        30 + (Math.random() - 0.5) * 25
       );
-      bolt.rotation.x = Math.random() * 0.3;
-      bolt.rotation.z = Math.random() * 0.3;
+      bolt.rotation.x = (Math.random() - 0.5) * 0.4;
+      bolt.rotation.z = (Math.random() - 0.5) * 0.4;
+      
+      bolt.userData = {
+        originalIntensity: 1.2,
+        flickerSpeed: 2 + Math.random() * 3
+      };
+      
       lightning.add(bolt);
+      
+      // Rayos secundarios (ramificaciones)
+      if (i < 6) {
+        for(let j = 0; j < 3; j++) {
+          const branchGeo = new THREE.CylinderGeometry(0.05, 0.15, 15);
+          const branchMat = new THREE.MeshBasicMaterial({ 
+            color: 0xaaaaff,
+            emissive: 0xaaaaff,
+            emissiveIntensity: 0.8
+          });
+          const branch = new THREE.Mesh(branchGeo, branchMat);
+          branch.position.set(
+            bolt.position.x + (Math.random() - 0.5) * 8,
+            bolt.position.y - 10 - (j * 5),
+            bolt.position.z + (Math.random() - 0.5) * 8
+          );
+          branch.rotation.x = (Math.random() - 0.5) * 0.6;
+          branch.rotation.z = (Math.random() - 0.5) * 0.6;
+          lightning.add(branch);
+        }
+      }
     }
+    
+    // Efecto de destello en el suelo donde cae el rayo
+    const flashGeo = new THREE.CircleGeometry(8);
+    const flashMat = new THREE.MeshBasicMaterial({ 
+      color: 0xffffff,
+      emissive: 0xffffff,
+      emissiveIntensity: 2,
+      transparent: true,
+      opacity: 0
+    });
+    const flash = new THREE.Mesh(flashGeo, flashMat);
+    flash.rotation.x = -Math.PI / 2;
+    flash.position.set(30, 0.1, 30); // En la base del árbol
+    flash.userData = { isFlash: true };
+    lightning.add(flash);
     
     lightning.visible = false;
     droneScene.add(lightning);
@@ -1488,18 +1658,32 @@
       if (fireParticles) {
         fireParticles.visible = true;
         
-        // Animar partículas de fuego
+        // Animar partículas de fuego CON MÁS REALISMO
         fireParticles.children.forEach((flame, index) => {
-          flame.position.y = flame.userData.initialY + Math.sin(sequenceTime * 0.01 + index) * 2;
-          flame.scale.set(
-            1 + Math.sin(sequenceTime * 0.005 + index) * 0.3,
-            1 + Math.sin(sequenceTime * 0.008 + index) * 0.5,
-            1 + Math.sin(sequenceTime * 0.005 + index) * 0.3
-          );
-          
-          // Cambiar color de llama
-          const hue = 0.1 - (Math.sin(sequenceTime * 0.01 + index) * 0.1);
-          flame.material.color.setHSL(hue, 1, 0.5 + Math.sin(sequenceTime * 0.02) * 0.3);
+          if (flame.userData.isSmoke) {
+            // Animación del humo: sube y se dispersa
+            flame.position.y = flame.userData.initialY + Math.sin(sequenceTime * 0.002 + index) * 3;
+            flame.scale.setScalar(1 + Math.sin(sequenceTime * 0.003 + index) * 0.4);
+            flame.material.opacity = 0.3 + Math.sin(sequenceTime * 0.004 + index) * 0.2;
+          } else {
+            // Animación del fuego: parpadeo y movimiento errático
+            flame.position.y = flame.userData.initialY + Math.sin(sequenceTime * 0.01 + index) * 3;
+            flame.position.x = flame.userData.initialX + Math.sin(sequenceTime * 0.015 + index) * 1.5;
+            flame.position.z = flame.userData.initialZ + Math.cos(sequenceTime * 0.012 + index) * 1.5;
+            
+            flame.scale.set(
+              1 + Math.sin(sequenceTime * 0.008 + index) * 0.4,
+              1 + Math.sin(sequenceTime * 0.012 + index) * 0.6,
+              1 + Math.sin(sequenceTime * 0.008 + index) * 0.4
+            );
+            
+            // Cambiar color de llama MÁS DINÁMICO
+            const time = sequenceTime * 0.01;
+            const hue = 0.15 - (Math.sin(time + index * flame.userData.bobSpeed) * 0.12);
+            const brightness = 0.5 + Math.sin(time * 2 + index) * 0.3;
+            flame.material.color.setHSL(hue, 1, brightness);
+            flame.material.opacity = 0.7 + Math.sin(time * 3 + index) * 0.3;
+          }
         });
       }
       
@@ -1598,50 +1782,129 @@
         magicTree.rotation.y = progress * Math.PI * 2;
       }
       
-      // Vista del árbol creciendo
-      droneCamera.position.set(15, 10, 15);
-      droneCamera.lookAt(0, 5, 0);
+      // Vista del árbol creciendo (MIRAR HACIA LA NUEVA POSICIÓN)
+      droneCamera.position.set(45, 15, 45);
+      droneCamera.lookAt(30, 10, 30); // Mirar hacia el árbol en su nueva posición
     }
-    // ESCENA 5: Rayo golpea el árbol y se incendia (13-16 segundos)
-    else if (sequenceTime <= 16000) {
-      const progress = (sequenceTime - 13000) / 3000;
+    // ESCENA 5: Rayo golpea el árbol y se incendia (13-18 segundos) - EXTENDIDA
+    else if (sequenceTime <= 18000) {
+      const progress = (sequenceTime - 13000) / 5000; // Ahora son 5 segundos
       
-      // Mostrar rayos a los 0.5 segundos
-      if (progress > 0.15 && lightning) {
+      // Mostrar rayos a los 0.2 segundos con MÁS INTENSIDAD
+      if (progress > 0.04 && lightning) {
         lightning.visible = true;
         
-        // Animar rayos
+        // Animar rayos CON MÁS REALISMO
         lightning.children.forEach((bolt, index) => {
-          bolt.scale.y = 1 + Math.sin(sequenceTime * 0.05 + index) * 0.3;
-          bolt.material.emissiveIntensity = 0.8 + Math.sin(sequenceTime * 0.1) * 0.4;
-        });
-      }
-      
-      // Árbol se incendia después del rayo
-      if (progress > 0.3 && magicTree) {
-        magicTree.children.forEach(part => {
-          if (part.material) {
-            // Cambiar a colores de fuego
-            const fireIntensity = (progress - 0.3) / 0.7;
-            if (part.material.color.r < 0.5) { // Partes verdes/marrones
-              part.material.color.setHex(0xff4400); // Naranja fuego
-              part.material.emissive = new THREE.Color(0x882200).multiplyScalar(fireIntensity);
-            }
+          if (bolt.userData.isFlash) {
+            // Destello en el suelo
+            const flashIntensity = Math.sin(sequenceTime * 0.02) * 0.5 + 0.5;
+            bolt.material.opacity = progress < 0.2 ? flashIntensity * 0.8 : 0;
+          } else {
+            // Rayos parpadeando
+            const flicker = Math.sin(sequenceTime * bolt.userData.flickerSpeed) * 0.3 + 0.7;
+            bolt.scale.y = 1 + Math.sin(sequenceTime * 0.03 + index) * 0.4;
+            bolt.material.emissiveIntensity = bolt.userData.originalIntensity * flicker;
+            
+            // Hacer que algunos rayos aparezcan y desaparezcan
+            bolt.visible = Math.sin(sequenceTime * 0.01 + index) > -0.3;
           }
         });
       }
       
-      // Vista dramática del árbol en llamas
-      const angle = progress * Math.PI * 4; // 2 rotaciones completas
+      // Árbol se incendia después del rayo CON LLAMAS REALES
+      if (progress > 0.2 && magicTree) {
+        magicTree.children.forEach((part, partIndex) => {
+          if (part.material) {
+            // Cambiar a colores de fuego GRADUALMENTE
+            const fireIntensity = Math.min((progress - 0.2) / 0.4, 1);
+            
+            if (part.material.color.g > 0.3) { // Partes verdes (hojas)
+              // Transición de verde a naranja a rojo
+              const red = 1;
+              const green = Math.max(0.8 - fireIntensity, 0);
+              const blue = Math.max(0.2 - fireIntensity, 0);
+              part.material.color.setRGB(red, green, blue);
+              part.material.emissive = new THREE.Color(0.6, 0.2, 0).multiplyScalar(fireIntensity);
+              part.material.emissiveIntensity = fireIntensity * 2;
+            } else if (part.material.color.r > 0.3 && part.material.color.r < 0.8) { // Tronco/ramas
+              // Tronco se pone negro carbonizado con brasas
+              const char = Math.min(fireIntensity * 1.5, 1);
+              part.material.color.setRGB(0.1 + char * 0.3, 0.05 + char * 0.15, 0.05);
+              part.material.emissive = new THREE.Color(0.4, 0.1, 0).multiplyScalar(fireIntensity);
+            }
+          }
+        });
+        
+        // CREAR PARTÍCULAS DE FUEGO ALREDEDOR DEL ÁRBOL
+        if (progress > 0.3 && !magicTree.userData.fireCreated) {
+          magicTree.userData.fireCreated = true;
+          
+          // Crear llamas flotantes alrededor del árbol
+          for(let i = 0; i < 40; i++) {
+            const flameGeo = new THREE.SphereGeometry(0.3 + Math.random() * 0.4);
+            const flameMat = new THREE.MeshBasicMaterial({ 
+              color: new THREE.Color().setHSL(0.1 - Math.random() * 0.1, 1, 0.6),
+              transparent: true,
+              opacity: 0.8,
+              emissive: new THREE.Color(0.8, 0.2, 0),
+              emissiveIntensity: 1.5
+            });
+            const flame = new THREE.Mesh(flameGeo, flameMat);
+            
+            const angle = (i / 40) * Math.PI * 2;
+            const radius = 5 + Math.random() * 8;
+            flame.position.set(
+              30 + Math.cos(angle) * radius, // Posición del árbol + radio
+              3 + Math.random() * 12,
+              30 + Math.sin(angle) * radius
+            );
+            
+            flame.userData = {
+              originalY: flame.position.y,
+              speed: 1 + Math.random() * 2,
+              bobSpeed: 1 + Math.random() * 2,
+              startTime: sequenceTime
+            };
+            
+            droneScene.add(flame);
+            
+            // Guardar referencia para limpiar después
+            if (!magicTree.userData.fireParticles) {
+              magicTree.userData.fireParticles = [];
+            }
+            magicTree.userData.fireParticles.push(flame);
+          }
+        }
+        
+        // Animar partículas de fuego del árbol
+        if (magicTree.userData.fireParticles) {
+          magicTree.userData.fireParticles.forEach((flame, index) => {
+            const elapsed = sequenceTime - flame.userData.startTime;
+            flame.position.y = flame.userData.originalY + Math.sin(elapsed * 0.005 + index) * 2;
+            flame.scale.setScalar(1 + Math.sin(elapsed * 0.01 + index) * 0.3);
+            
+            // Cambiar color con el tiempo
+            const hue = 0.1 - (Math.sin(elapsed * 0.003 + index) * 0.1);
+            flame.material.color.setHSL(hue, 1, 0.6);
+          });
+        }
+      }
+      
+      // Vista dramática del árbol en llamas MÁS CINEMATOGRÁFICA
+      const angle = progress * Math.PI * 3; // 1.5 rotaciones completas
+      const height = 15 + Math.sin(progress * Math.PI * 4) * 5;
+      const distance = 25 + Math.sin(progress * Math.PI * 2) * 5;
+      
       droneCamera.position.set(
-        Math.sin(angle) * 20,
-        12 + Math.sin(progress * Math.PI * 6) * 3,
-        Math.cos(angle) * 20
+        30 + Math.sin(angle) * distance, // Centrado en el árbol
+        height,
+        30 + Math.cos(angle) * distance
       );
-      droneCamera.lookAt(0, 8, 0);
+      droneCamera.lookAt(30, 12, 30); // Mirar al árbol ardiendo
       
       // Mostrar calavera al final
-      if (progress >= 0.8 && !skullShown) {
+      if (progress >= 0.85 && !skullShown) {
         setTimeout(() => {
           showSkullAndBlackWhiteEffect();
         }, 200);
