@@ -1289,75 +1289,174 @@
   }
 
   function createGiantRobloxCharacter() {
-    // Crear muñeco gigante estilo Roblox
+    // Crear muñeco gigante estilo Roblox/Lego según descripción detallada
     giantRobloxCharacter = new THREE.Group();
     
-    // Torso rojo estilo Roblox
+    // ===== CABEZA AMARILLA =====
+    const headGeo = new THREE.BoxGeometry(6, 6, 6);
+    const headMat = new THREE.MeshLambertMaterial({ color: 0xffeb3b }); // Amarillo
+    const head = new THREE.Mesh(headGeo, headMat);
+    head.position.y = 15;
+    giantRobloxCharacter.add(head);
+    
+    // OJOS GRANDES Y BLANCOS
+    const eyeWhiteGeo = new THREE.BoxGeometry(1.5, 1.5, 0.3);
+    const eyeWhiteMat = new THREE.MeshLambertMaterial({ color: 0xffffff });
+    
+    const leftEyeWhite = new THREE.Mesh(eyeWhiteGeo, eyeWhiteMat);
+    leftEyeWhite.position.set(-1.5, 15.8, 3.1);
+    giantRobloxCharacter.add(leftEyeWhite);
+    
+    const rightEyeWhite = new THREE.Mesh(eyeWhiteGeo, eyeWhiteMat);
+    rightEyeWhite.position.set(1.5, 15.8, 3.1);
+    giantRobloxCharacter.add(rightEyeWhite);
+    
+    // Pupilas negras dentro de los ojos blancos
+    const pupilGeo = new THREE.BoxGeometry(0.8, 0.8, 0.2);
+    const pupilMat = new THREE.MeshLambertMaterial({ color: 0x000000 });
+    
+    const leftPupil = new THREE.Mesh(pupilGeo, pupilMat);
+    leftPupil.position.set(-1.5, 15.8, 3.2);
+    giantRobloxCharacter.add(leftPupil);
+    
+    const rightPupil = new THREE.Mesh(pupilGeo, pupilMat);
+    rightPupil.position.set(1.5, 15.8, 3.2);
+    giantRobloxCharacter.add(rightPupil);
+    
+    // BOCA SONRIENTE NEGRA
+    const smileGeo = new THREE.BoxGeometry(3, 0.8, 0.2);
+    const smileMat = new THREE.MeshLambertMaterial({ color: 0x000000 });
+    const smile = new THREE.Mesh(smileGeo, smileMat);
+    smile.position.set(0, 14, 3.1);
+    giantRobloxCharacter.add(smile);
+    
+    // PEQUEÑA ARAÑA NEGRA EN LA MEJILLA IZQUIERDA
+    const spiderBodyGeo = new THREE.BoxGeometry(0.5, 0.3, 0.1);
+    const spiderMat = new THREE.MeshLambertMaterial({ color: 0x000000 });
+    const spiderBody = new THREE.Mesh(spiderBodyGeo, spiderMat);
+    spiderBody.position.set(-2.2, 14.8, 3.1);
+    giantRobloxCharacter.add(spiderBody);
+    
+    // Patas de araña (líneas pequeñas)
+    const spiderLegGeo = new THREE.BoxGeometry(0.8, 0.1, 0.1);
+    for(let i = 0; i < 4; i++) {
+      const legTop = new THREE.Mesh(spiderLegGeo, spiderMat);
+      const legBottom = new THREE.Mesh(spiderLegGeo, spiderMat);
+      legTop.position.set(-2.2, 15 + (i * 0.1), 3.1);
+      legBottom.position.set(-2.2, 14.6 - (i * 0.1), 3.1);
+      legTop.rotation.z = (i % 2 === 0 ? 0.3 : -0.3);
+      legBottom.rotation.z = (i % 2 === 0 ? -0.3 : 0.3);
+      giantRobloxCharacter.add(legTop);
+      giantRobloxCharacter.add(legBottom);
+    }
+    
+    // ===== SOMBRERO DE COPA ROJO =====
+    robloxRedHat = new THREE.Group();
+    
+    // Ala del sombrero
+    const hatBrimGeo = new THREE.CylinderGeometry(4.5, 4.5, 0.5);
+    const hatBrimMat = new THREE.MeshLambertMaterial({ color: 0xcc0000 });
+    const hatBrim = new THREE.Mesh(hatBrimGeo, hatBrimMat);
+    hatBrim.position.y = 18.3;
+    robloxRedHat.add(hatBrim);
+    
+    // Copa del sombrero (más alta y cilíndrica)
+    const hatTopGeo = new THREE.CylinderGeometry(3, 3, 4.5);
+    const hatTopMat = new THREE.MeshLambertMaterial({ color: 0xcc0000 });
+    const hatTop = new THREE.Mesh(hatTopGeo, hatTopMat);
+    hatTop.position.y = 20.8;
+    robloxRedHat.add(hatTop);
+    
+    // Banda decorativa del sombrero
+    const hatBandGeo = new THREE.CylinderGeometry(3.1, 3.1, 0.5);
+    const hatBandMat = new THREE.MeshLambertMaterial({ color: 0x8b0000 });
+    const hatBand = new THREE.Mesh(hatBandGeo, hatBandMat);
+    hatBand.position.y = 19;
+    robloxRedHat.add(hatBand);
+    
+    giantRobloxCharacter.add(robloxRedHat);
+    
+    // ===== TORSO COMPLETAMENTE ROJO =====
     const bodyGeo = new THREE.BoxGeometry(8, 12, 4);
     const bodyMat = new THREE.MeshLambertMaterial({ color: 0xcc0000 }); // Rojo brillante
     const body = new THREE.Mesh(bodyGeo, bodyMat);
     body.position.y = 6;
     giantRobloxCharacter.add(body);
     
-    // Cabeza amarilla característica de Roblox
-    const headGeo = new THREE.BoxGeometry(6, 6, 6);
-    const headMat = new THREE.MeshLambertMaterial({ color: 0xffeb3b }); // Amarillo Roblox
-    const head = new THREE.Mesh(headGeo, headMat);
-    head.position.y = 15;
-    giantRobloxCharacter.add(head);
+    // ===== CADENA PLATEADA CON AMULETO DE ARAÑA =====
+    // Cadena alrededor del cuello
+    const chainGeo = new THREE.TorusGeometry(2.2, 0.15, 8, 16);
+    const chainMat = new THREE.MeshLambertMaterial({ color: 0xc0c0c0, metalness: 0.7 });
+    const chain = new THREE.Mesh(chainGeo, chainMat);
+    chain.position.set(0, 11.5, 0);
+    chain.rotation.x = Math.PI / 2;
+    giantRobloxCharacter.add(chain);
     
-    // Ojos negros simples estilo Roblox
-    const eyeGeo = new THREE.BoxGeometry(0.8, 0.8, 0.2);
-    const eyeMat = new THREE.MeshLambertMaterial({ color: 0x000000 });
+    // Amuleto de araña plateada colgando
+    const amuletBodyGeo = new THREE.BoxGeometry(1.2, 0.8, 0.3);
+    const amuletMat = new THREE.MeshLambertMaterial({ color: 0xc0c0c0, metalness: 0.8 });
+    const amuletBody = new THREE.Mesh(amuletBodyGeo, amuletMat);
+    amuletBody.position.set(0, 9.5, 1.5);
+    giantRobloxCharacter.add(amuletBody);
     
-    const leftEye = new THREE.Mesh(eyeGeo, eyeMat);
-    leftEye.position.set(-1.2, 15.5, 3.1);
-    giantRobloxCharacter.add(leftEye);
+    // Patas del amuleto araña
+    const amuletLegGeo = new THREE.BoxGeometry(0.6, 0.08, 0.08);
+    for(let i = 0; i < 8; i++) {
+      const amuletLeg = new THREE.Mesh(amuletLegGeo, amuletMat);
+      const angle = (i / 8) * Math.PI * 2;
+      amuletLeg.position.set(
+        Math.cos(angle) * 0.8, 
+        9.5, 
+        1.5 + Math.sin(angle) * 0.8
+      );
+      amuletLeg.rotation.y = angle;
+      giantRobloxCharacter.add(amuletLeg);
+    }
     
-    const rightEye = new THREE.Mesh(eyeGeo, eyeMat);
-    rightEye.position.set(1.2, 15.5, 3.1);
-    giantRobloxCharacter.add(rightEye);
+    // Cadena que conecta el collar con el amuleto
+    const connectChainGeo = new THREE.BoxGeometry(0.1, 2, 0.1);
+    const connectChain = new THREE.Mesh(connectChainGeo, chainMat);
+    connectChain.position.set(0, 10.5, 1.2);
+    giantRobloxCharacter.add(connectChain);
     
-    // Boca simple
-    const mouthGeo = new THREE.BoxGeometry(2, 0.4, 0.2);
-    const mouthMat = new THREE.MeshLambertMaterial({ color: 0x000000 });
-    const mouth = new THREE.Mesh(mouthGeo, mouthMat);
-    mouth.position.set(0, 14.2, 3.1);
-    giantRobloxCharacter.add(mouth);
-    
-    // Sombrero rojo clásico estilo antiguo
-    robloxRedHat = new THREE.Group();
-    const hatBase = new THREE.Mesh(
-      new THREE.CylinderGeometry(4, 4, 1),
-      new THREE.MeshLambertMaterial({ color: 0x8b0000 }) // Rojo más oscuro
-    );
-    hatBase.position.y = 18.5;
-    robloxRedHat.add(hatBase);
-    
-    const hatTop = new THREE.Mesh(
-      new THREE.CylinderGeometry(2.5, 2.5, 3),
-      new THREE.MeshLambertMaterial({ color: 0xcc0000 }) // Rojo brillante
-    );
-    hatTop.position.y = 20;
-    robloxRedHat.add(hatTop);
-    
-    giantRobloxCharacter.add(robloxRedHat);
-    
-    // Brazos amarillos estilo Roblox
-    const armGeo = new THREE.BoxGeometry(3, 10, 3);
+    // ===== BRAZOS Y MANOS AMARILLOS =====
+    const armGeo = new THREE.BoxGeometry(2.5, 9, 2.5);
     const armMat = new THREE.MeshLambertMaterial({ color: 0xffeb3b }); // Amarillo
     
     const leftArm = new THREE.Mesh(armGeo, armMat);
-    leftArm.position.set(-6, 8, 0);
+    leftArm.position.set(-5.5, 8, 0);
     giantRobloxCharacter.add(leftArm);
     
     const rightArm = new THREE.Mesh(armGeo, armMat);
-    rightArm.position.set(6, 8, 0);
+    rightArm.position.set(5.5, 8, 0);
     giantRobloxCharacter.add(rightArm);
     
-    // Piernas rojas estilo Roblox
+    // Manos amarillas estilo "garra" de Lego
+    const handGeo = new THREE.BoxGeometry(2, 2, 2);
+    const handMat = new THREE.MeshLambertMaterial({ color: 0xffeb3b });
+    
+    const leftHand = new THREE.Mesh(handGeo, handMat);
+    leftHand.position.set(-5.5, 3, 0);
+    giantRobloxCharacter.add(leftHand);
+    
+    const rightHand = new THREE.Mesh(handGeo, handMat);
+    rightHand.position.set(5.5, 3, 0);
+    giantRobloxCharacter.add(rightHand);
+    
+    // Dedos tipo garra de Lego
+    const fingerGeo = new THREE.BoxGeometry(0.4, 1, 0.4);
+    for(let hand = 0; hand < 2; hand++) {
+      const handX = hand === 0 ? -5.5 : 5.5;
+      for(let finger = 0; finger < 3; finger++) {
+        const fingerMesh = new THREE.Mesh(fingerGeo, handMat);
+        fingerMesh.position.set(handX + (finger - 1) * 0.5, 2, 0.8);
+        giantRobloxCharacter.add(fingerMesh);
+      }
+    }
+    
+    // ===== PIERNAS ROJAS =====
     const legGeo = new THREE.BoxGeometry(3, 8, 3);
-    const legMat = new THREE.MeshLambertMaterial({ color: 0xcc0000 }); // Rojo para pantalones
+    const legMat = new THREE.MeshLambertMaterial({ color: 0xcc0000 }); // Rojo
     
     const leftLeg = new THREE.Mesh(legGeo, legMat);
     leftLeg.position.set(-2, -4, 0);
@@ -1366,6 +1465,40 @@
     const rightLeg = new THREE.Mesh(legGeo, legMat);
     rightLeg.position.set(2, -4, 0);
     giantRobloxCharacter.add(rightLeg);
+    
+    // ===== KATANA EN LA ESPALDA =====
+    // Mango de la katana (rojo)
+    const katanaHandleGeo = new THREE.BoxGeometry(0.4, 3, 0.4);
+    const katanaHandleMat = new THREE.MeshLambertMaterial({ color: 0xcc0000 });
+    const katanaHandle = new THREE.Mesh(katanaHandleGeo, katanaHandleMat);
+    katanaHandle.position.set(0, 10, -2.5);
+    giantRobloxCharacter.add(katanaHandle);
+    
+    // Funda de la katana (roja)
+    const katanaSheathGeo = new THREE.BoxGeometry(0.6, 8, 0.6);
+    const katanaSheathMat = new THREE.MeshLambertMaterial({ color: 0x8b0000 });
+    const katanaSheath = new THREE.Mesh(katanaSheathGeo, katanaSheathMat);
+    katanaSheath.position.set(0, 6, -2.5);
+    giantRobloxCharacter.add(katanaSheath);
+    
+    // Guarda de la katana (plateada)
+    const katanaGuardGeo = new THREE.BoxGeometry(1.5, 0.3, 0.8);
+    const katanaGuardMat = new THREE.MeshLambertMaterial({ color: 0xc0c0c0 });
+    const katanaGuard = new THREE.Mesh(katanaGuardGeo, katanaGuardMat);
+    katanaGuard.position.set(0, 8.5, -2.5);
+    giantRobloxCharacter.add(katanaGuard);
+    
+    // Correas que sujetan la katana (negras)
+    const strapGeo = new THREE.BoxGeometry(0.2, 0.5, 3);
+    const strapMat = new THREE.MeshLambertMaterial({ color: 0x222222 });
+    
+    const strapTop = new THREE.Mesh(strapGeo, strapMat);
+    strapTop.position.set(0, 9, -1);
+    giantRobloxCharacter.add(strapTop);
+    
+    const strapBottom = new THREE.Mesh(strapGeo, strapMat);
+    strapBottom.position.set(0, 7, -1);
+    giantRobloxCharacter.add(strapBottom);
     
     // Posicionar el muñeco sobre la superficie, alineado con la tienda
     giantRobloxCharacter.position.set(60, 4, -25); // Y=4 para que esté sobre el suelo, Z=-25 para línea recta hacia la tienda
