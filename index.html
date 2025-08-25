@@ -1252,14 +1252,14 @@
       if (!state.introCompleted) {
         const elapsed = Date.now() - startTime;
         
-        // Después de 10 segundos, iniciar secuencia épica
-        if (elapsed > 10000 && !epicSequenceStarted) {
+        // Después de 8 segundos, iniciar secuencia épica
+        if (elapsed > 8000 && !epicSequenceStarted) {
           epicSequenceStarted = true;
           createGiantRobloxCharacter();
         }
         
-        // Durante los primeros 10 segundos: vista 360 normal
-        if (elapsed <= 10000) {
+        // Durante los primeros 8 segundos: vista 360 normal
+        if (elapsed <= 8000) {
           // Movimiento circular de drone elevándose gradualmente
           const radius = 35 - (elapsed * 0.005); // Se acerca gradualmente
           const height = 25 + Math.sin(elapsed * 0.001) * 5; // Movimiento vertical suave
@@ -1274,7 +1274,7 @@
           droneCamera.lookAt(0, 0, 0);
         } else {
           // Secuencia épica del muñeco gigante
-          animateEpicSequence(elapsed - 10000);
+          animateEpicSequence(elapsed - 8000);
         }
         
         // Renderizar la escena
@@ -1514,119 +1514,180 @@
   function animateEpicSequence(sequenceTime) {
     if (!giantRobloxCharacter) return;
     
-    // Caminar lentamente hacia la tienda (primeros 8 segundos)
-    if (sequenceTime <= 8000) {
-      const walkProgress = sequenceTime / 8000;
+    // ESCENA 1: Caminar hacia la tienda con vista lateral (primeros 4 segundos)
+    if (sequenceTime <= 4000) {
+      const walkProgress = sequenceTime / 4000;
       
       // Movimiento directo hacia la tienda (línea recta)
-      giantRobloxCharacter.position.x = 60 - (walkProgress * 60); // Camina de x=60 a x=0
-      giantRobloxCharacter.position.z = -25; // Mantener Z fijo para caminar derecho hacia la tienda
+      giantRobloxCharacter.position.x = 60 - (walkProgress * 30); // Camina hacia la mitad
+      giantRobloxCharacter.position.z = -25; // Mantener Z fijo
       
       // Animación de caminar MUY VISIBLE y estilo Roblox
-      const walkSpeed = 0.03; // Más rápido para que se vea mejor
+      const walkSpeed = 0.03;
       const walkCycle = Math.sin(sequenceTime * walkSpeed);
       const walkBounce = Math.abs(Math.sin(sequenceTime * walkSpeed * 2)) * 0.3;
       
-      // Movimiento vertical de rebote al caminar (más pronunciado)
       giantRobloxCharacter.position.y = 4 + walkBounce;
       
       // ANIMACIÓN EXTREMA DE BRAZOS Y PIERNAS ESTILO ROBLOX
-      // Los brazos se mueven MUCHO más para que se vea claramente
-      const armSwing = walkCycle * 1.2; // Movimiento muy exagerado
-      const legSwing = walkCycle * 0.8; // Piernas menos exageradas pero visibles
-      
-      // ENCONTRAR LOS ÍNDICES CORRECTOS DE LAS PARTES DEL CUERPO
-      // Cabeza: 0, ojos: 1-2, pupilas: 3-4, sonrisa: 5, araña: 6-10, sombrero: 11, torso: 12
-      // cadena: 13, amuleto: 14-22, brazos: 23-24, manos: 25-26, dedos: 27-32, piernas: 33-34, katana: 35-38
+      const armSwing = walkCycle * 1.2;
+      const legSwing = walkCycle * 0.8;
       
       const leftArmIndex = 23;
       const rightArmIndex = 24;
       const leftLegIndex = 33;
       const rightLegIndex = 34;
       
-      // BRAZOS SE MUEVEN OPUESTO A LAS PIERNAS (como caminar real)
-      giantRobloxCharacter.children[leftArmIndex].rotation.x = -armSwing; // Brazo izquierdo hacia atrás/adelante
-      giantRobloxCharacter.children[rightArmIndex].rotation.x = armSwing; // Brazo derecho opuesto
+      // BRAZOS SE MUEVEN OPUESTO A LAS PIERNAS
+      giantRobloxCharacter.children[leftArmIndex].rotation.x = -armSwing;
+      giantRobloxCharacter.children[rightArmIndex].rotation.x = armSwing;
       
       // PIERNAS SE MUEVEN ALTERNANDO
-      giantRobloxCharacter.children[leftLegIndex].rotation.x = legSwing; // Pierna izquierda adelante/atrás
-      giantRobloxCharacter.children[rightLegIndex].rotation.x = -legSwing; // Pierna derecha opuesta
+      giantRobloxCharacter.children[leftLegIndex].rotation.x = legSwing;
+      giantRobloxCharacter.children[rightLegIndex].rotation.x = -legSwing;
       
-      // MANOS también se mueven un poco
+      // MANOS también se mueven
       const leftHandIndex = 25;
       const rightHandIndex = 26;
       giantRobloxCharacter.children[leftHandIndex].rotation.x = -armSwing * 0.5;
       giantRobloxCharacter.children[rightHandIndex].rotation.x = armSwing * 0.5;
       
-      // SOMBRERO FIJO - sin balanceo
+      // SOMBRERO FIJO
       if (robloxRedHat) {
-        robloxRedHat.rotation.set(0, 0, 0); // Mantener el sombrero completamente fijo
+        robloxRedHat.rotation.set(0, 0, 0);
       }
       
-      // Cámara sigue al muñeco dramáticamente
+      // VISTA LATERAL DINÁMICA (360 grados alrededor del personaje)
+      const cameraAngle = (sequenceTime / 4000) * Math.PI * 2; // Rotación completa
+      const radius = 40;
       droneCamera.position.set(
-        giantRobloxCharacter.position.x + 20,
-        25,
-        giantRobloxCharacter.position.z + 30
+        giantRobloxCharacter.position.x + Math.sin(cameraAngle) * radius,
+        20,
+        giantRobloxCharacter.position.z + Math.cos(cameraAngle) * radius
       );
       droneCamera.lookAt(giantRobloxCharacter.position);
     }
-    // Aplastar la tienda (segundos 8-10)
+    // ESCENA 2: Continuar caminando con vista frontal (segundos 4-8)
+    else if (sequenceTime <= 8000) {
+      const walkProgress = (sequenceTime - 4000) / 4000;
+      
+      // Completar el movimiento hacia la tienda
+      giantRobloxCharacter.position.x = 30 - (walkProgress * 30); // De x=30 a x=0
+      giantRobloxCharacter.position.z = -25;
+      
+      // Continuar animación de caminar
+      const walkSpeed = 0.03;
+      const walkCycle = Math.sin(sequenceTime * walkSpeed);
+      const walkBounce = Math.abs(Math.sin(sequenceTime * walkSpeed * 2)) * 0.3;
+      
+      giantRobloxCharacter.position.y = 4 + walkBounce;
+      
+      const armSwing = walkCycle * 1.2;
+      const legSwing = walkCycle * 0.8;
+      
+      const leftArmIndex = 23;
+      const rightArmIndex = 24;
+      const leftLegIndex = 33;
+      const rightLegIndex = 34;
+      const leftHandIndex = 25;
+      const rightHandIndex = 26;
+      
+      giantRobloxCharacter.children[leftArmIndex].rotation.x = -armSwing;
+      giantRobloxCharacter.children[rightArmIndex].rotation.x = armSwing;
+      giantRobloxCharacter.children[leftLegIndex].rotation.x = legSwing;
+      giantRobloxCharacter.children[rightLegIndex].rotation.x = -legSwing;
+      giantRobloxCharacter.children[leftHandIndex].rotation.x = -armSwing * 0.5;
+      giantRobloxCharacter.children[rightHandIndex].rotation.x = armSwing * 0.5;
+      
+      if (robloxRedHat) {
+        robloxRedHat.rotation.set(0, 0, 0);
+      }
+      
+      // VISTA FRONTAL SIGUIENDO AL PERSONAJE
+      droneCamera.position.set(
+        giantRobloxCharacter.position.x,
+        25,
+        giantRobloxCharacter.position.z + 50
+      );
+      droneCamera.lookAt(giantRobloxCharacter.position);
+    }
+    // ESCENA 3: Aplastar la tienda con vista cenital (segundos 8-10)
     else if (sequenceTime <= 10000) {
       const crushProgress = (sequenceTime - 8000) / 2000;
       
       // El muñeco levanta el pie derecho para aplastar
-      giantRobloxCharacter.children[8].rotation.x = crushProgress * 1.5; // Pierna derecha se levanta
+      const rightLegIndex = 34;
+      giantRobloxCharacter.children[rightLegIndex].rotation.x = crushProgress * 1.5;
+      
+      // Restablecer otras animaciones
+      const leftArmIndex = 23;
+      const rightArmIndex = 24;
+      const leftLegIndex = 33;
+      const leftHandIndex = 25;
+      const rightHandIndex = 26;
+      
+      giantRobloxCharacter.children[leftArmIndex].rotation.x = 0;
+      giantRobloxCharacter.children[rightArmIndex].rotation.x = 0;
+      giantRobloxCharacter.children[leftLegIndex].rotation.x = 0;
+      giantRobloxCharacter.children[leftHandIndex].rotation.x = 0;
+      giantRobloxCharacter.children[rightHandIndex].rotation.x = 0;
       
       // La tienda se aplasta gradualmente
       if (storeBase) {
-        storeBase.scale.y = 1 - (crushProgress * 0.8); // Se aplasta a 20% de su altura
-        storeBase.position.y = 3 - (crushProgress * 2.4); // Baja
+        storeBase.scale.y = 1 - (crushProgress * 0.8);
+        storeBase.position.y = 3 - (crushProgress * 2.4);
       }
       
-      // Cámara se acerca para capturar la acción
-      droneCamera.position.set(10, 15, -5);
+      // VISTA CENITAL (desde arriba) para capturar la destrucción
+      droneCamera.position.set(0, 50, -15);
       droneCamera.lookAt(0, 0, -15);
     }
-    // Levantamiento lento de la mano (segundos 10-12)
-    else if (sequenceTime <= 12000 && !victorySequenceStarted) {
-      victorySequenceStarted = true;
+    // ESCENA 4: Levantamiento lento de la mano con vista dramática (segundos 10-12)
+    else if (sequenceTime <= 12000) {
+      const handRaiseProgress = (sequenceTime - 10000) / 2000;
       
-      const handRaiseProgress = (sequenceTime - 10000) / 2000; // Progreso de 0 a 1 en 2 segundos
-      
-      // Brazo derecho se levanta LENTAMENTE (índice correcto)
-      const rightArmIndex = 24; // Índice correcto del brazo derecho
-      const targetRotation = -Math.PI / 2; // 90 grados hacia arriba
+      // Brazo derecho se levanta LENTAMENTE
+      const rightArmIndex = 24;
+      const targetRotation = -Math.PI / 2;
       giantRobloxCharacter.children[rightArmIndex].rotation.z = targetRotation * handRaiseProgress;
       giantRobloxCharacter.children[rightArmIndex].rotation.x = 0;
       
-      // Piernas vuelven a posición normal (índices correctos)
-      giantRobloxCharacter.children[33].rotation.x = 0; // Pierna izquierda
-      giantRobloxCharacter.children[34].rotation.x = 0; // Pierna derecha
+      // Piernas y otros brazos en posición normal
+      const leftArmIndex = 23;
+      const leftLegIndex = 33;
+      const rightLegIndex = 34;
       
-      // Brazos vuelven a posición normal excepto el que se levanta
-      giantRobloxCharacter.children[23].rotation.x = 0; // Brazo izquierdo
+      giantRobloxCharacter.children[leftArmIndex].rotation.x = 0;
+      giantRobloxCharacter.children[leftLegIndex].rotation.x = 0;
+      giantRobloxCharacter.children[rightLegIndex].rotation.x = 0;
       
-      // Cámara captura la pose épica
-      droneCamera.position.set(15, 20, -10);
-      droneCamera.lookAt(giantRobloxCharacter.position);
+      // VISTA DRAMÁTICA EN ÁNGULO BAJO (como película de acción)
+      droneCamera.position.set(20, 8, -10);
+      droneCamera.lookAt(giantRobloxCharacter.position.x, giantRobloxCharacter.position.y + 8, giantRobloxCharacter.position.z);
       
-      // Cuando termine el levantamiento de la mano (solo una vez)
-      if (handRaiseProgress >= 1 && sequenceTime > 11900) { // Cerca del final
-        showSkullAndBlackWhiteEffect();
+      // Mostrar calavera cuando la mano esté completamente levantada
+      if (handRaiseProgress >= 0.95 && !skullShown) {
+        setTimeout(() => {
+          showSkullAndBlackWhiteEffect();
+        }, 200);
       }
     }
-    // Mantener la mano arriba después de levantarla (segundos 12-15)
-    else if (sequenceTime > 12000 && sequenceTime <= 15000) {
+    // ESCENA 5: Vista 360 final con calavera (segundos 12-16)
+    else if (sequenceTime > 12000 && sequenceTime <= 16000) {
       // Mantener brazo derecho completamente levantado
       const rightArmIndex = 24;
       giantRobloxCharacter.children[rightArmIndex].rotation.z = -Math.PI / 2;
       giantRobloxCharacter.children[rightArmIndex].rotation.x = 0;
       
-      // Mantener otras partes inmóviles
-      giantRobloxCharacter.children[23].rotation.x = 0; // Brazo izquierdo
-      giantRobloxCharacter.children[33].rotation.x = 0; // Pierna izquierda
-      giantRobloxCharacter.children[34].rotation.x = 0; // Pierna derecha
+      // VISTA 360 ÉPICA ALREDEDOR DEL PERSONAJE CON CALAVERA
+      const finalAngle = ((sequenceTime - 12000) / 4000) * Math.PI * 3; // 1.5 rotaciones completas
+      const radius = 25;
+      droneCamera.position.set(
+        giantRobloxCharacter.position.x + Math.sin(finalAngle) * radius,
+        15 + Math.sin((sequenceTime - 12000) * 0.001) * 8, // Movimiento vertical dinámico
+        giantRobloxCharacter.position.z + Math.cos(finalAngle) * radius
+      );
+      droneCamera.lookAt(giantRobloxCharacter.position.x, giantRobloxCharacter.position.y + 8, giantRobloxCharacter.position.z);
     }
   }
 
@@ -1635,6 +1696,8 @@
   function showSkullAndBlackWhiteEffect() {
     if (skullShown) return; // Evitar que se ejecute múltiples veces
     skullShown = true;
+    
+    console.log("Iniciando efecto de calavera"); // Debug
     
     // Crear overlay de calavera
     const skullOverlay = document.createElement('div');
@@ -1742,7 +1805,7 @@
       droneScene.background = new THREE.Color(0x606060); // Gris más oscuro para efecto B&N
     }
     
-    // Después de 4 segundos, terminar el intro
+    // Después de 5 segundos, terminar el intro
     setTimeout(() => {
       endIntro();
       // Limpiar elementos de forma segura
@@ -1750,7 +1813,7 @@
       const filterElement = document.getElementById('blackWhiteFilter');
       if (skullElement) document.body.removeChild(skullElement);
       if (filterElement) document.body.removeChild(filterElement);
-    }, 4000);
+    }, 5000);
   }
 
   function endIntro() {
