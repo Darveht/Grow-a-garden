@@ -1367,8 +1367,8 @@
     rightLeg.position.set(2, -4, 0);
     giantRobloxCharacter.add(rightLeg);
     
-    // Posicionar el muñeco sobre la superficie, no debajo
-    giantRobloxCharacter.position.set(60, 4, -25); // Y=4 para que esté sobre el suelo
+    // Posicionar el muñeco sobre la superficie, alineado con la tienda
+    giantRobloxCharacter.position.set(60, 4, -25); // Y=4 para que esté sobre el suelo, Z=-25 para línea recta hacia la tienda
     giantRobloxCharacter.castShadow = true;
     
     droneScene.add(giantRobloxCharacter);
@@ -1381,9 +1381,9 @@
     if (sequenceTime <= 8000) {
       const walkProgress = sequenceTime / 8000;
       
-      // Movimiento hacia la tienda - mantiene Y=4 para caminar sobre la superficie
+      // Movimiento directo hacia la tienda (línea recta)
       giantRobloxCharacter.position.x = 60 - (walkProgress * 60); // Camina de x=60 a x=0
-      giantRobloxCharacter.position.y = 4; // Mantener sobre la superficie
+      giantRobloxCharacter.position.z = -25; // Mantener Z fijo para caminar derecho hacia la tienda
       
       // Animación de caminar más realista (balanceo de brazos y piernas)
       const walkCycle = Math.sin(sequenceTime * 0.015) * 0.4;
@@ -1403,9 +1403,9 @@
       giantRobloxCharacter.children[leftLegIndex].rotation.x = walkCycle; // Pierna izquierda
       giantRobloxCharacter.children[rightLegIndex].rotation.x = -walkCycle; // Pierna derecha
       
-      // Sombrero se balancea ligeramente
+      // SOMBRERO FIJO - sin balanceo
       if (robloxRedHat) {
-        robloxRedHat.rotation.z = Math.sin(sequenceTime * 0.008) * 0.1;
+        robloxRedHat.rotation.set(0, 0, 0); // Mantener el sombrero completamente fijo
       }
       
       // Cámara sigue al muñeco dramáticamente
@@ -1464,15 +1464,29 @@
     skullOverlay.style.transform = 'translate(-50%, -50%)';
     skullOverlay.style.fontSize = '100px';
     skullOverlay.style.zIndex = '2500';
-    skullOverlay.style.animation = 'skullAppear 1s ease-out';
+    skullOverlay.style.animation = 'skullAppear 1s ease-out, skullPulse 1.5s ease-in-out infinite 1s';
+    skullOverlay.style.textShadow = '0 0 20px rgba(255, 255, 255, 0.8), 0 0 40px rgba(128, 0, 128, 0.6)';
     skullOverlay.textContent = '💀';
     
-    // CSS para la animación de calavera
+    // CSS para la animación de calavera con palpitación fantasmal
     const skullStyle = document.createElement('style');
     skullStyle.textContent = `
       @keyframes skullAppear {
         from { transform: translate(-50%, -50%) scale(0) rotate(180deg); opacity: 0; }
         to { transform: translate(-50%, -50%) scale(1) rotate(0deg); opacity: 1; }
+      }
+      
+      @keyframes skullPulse {
+        0%, 100% { 
+          transform: translate(-50%, -50%) scale(1); 
+          opacity: 1; 
+          text-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 0 0 40px rgba(128, 0, 128, 0.6);
+        }
+        50% { 
+          transform: translate(-50%, -50%) scale(1.2); 
+          opacity: 0.7; 
+          text-shadow: 0 0 30px rgba(255, 255, 255, 1), 0 0 60px rgba(128, 0, 128, 0.8), 0 0 80px rgba(255, 0, 0, 0.4);
+        }
       }
     `;
     document.head.appendChild(skullStyle);
