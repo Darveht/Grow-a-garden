@@ -1240,7 +1240,7 @@
     startDroneAnimation();
   }
 
-  let giantRobloxCharacter, robloxRedHat;
+  let spaceship, fireParticles, colorTunnel, magicTree, lightning;
   let epicSequenceStarted = false;
   let victorySequenceStarted = false;
 
@@ -1255,7 +1255,7 @@
         // Después de 8 segundos, iniciar secuencia épica
         if (elapsed > 8000 && !epicSequenceStarted) {
           epicSequenceStarted = true;
-          createGiantRobloxCharacter();
+          createSpaceshipSequence();
         }
         
         // Durante los primeros 8 segundos: vista 360 normal
@@ -1288,406 +1288,364 @@
     animateDrone();
   }
 
-  function createGiantRobloxCharacter() {
-    // Crear muñeco gigante estilo Roblox/Lego según descripción detallada
-    giantRobloxCharacter = new THREE.Group();
+  function createSpaceshipSequence() {
+    // Crear nave espacial
+    spaceship = new THREE.Group();
     
-    // ===== CABEZA AMARILLA (MÁS GRANDE ESTILO ROBLOX) =====
-    const headGeo = new THREE.BoxGeometry(8, 8, 8); // Cabeza más grande
-    const headMat = new THREE.MeshLambertMaterial({ color: 0xffeb3b }); // Amarillo
-    const head = new THREE.Mesh(headGeo, headMat);
-    head.position.y = 16; // Más alta
-    giantRobloxCharacter.add(head);
-    
-    // OJOS GRANDES Y BLANCOS (AJUSTADOS A LA CABEZA MÁS GRANDE)
-    const eyeWhiteGeo = new THREE.BoxGeometry(2, 2, 0.4); // Ojos más grandes
-    const eyeWhiteMat = new THREE.MeshLambertMaterial({ color: 0xffffff });
-    
-    const leftEyeWhite = new THREE.Mesh(eyeWhiteGeo, eyeWhiteMat);
-    leftEyeWhite.position.set(-2, 16.5, 4.2); // Ajustado para cabeza más grande
-    giantRobloxCharacter.add(leftEyeWhite);
-    
-    const rightEyeWhite = new THREE.Mesh(eyeWhiteGeo, eyeWhiteMat);
-    rightEyeWhite.position.set(2, 16.5, 4.2); // Ajustado para cabeza más grande
-    giantRobloxCharacter.add(rightEyeWhite);
-    
-    // Pupilas negras dentro de los ojos blancos
-    const pupilGeo = new THREE.BoxGeometry(1, 1, 0.3);
-    const pupilMat = new THREE.MeshLambertMaterial({ color: 0x000000 });
-    
-    const leftPupil = new THREE.Mesh(pupilGeo, pupilMat);
-    leftPupil.position.set(-2, 16.5, 4.3);
-    giantRobloxCharacter.add(leftPupil);
-    
-    const rightPupil = new THREE.Mesh(pupilGeo, pupilMat);
-    rightPupil.position.set(2, 16.5, 4.3);
-    giantRobloxCharacter.add(rightPupil);
-    
-    // BOCA SONRIENTE NEGRA (MÁS GRANDE)
-    const smileGeo = new THREE.BoxGeometry(4, 1, 0.3);
-    const smileMat = new THREE.MeshLambertMaterial({ color: 0x000000 });
-    const smile = new THREE.Mesh(smileGeo, smileMat);
-    smile.position.set(0, 15, 4.2);
-    giantRobloxCharacter.add(smile);
-    
-    // PEQUEÑA ARAÑA NEGRA EN LA MEJILLA IZQUIERDA
-    const spiderBodyGeo = new THREE.BoxGeometry(0.5, 0.3, 0.1);
-    const spiderMat = new THREE.MeshLambertMaterial({ color: 0x000000 });
-    const spiderBody = new THREE.Mesh(spiderBodyGeo, spiderMat);
-    spiderBody.position.set(-2.2, 14.8, 3.1);
-    giantRobloxCharacter.add(spiderBody);
-    
-    // Patas de araña (líneas pequeñas)
-    const spiderLegGeo = new THREE.BoxGeometry(0.8, 0.1, 0.1);
-    for(let i = 0; i < 4; i++) {
-      const legTop = new THREE.Mesh(spiderLegGeo, spiderMat);
-      const legBottom = new THREE.Mesh(spiderLegGeo, spiderMat);
-      legTop.position.set(-2.2, 15 + (i * 0.1), 3.1);
-      legBottom.position.set(-2.2, 14.6 - (i * 0.1), 3.1);
-      legTop.rotation.z = (i % 2 === 0 ? 0.3 : -0.3);
-      legBottom.rotation.z = (i % 2 === 0 ? -0.3 : 0.3);
-      giantRobloxCharacter.add(legTop);
-      giantRobloxCharacter.add(legBottom);
-    }
-    
-    // ===== SOMBRERO DE COPA ROJO =====
-    robloxRedHat = new THREE.Group();
-    
-    // Ala del sombrero
-    const hatBrimGeo = new THREE.CylinderGeometry(4.5, 4.5, 0.5);
-    const hatBrimMat = new THREE.MeshLambertMaterial({ color: 0xcc0000 });
-    const hatBrim = new THREE.Mesh(hatBrimGeo, hatBrimMat);
-    hatBrim.position.y = 18.3;
-    robloxRedHat.add(hatBrim);
-    
-    // Copa del sombrero (más alta y cilíndrica)
-    const hatTopGeo = new THREE.CylinderGeometry(3, 3, 4.5);
-    const hatTopMat = new THREE.MeshLambertMaterial({ color: 0xcc0000 });
-    const hatTop = new THREE.Mesh(hatTopGeo, hatTopMat);
-    hatTop.position.y = 20.8;
-    robloxRedHat.add(hatTop);
-    
-    // Banda decorativa del sombrero
-    const hatBandGeo = new THREE.CylinderGeometry(3.1, 3.1, 0.5);
-    const hatBandMat = new THREE.MeshLambertMaterial({ color: 0x8b0000 });
-    const hatBand = new THREE.Mesh(hatBandGeo, hatBandMat);
-    hatBand.position.y = 19;
-    robloxRedHat.add(hatBand);
-    
-    giantRobloxCharacter.add(robloxRedHat);
-    
-    // ===== TORSO COMPLETAMENTE ROJO =====
-    const bodyGeo = new THREE.BoxGeometry(8, 12, 4);
-    const bodyMat = new THREE.MeshLambertMaterial({ color: 0xcc0000 }); // Rojo brillante
+    // Cuerpo principal de la nave (plateado)
+    const bodyGeo = new THREE.CylinderGeometry(2, 4, 12);
+    const bodyMat = new THREE.MeshLambertMaterial({ color: 0xc0c0c0 });
     const body = new THREE.Mesh(bodyGeo, bodyMat);
     body.position.y = 6;
-    giantRobloxCharacter.add(body);
+    spaceship.add(body);
     
-    // ===== CADENA PLATEADA CON AMULETO DE ARAÑA =====
-    // Cadena alrededor del cuello
-    const chainGeo = new THREE.TorusGeometry(2.2, 0.15, 8, 16);
-    const chainMat = new THREE.MeshLambertMaterial({ color: 0xc0c0c0, metalness: 0.7 });
-    const chain = new THREE.Mesh(chainGeo, chainMat);
-    chain.position.set(0, 11.5, 0);
-    chain.rotation.x = Math.PI / 2;
-    giantRobloxCharacter.add(chain);
+    // Punta de la nave (dorada)
+    const tipGeo = new THREE.ConeGeometry(2, 4);
+    const tipMat = new THREE.MeshLambertMaterial({ color: 0xffd700 });
+    const tip = new THREE.Mesh(tipGeo, tipMat);
+    tip.position.y = 14;
+    spaceship.add(tip);
     
-    // Amuleto de araña plateada colgando
-    const amuletBodyGeo = new THREE.BoxGeometry(1.2, 0.8, 0.3);
-    const amuletMat = new THREE.MeshLambertMaterial({ color: 0xc0c0c0, metalness: 0.8 });
-    const amuletBody = new THREE.Mesh(amuletBodyGeo, amuletMat);
-    amuletBody.position.set(0, 9.5, 1.5);
-    giantRobloxCharacter.add(amuletBody);
+    // Alas laterales
+    const wingGeo = new THREE.BoxGeometry(8, 1, 3);
+    const wingMat = new THREE.MeshLambertMaterial({ color: 0x1877f2 });
     
-    // Patas del amuleto araña
-    const amuletLegGeo = new THREE.BoxGeometry(0.6, 0.08, 0.08);
-    for(let i = 0; i < 8; i++) {
-      const amuletLeg = new THREE.Mesh(amuletLegGeo, amuletMat);
-      const angle = (i / 8) * Math.PI * 2;
-      amuletLeg.position.set(
-        Math.cos(angle) * 0.8, 
-        9.5, 
-        1.5 + Math.sin(angle) * 0.8
+    const leftWing = new THREE.Mesh(wingGeo, wingMat);
+    leftWing.position.set(-4, 8, 0);
+    spaceship.add(leftWing);
+    
+    const rightWing = new THREE.Mesh(wingGeo, wingMat);
+    rightWing.position.set(4, 8, 0);
+    spaceship.add(rightWing);
+    
+    // Cabina (transparente azul)
+    const cabinGeo = new THREE.SphereGeometry(1.5);
+    const cabinMat = new THREE.MeshLambertMaterial({ 
+      color: 0x42a5f5, 
+      transparent: true, 
+      opacity: 0.6 
+    });
+    const cabin = new THREE.Mesh(cabinGeo, cabinMat);
+    cabin.position.y = 10;
+    spaceship.add(cabin);
+    
+    // Propulsores en la base
+    for(let i = 0; i < 3; i++) {
+      const thrusterGeo = new THREE.CylinderGeometry(0.5, 0.8, 2);
+      const thrusterMat = new THREE.MeshLambertMaterial({ color: 0x444444 });
+      const thruster = new THREE.Mesh(thrusterGeo, thrusterMat);
+      const angle = (i / 3) * Math.PI * 2;
+      thruster.position.set(
+        Math.cos(angle) * 2,
+        -1,
+        Math.sin(angle) * 2
       );
-      amuletLeg.rotation.y = angle;
-      giantRobloxCharacter.add(amuletLeg);
+      spaceship.add(thruster);
     }
     
-    // Cadena que conecta el collar con el amuleto
-    const connectChainGeo = new THREE.BoxGeometry(0.1, 2, 0.1);
-    const connectChain = new THREE.Mesh(connectChainGeo, chainMat);
-    connectChain.position.set(0, 10.5, 1.2);
-    giantRobloxCharacter.add(connectChain);
+    spaceship.position.set(0, 0, 0);
+    droneScene.add(spaceship);
     
-    // ===== BRAZOS Y MANOS AMARILLOS =====
-    const armGeo = new THREE.BoxGeometry(2.5, 9, 2.5);
-    const armMat = new THREE.MeshLambertMaterial({ color: 0xffeb3b }); // Amarillo
+    // Crear sistema de partículas de fuego
+    createFireSystem();
     
-    const leftArm = new THREE.Mesh(armGeo, armMat);
-    leftArm.position.set(-5.5, 8, 0);
-    giantRobloxCharacter.add(leftArm);
+    // Crear túnel de colores (invisible inicialmente)
+    createColorTunnel();
     
-    const rightArm = new THREE.Mesh(armGeo, armMat);
-    rightArm.position.set(5.5, 8, 0);
-    giantRobloxCharacter.add(rightArm);
+    // Crear árbol mágico (invisible inicialmente)
+    createMagicTree();
+  }
+  
+  function createFireSystem() {
+    fireParticles = new THREE.Group();
     
-    // Manos amarillas estilo "garra" de Lego
-    const handGeo = new THREE.BoxGeometry(2, 2, 2);
-    const handMat = new THREE.MeshLambertMaterial({ color: 0xffeb3b });
-    
-    const leftHand = new THREE.Mesh(handGeo, handMat);
-    leftHand.position.set(-5.5, 3, 0);
-    giantRobloxCharacter.add(leftHand);
-    
-    const rightHand = new THREE.Mesh(handGeo, handMat);
-    rightHand.position.set(5.5, 3, 0);
-    giantRobloxCharacter.add(rightHand);
-    
-    // Dedos tipo garra de Lego
-    const fingerGeo = new THREE.BoxGeometry(0.4, 1, 0.4);
-    for(let hand = 0; hand < 2; hand++) {
-      const handX = hand === 0 ? -5.5 : 5.5;
-      for(let finger = 0; finger < 3; finger++) {
-        const fingerMesh = new THREE.Mesh(fingerGeo, handMat);
-        fingerMesh.position.set(handX + (finger - 1) * 0.5, 2, 0.8);
-        giantRobloxCharacter.add(fingerMesh);
-      }
+    for(let i = 0; i < 50; i++) {
+      const flameGeo = new THREE.SphereGeometry(0.3);
+      const flameMat = new THREE.MeshBasicMaterial({ 
+        color: new THREE.Color().setHSL(0.1 - Math.random() * 0.1, 1, 0.5),
+        transparent: true,
+        opacity: 0.8
+      });
+      const flame = new THREE.Mesh(flameGeo, flameMat);
+      
+      // Posicionar llamas aleatoriamente debajo de la nave
+      flame.position.set(
+        (Math.random() - 0.5) * 10,
+        -3 - Math.random() * 5,
+        (Math.random() - 0.5) * 10
+      );
+      
+      flame.userData = {
+        initialY: flame.position.y,
+        speed: 1 + Math.random() * 2,
+        life: Math.random()
+      };
+      
+      fireParticles.add(flame);
     }
     
-    // ===== PIERNAS ROJAS =====
-    const legGeo = new THREE.BoxGeometry(3, 8, 3);
-    const legMat = new THREE.MeshLambertMaterial({ color: 0xcc0000 }); // Rojo
+    fireParticles.visible = false;
+    droneScene.add(fireParticles);
+  }
+  
+  function createColorTunnel() {
+    colorTunnel = new THREE.Group();
     
-    const leftLeg = new THREE.Mesh(legGeo, legMat);
-    leftLeg.position.set(-2, -4, 0);
-    giantRobloxCharacter.add(leftLeg);
+    // Crear anillos de colores
+    for(let i = 0; i < 30; i++) {
+      const ringGeo = new THREE.TorusGeometry(20 + i * 5, 2, 8, 16);
+      const hue = (i * 0.1) % 1;
+      const ringMat = new THREE.MeshBasicMaterial({ 
+        color: new THREE.Color().setHSL(hue, 1, 0.5),
+        transparent: true,
+        opacity: 0.6
+      });
+      const ring = new THREE.Mesh(ringGeo, ringMat);
+      ring.position.z = i * -20;
+      ring.userData = { originalZ: ring.position.z };
+      colorTunnel.add(ring);
+    }
     
-    const rightLeg = new THREE.Mesh(legGeo, legMat);
-    rightLeg.position.set(2, -4, 0);
-    giantRobloxCharacter.add(rightLeg);
+    colorTunnel.visible = false;
+    droneScene.add(colorTunnel);
+  }
+  
+  function createMagicTree() {
+    magicTree = new THREE.Group();
     
-    // ===== KATANA EN LA ESPALDA =====
-    // Mango de la katana (rojo)
-    const katanaHandleGeo = new THREE.BoxGeometry(0.4, 3, 0.4);
-    const katanaHandleMat = new THREE.MeshLambertMaterial({ color: 0xcc0000 });
-    const katanaHandle = new THREE.Mesh(katanaHandleGeo, katanaHandleMat);
-    katanaHandle.position.set(0, 10, -2.5);
-    giantRobloxCharacter.add(katanaHandle);
+    // Tronco del árbol
+    const trunkGeo = new THREE.CylinderGeometry(1, 2, 8);
+    const trunkMat = new THREE.MeshLambertMaterial({ color: 0x8B4513 });
+    const trunk = new THREE.Mesh(trunkGeo, trunkMat);
+    trunk.position.y = 4;
+    magicTree.add(trunk);
     
-    // Funda de la katana (roja)
-    const katanaSheathGeo = new THREE.BoxGeometry(0.6, 8, 0.6);
-    const katanaSheathMat = new THREE.MeshLambertMaterial({ color: 0x8b0000 });
-    const katanaSheath = new THREE.Mesh(katanaSheathGeo, katanaSheathMat);
-    katanaSheath.position.set(0, 6, -2.5);
-    giantRobloxCharacter.add(katanaSheath);
+    // Copa del árbol
+    const leavesGeo = new THREE.SphereGeometry(6);
+    const leavesMat = new THREE.MeshLambertMaterial({ color: 0x228B22 });
+    const leaves = new THREE.Mesh(leavesGeo, leavesMat);
+    leaves.position.y = 10;
+    magicTree.add(leaves);
     
-    // Guarda de la katana (plateada)
-    const katanaGuardGeo = new THREE.BoxGeometry(1.5, 0.3, 0.8);
-    const katanaGuardMat = new THREE.MeshLambertMaterial({ color: 0xc0c0c0 });
-    const katanaGuard = new THREE.Mesh(katanaGuardGeo, katanaGuardMat);
-    katanaGuard.position.set(0, 8.5, -2.5);
-    giantRobloxCharacter.add(katanaGuard);
+    // Ramas adicionales
+    for(let i = 0; i < 8; i++) {
+      const branchGeo = new THREE.CylinderGeometry(0.2, 0.5, 3);
+      const branchMat = new THREE.MeshLambertMaterial({ color: 0x654321 });
+      const branch = new THREE.Mesh(branchGeo, branchMat);
+      const angle = (i / 8) * Math.PI * 2;
+      branch.position.set(
+        Math.cos(angle) * 3,
+        6 + Math.random() * 4,
+        Math.sin(angle) * 3
+      );
+      branch.rotation.z = angle;
+      magicTree.add(branch);
+    }
     
-    // Correas que sujetan la katana (negras)
-    const strapGeo = new THREE.BoxGeometry(0.2, 0.5, 3);
-    const strapMat = new THREE.MeshLambertMaterial({ color: 0x222222 });
+    magicTree.position.set(0, 0, 0);
+    magicTree.scale.set(0.1, 0.1, 0.1); // Comienza muy pequeño
+    magicTree.visible = false;
+    droneScene.add(magicTree);
     
-    const strapTop = new THREE.Mesh(strapGeo, strapMat);
-    strapTop.position.set(0, 9, -1);
-    giantRobloxCharacter.add(strapTop);
+    // Crear sistema de rayos
+    createLightningSystem();
+  }
+  
+  function createLightningSystem() {
+    lightning = new THREE.Group();
     
-    const strapBottom = new THREE.Mesh(strapGeo, strapMat);
-    strapBottom.position.set(0, 7, -1);
-    giantRobloxCharacter.add(strapBottom);
+    // Crear múltiples rayos
+    for(let i = 0; i < 5; i++) {
+      const lightningGeo = new THREE.CylinderGeometry(0.2, 0.2, 25);
+      const lightningMat = new THREE.MeshBasicMaterial({ 
+        color: 0xffffff,
+        emissive: 0xffffff,
+        emissiveIntensity: 0.8
+      });
+      const bolt = new THREE.Mesh(lightningGeo, lightningMat);
+      bolt.position.set(
+        (Math.random() - 0.5) * 20,
+        30,
+        (Math.random() - 0.5) * 20
+      );
+      bolt.rotation.x = Math.random() * 0.3;
+      bolt.rotation.z = Math.random() * 0.3;
+      lightning.add(bolt);
+    }
     
-    // Posicionar el muñeco sobre la superficie, alineado con la tienda
-    giantRobloxCharacter.position.set(60, 4, -25); // Y=4 para que esté sobre el suelo, Z=-25 para línea recta hacia la tienda
-    
-    // ORIENTAR EL PERSONAJE HACIA LA TIENDA (mirando hacia x=0, z=-25)
-    giantRobloxCharacter.rotation.y = Math.PI; // Rotación 180 grados para que mire hacia la tienda
-    
-    giantRobloxCharacter.castShadow = true;
-    
-    droneScene.add(giantRobloxCharacter);
+    lightning.visible = false;
+    droneScene.add(lightning);
   }
 
   function animateEpicSequence(sequenceTime) {
-    if (!giantRobloxCharacter) return;
+    if (!spaceship) return;
     
-    // ESCENA 1: Caminar hacia la tienda con vista lateral (primeros 4 segundos)
-    if (sequenceTime <= 4000) {
-      const walkProgress = sequenceTime / 4000;
+    // ESCENA 1: Nave espacial con fuego saliendo del suelo (0-3 segundos)
+    if (sequenceTime <= 3000) {
+      const progress = sequenceTime / 3000;
       
-      // Movimiento directo hacia la tienda (línea recta)
-      giantRobloxCharacter.position.x = 60 - (walkProgress * 30); // Camina hacia la mitad
-      giantRobloxCharacter.position.z = -25; // Mantener Z fijo
-      
-      // Animación de caminar MUY VISIBLE y estilo Roblox
-      const walkSpeed = 0.03;
-      const walkCycle = Math.sin(sequenceTime * walkSpeed);
-      const walkBounce = Math.abs(Math.sin(sequenceTime * walkSpeed * 2)) * 0.3;
-      
-      giantRobloxCharacter.position.y = 4 + walkBounce;
-      
-      // ANIMACIÓN EXTREMA DE BRAZOS Y PIERNAS ESTILO ROBLOX
-      const armSwing = walkCycle * 1.2;
-      const legSwing = walkCycle * 0.8;
-      
-      const leftArmIndex = 23;
-      const rightArmIndex = 24;
-      const leftLegIndex = 33;
-      const rightLegIndex = 34;
-      
-      // BRAZOS SE MUEVEN OPUESTO A LAS PIERNAS
-      giantRobloxCharacter.children[leftArmIndex].rotation.x = -armSwing;
-      giantRobloxCharacter.children[rightArmIndex].rotation.x = armSwing;
-      
-      // PIERNAS SE MUEVEN ALTERNANDO
-      giantRobloxCharacter.children[leftLegIndex].rotation.x = legSwing;
-      giantRobloxCharacter.children[rightLegIndex].rotation.x = -legSwing;
-      
-      // MANOS también se mueven
-      const leftHandIndex = 25;
-      const rightHandIndex = 26;
-      giantRobloxCharacter.children[leftHandIndex].rotation.x = -armSwing * 0.5;
-      giantRobloxCharacter.children[rightHandIndex].rotation.x = armSwing * 0.5;
-      
-      // SOMBRERO FIJO
-      if (robloxRedHat) {
-        robloxRedHat.rotation.set(0, 0, 0);
+      // Mostrar fuego gradualmente
+      if (fireParticles) {
+        fireParticles.visible = true;
+        
+        // Animar partículas de fuego
+        fireParticles.children.forEach((flame, index) => {
+          flame.position.y = flame.userData.initialY + Math.sin(sequenceTime * 0.01 + index) * 2;
+          flame.scale.set(
+            1 + Math.sin(sequenceTime * 0.005 + index) * 0.3,
+            1 + Math.sin(sequenceTime * 0.008 + index) * 0.5,
+            1 + Math.sin(sequenceTime * 0.005 + index) * 0.3
+          );
+          
+          // Cambiar color de llama
+          const hue = 0.1 - (Math.sin(sequenceTime * 0.01 + index) * 0.1);
+          flame.material.color.setHSL(hue, 1, 0.5 + Math.sin(sequenceTime * 0.02) * 0.3);
+        });
       }
       
-      // VISTA LATERAL DINÁMICA (360 grados alrededor del personaje)
-      const cameraAngle = (sequenceTime / 4000) * Math.PI * 2; // Rotación completa
-      const radius = 40;
-      droneCamera.position.set(
-        giantRobloxCharacter.position.x + Math.sin(cameraAngle) * radius,
-        20,
-        giantRobloxCharacter.position.z + Math.cos(cameraAngle) * radius
-      );
-      droneCamera.lookAt(giantRobloxCharacter.position);
-    }
-    // ESCENA 2: Continuar caminando con vista frontal (segundos 4-8)
-    else if (sequenceTime <= 8000) {
-      const walkProgress = (sequenceTime - 4000) / 4000;
-      
-      // Completar el movimiento hacia la tienda
-      giantRobloxCharacter.position.x = 30 - (walkProgress * 30); // De x=30 a x=0
-      giantRobloxCharacter.position.z = -25;
-      
-      // Continuar animación de caminar
-      const walkSpeed = 0.03;
-      const walkCycle = Math.sin(sequenceTime * walkSpeed);
-      const walkBounce = Math.abs(Math.sin(sequenceTime * walkSpeed * 2)) * 0.3;
-      
-      giantRobloxCharacter.position.y = 4 + walkBounce;
-      
-      const armSwing = walkCycle * 1.2;
-      const legSwing = walkCycle * 0.8;
-      
-      const leftArmIndex = 23;
-      const rightArmIndex = 24;
-      const leftLegIndex = 33;
-      const rightLegIndex = 34;
-      const leftHandIndex = 25;
-      const rightHandIndex = 26;
-      
-      giantRobloxCharacter.children[leftArmIndex].rotation.x = -armSwing;
-      giantRobloxCharacter.children[rightArmIndex].rotation.x = armSwing;
-      giantRobloxCharacter.children[leftLegIndex].rotation.x = legSwing;
-      giantRobloxCharacter.children[rightLegIndex].rotation.x = -legSwing;
-      giantRobloxCharacter.children[leftHandIndex].rotation.x = -armSwing * 0.5;
-      giantRobloxCharacter.children[rightHandIndex].rotation.x = armSwing * 0.5;
-      
-      if (robloxRedHat) {
-        robloxRedHat.rotation.set(0, 0, 0);
+      // La nave se ilumina gradualmente
+      if (spaceship) {
+        spaceship.children.forEach(part => {
+          if (part.material) {
+            part.material.emissive = new THREE.Color(0x444444).multiplyScalar(progress);
+          }
+        });
       }
       
-      // VISTA FRONTAL SIGUIENDO AL PERSONAJE
-      droneCamera.position.set(
-        giantRobloxCharacter.position.x,
-        25,
-        giantRobloxCharacter.position.z + 50
-      );
-      droneCamera.lookAt(giantRobloxCharacter.position);
+      // Vista lateral dramática
+      droneCamera.position.set(30, 15, 0);
+      droneCamera.lookAt(0, 10, 0);
     }
-    // ESCENA 3: Aplastar la tienda con vista cenital (segundos 8-10)
+    // ESCENA 2: Nave despegando (3-6 segundos)
+    else if (sequenceTime <= 6000) {
+      const progress = (sequenceTime - 3000) / 3000;
+      
+      // Nave se eleva
+      if (spaceship) {
+        spaceship.position.y = progress * 40;
+        spaceship.rotation.y = progress * Math.PI * 2; // Gira mientras sube
+        
+        // Máximo brillo
+        spaceship.children.forEach(part => {
+          if (part.material) {
+            part.material.emissive = new THREE.Color(0x666666);
+          }
+        });
+      }
+      
+      // Fuego más intenso
+      if (fireParticles) {
+        fireParticles.children.forEach((flame, index) => {
+          flame.position.y = flame.userData.initialY + Math.sin(sequenceTime * 0.02 + index) * 4;
+          flame.scale.set(2, 3, 2);
+        });
+      }
+      
+      // Cámara sigue la nave
+      droneCamera.position.set(25, 20 + progress * 20, 25);
+      droneCamera.lookAt(0, spaceship.position.y, 0);
+    }
+    // ESCENA 3: Túnel de colores infinito (6-10 segundos)
     else if (sequenceTime <= 10000) {
-      const crushProgress = (sequenceTime - 8000) / 2000;
+      const progress = (sequenceTime - 6000) / 4000;
       
-      // El muñeco levanta el pie derecho para aplastar
-      const rightLegIndex = 34;
-      giantRobloxCharacter.children[rightLegIndex].rotation.x = crushProgress * 1.5;
+      // Ocultar nave y fuego
+      if (spaceship) spaceship.visible = false;
+      if (fireParticles) fireParticles.visible = false;
       
-      // Restablecer otras animaciones
-      const leftArmIndex = 23;
-      const rightArmIndex = 24;
-      const leftLegIndex = 33;
-      const leftHandIndex = 25;
-      const rightHandIndex = 26;
-      
-      giantRobloxCharacter.children[leftArmIndex].rotation.x = 0;
-      giantRobloxCharacter.children[rightArmIndex].rotation.x = 0;
-      giantRobloxCharacter.children[leftLegIndex].rotation.x = 0;
-      giantRobloxCharacter.children[leftHandIndex].rotation.x = 0;
-      giantRobloxCharacter.children[rightHandIndex].rotation.x = 0;
-      
-      // La tienda se aplasta gradualmente
-      if (storeBase) {
-        storeBase.scale.y = 1 - (crushProgress * 0.8);
-        storeBase.position.y = 3 - (crushProgress * 2.4);
+      // Mostrar túnel de colores
+      if (colorTunnel) {
+        colorTunnel.visible = true;
+        
+        // Animar túnel moviéndose hacia adelante
+        colorTunnel.children.forEach((ring, index) => {
+          ring.position.z = ring.userData.originalZ + (sequenceTime - 6000) * 0.05;
+          ring.rotation.z += 0.02;
+          ring.rotation.x += 0.01;
+          
+          // Si el anillo pasa muy adelante, lo movemos atrás
+          if (ring.position.z > 50) {
+            ring.position.z = ring.userData.originalZ - 600;
+          }
+        });
       }
       
-      // VISTA CENITAL (desde arriba) para capturar la destrucción
-      droneCamera.position.set(0, 50, -15);
-      droneCamera.lookAt(0, 0, -15);
+      // Cambiar color de fondo dinámicamente
+      const hue = (sequenceTime * 0.001) % 1;
+      droneScene.background = new THREE.Color().setHSL(hue, 0.8, 0.3);
+      
+      // Cámara viajando por el túnel
+      droneCamera.position.set(0, 0, 0);
+      droneCamera.lookAt(0, 0, -100);
     }
-    // ESCENA 4: Levantamiento lento de la mano con vista dramática (segundos 10-12)
-    else if (sequenceTime <= 12000) {
-      const handRaiseProgress = (sequenceTime - 10000) / 2000;
+    // ESCENA 4: Árbol creciendo rápidamente (10-13 segundos)
+    else if (sequenceTime <= 13000) {
+      const progress = (sequenceTime - 10000) / 3000;
       
-      // Brazo derecho se levanta LENTAMENTE
-      const rightArmIndex = 24;
-      const targetRotation = -Math.PI / 2;
-      giantRobloxCharacter.children[rightArmIndex].rotation.z = targetRotation * handRaiseProgress;
-      giantRobloxCharacter.children[rightArmIndex].rotation.x = 0;
+      // Ocultar túnel
+      if (colorTunnel) colorTunnel.visible = false;
       
-      // Piernas y otros brazos en posición normal
-      const leftArmIndex = 23;
-      const leftLegIndex = 33;
-      const rightLegIndex = 34;
+      // Restaurar fondo normal
+      droneScene.background = new THREE.Color(0x87CEEB);
       
-      giantRobloxCharacter.children[leftArmIndex].rotation.x = 0;
-      giantRobloxCharacter.children[leftLegIndex].rotation.x = 0;
-      giantRobloxCharacter.children[rightLegIndex].rotation.x = 0;
+      // Mostrar árbol creciendo
+      if (magicTree) {
+        magicTree.visible = true;
+        const scale = 0.1 + (progress * 0.9); // Crece de 0.1 a 1.0
+        magicTree.scale.set(scale, scale, scale);
+        
+        // Rotación suave mientras crece
+        magicTree.rotation.y = progress * Math.PI * 2;
+      }
       
-      // VISTA DRAMÁTICA EN ÁNGULO BAJO (como película de acción)
-      droneCamera.position.set(20, 8, -10);
-      droneCamera.lookAt(giantRobloxCharacter.position.x, giantRobloxCharacter.position.y + 8, giantRobloxCharacter.position.z);
+      // Vista del árbol creciendo
+      droneCamera.position.set(15, 10, 15);
+      droneCamera.lookAt(0, 5, 0);
+    }
+    // ESCENA 5: Rayo golpea el árbol y se incendia (13-16 segundos)
+    else if (sequenceTime <= 16000) {
+      const progress = (sequenceTime - 13000) / 3000;
       
-      // Mostrar calavera cuando la mano esté completamente levantada
-      if (handRaiseProgress >= 0.95 && !skullShown) {
+      // Mostrar rayos a los 0.5 segundos
+      if (progress > 0.15 && lightning) {
+        lightning.visible = true;
+        
+        // Animar rayos
+        lightning.children.forEach((bolt, index) => {
+          bolt.scale.y = 1 + Math.sin(sequenceTime * 0.05 + index) * 0.3;
+          bolt.material.emissiveIntensity = 0.8 + Math.sin(sequenceTime * 0.1) * 0.4;
+        });
+      }
+      
+      // Árbol se incendia después del rayo
+      if (progress > 0.3 && magicTree) {
+        magicTree.children.forEach(part => {
+          if (part.material) {
+            // Cambiar a colores de fuego
+            const fireIntensity = (progress - 0.3) / 0.7;
+            if (part.material.color.r < 0.5) { // Partes verdes/marrones
+              part.material.color.setHex(0xff4400); // Naranja fuego
+              part.material.emissive = new THREE.Color(0x882200).multiplyScalar(fireIntensity);
+            }
+          }
+        });
+      }
+      
+      // Vista dramática del árbol en llamas
+      const angle = progress * Math.PI * 4; // 2 rotaciones completas
+      droneCamera.position.set(
+        Math.sin(angle) * 20,
+        12 + Math.sin(progress * Math.PI * 6) * 3,
+        Math.cos(angle) * 20
+      );
+      droneCamera.lookAt(0, 8, 0);
+      
+      // Mostrar calavera al final
+      if (progress >= 0.8 && !skullShown) {
         setTimeout(() => {
           showSkullAndBlackWhiteEffect();
         }, 200);
       }
-    }
-    // ESCENA 5: Vista 360 final con calavera (segundos 12-16)
-    else if (sequenceTime > 12000 && sequenceTime <= 16000) {
-      // Mantener brazo derecho completamente levantado
-      const rightArmIndex = 24;
-      giantRobloxCharacter.children[rightArmIndex].rotation.z = -Math.PI / 2;
-      giantRobloxCharacter.children[rightArmIndex].rotation.x = 0;
-      
-      // VISTA 360 ÉPICA ALREDEDOR DEL PERSONAJE CON CALAVERA
-      const finalAngle = ((sequenceTime - 12000) / 4000) * Math.PI * 3; // 1.5 rotaciones completas
-      const radius = 25;
-      droneCamera.position.set(
-        giantRobloxCharacter.position.x + Math.sin(finalAngle) * radius,
-        15 + Math.sin((sequenceTime - 12000) * 0.001) * 8, // Movimiento vertical dinámico
-        giantRobloxCharacter.position.z + Math.cos(finalAngle) * radius
-      );
-      droneCamera.lookAt(giantRobloxCharacter.position.x, giantRobloxCharacter.position.y + 8, giantRobloxCharacter.position.z);
     }
   }
 
