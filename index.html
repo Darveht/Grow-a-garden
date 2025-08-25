@@ -1394,8 +1394,8 @@
       spaceship.add(pipe);
     }
     
-    // POSICIONAR FUERA DEL ÁREA DEL JUEGO
-    spaceship.position.set(-50, 0, -50); // Lejos del huerto
+    // POSICIONAR MUY LEJOS DEL ÁREA DEL JUEGO
+    spaceship.position.set(-100, -20, -100); // Mucho más lejos del huerto y bajo tierra inicialmente
     droneScene.add(spaceship);
     
     // Crear sistema de partículas de fuego
@@ -1422,11 +1422,11 @@
       });
       const flame = new THREE.Mesh(flameGeo, flameMat);
       
-      // Posicionar llamas aleatoriamente debajo de la nave (FUERA DEL HUERTO)
+      // Posicionar llamas aleatoriamente debajo de la nave (MUY LEJOS DEL HUERTO)
       flame.position.set(
-        -50 + (Math.random() - 0.5) * 15, // Centrado en la nueva posición de la nave
-        -3 - Math.random() * 8,
-        -50 + (Math.random() - 0.5) * 15
+        -100 + (Math.random() - 0.5) * 15, // Centrado en la nueva posición de la nave
+        -25 - Math.random() * 8, // Más abajo para que no se vea inicialmente
+        -100 + (Math.random() - 0.5) * 15
       );
       
       flame.userData = {
@@ -1452,9 +1452,9 @@
       const smoke = new THREE.Mesh(smokeGeo, smokeMat);
       
       smoke.position.set(
-        -50 + (Math.random() - 0.5) * 20,
-        2 + Math.random() * 10,
-        -50 + (Math.random() - 0.5) * 20
+        -100 + (Math.random() - 0.5) * 20,
+        -18 + Math.random() * 10, // Más abajo inicialmente
+        -100 + (Math.random() - 0.5) * 20
       );
       
       smoke.userData = {
@@ -1654,6 +1654,12 @@
     if (sequenceTime <= 3000) {
       const progress = sequenceTime / 3000;
       
+      // Asegurar que la nave esté en la posición correcta y visible
+      if (spaceship) {
+        spaceship.position.set(-100, -20 + (progress * 25), -100); // Elevar gradualmente desde abajo
+        spaceship.visible = true;
+      }
+      
       // Mostrar fuego gradualmente
       if (fireParticles) {
         fireParticles.visible = true;
@@ -1733,9 +1739,15 @@
     else if (sequenceTime <= 10000) {
       const progress = (sequenceTime - 6000) / 4000;
       
-      // Ocultar nave y fuego
-      if (spaceship) spaceship.visible = false;
-      if (fireParticles) fireParticles.visible = false;
+      // Ocultar nave y fuego COMPLETAMENTE
+      if (spaceship) {
+        spaceship.visible = false;
+        spaceship.position.set(-1000, -1000, -1000); // Mover muy lejos
+      }
+      if (fireParticles) {
+        fireParticles.visible = false;
+        fireParticles.position.set(-1000, -1000, -1000); // Mover muy lejos
+      }
       
       // Mostrar túnel de colores
       if (colorTunnel) {
@@ -2042,9 +2054,47 @@
     if (droneAnimationId) {
       cancelAnimationFrame(droneAnimationId);
     }
+    
+    // Limpiar TODOS los elementos de la nave para evitar bugs
+    if (spaceship) {
+      droneScene.remove(spaceship);
+      spaceship = null;
+    }
+    if (fireParticles) {
+      droneScene.remove(fireParticles);
+      fireParticles = null;
+    }
+    if (colorTunnel) {
+      droneScene.remove(colorTunnel);
+      colorTunnel = null;
+    }
+    if (magicTree) {
+      // Limpiar partículas de fuego del árbol
+      if (magicTree.userData.fireParticles) {
+        magicTree.userData.fireParticles.forEach(flame => {
+          droneScene.remove(flame);
+        });
+        magicTree.userData.fireParticles = [];
+      }
+      droneScene.remove(magicTree);
+      magicTree = null;
+    }
+    if (lightning) {
+      droneScene.remove(lightning);
+      lightning = null;
+    }
+    
     if (droneRenderer && droneRenderer.domElement) {
       droneView.removeChild(droneRenderer.domElement);
     }
+    
+    // Limpiar la escena completamente
+    if (droneScene) {
+      while (droneScene.children.length > 0) {
+        droneScene.remove(droneScene.children[0]);
+      }
+    }
+    
     preIntro.style.display = 'none';
     startScreen.style.display = 'flex';
   }
