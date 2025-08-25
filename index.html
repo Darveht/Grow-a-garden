@@ -1099,7 +1099,7 @@
 
   // ----- INTRO ANIMADO CON VISTA 3D DE DRONE -----
   let droneScene, droneCamera, droneRenderer;
-  let dronePlots = [], droneCrops, droneStoreBuilding;
+  let dronePlots = [], droneCrops, droneStoreBuilding, storeBase;
   let droneAnimationId;
 
   function createDroneIntro() {
@@ -1191,7 +1191,7 @@
     }
     
     // Tienda con colores azules
-    const storeBase = new THREE.Mesh(
+    storeBase = new THREE.Mesh(
       new THREE.BoxGeometry(15, 6, 10),
       new THREE.MeshLambertMaterial({ color: 0x1877f2 })
     );
@@ -1240,6 +1240,10 @@
     startDroneAnimation();
   }
 
+  let giantRobloxCharacter, robloxRedHat;
+  let epicSequenceStarted = false;
+  let victorySequenceStarted = false;
+
   function startDroneAnimation() {
     const startTime = Date.now();
     let angle = 0;
@@ -1248,18 +1252,30 @@
       if (!state.introCompleted) {
         const elapsed = Date.now() - startTime;
         
-        // Movimiento circular de drone elevándose gradualmente
-        const radius = 35 - (elapsed * 0.005); // Se acerca gradualmente
-        const height = 25 + Math.sin(elapsed * 0.001) * 5; // Movimiento vertical suave
+        // Después de 10 segundos, iniciar secuencia épica
+        if (elapsed > 10000 && !epicSequenceStarted) {
+          epicSequenceStarted = true;
+          createGiantRobloxCharacter();
+        }
         
-        angle += 0.008; // Velocidad de rotación
-        
-        droneCamera.position.x = Math.sin(angle) * radius;
-        droneCamera.position.z = Math.cos(angle) * radius;
-        droneCamera.position.y = height;
-        
-        // La cámara siempre mira hacia el centro del jardín
-        droneCamera.lookAt(0, 0, 0);
+        // Durante los primeros 10 segundos: vista 360 normal
+        if (elapsed <= 10000) {
+          // Movimiento circular de drone elevándose gradualmente
+          const radius = 35 - (elapsed * 0.005); // Se acerca gradualmente
+          const height = 25 + Math.sin(elapsed * 0.001) * 5; // Movimiento vertical suave
+          
+          angle += 0.008; // Velocidad de rotación
+          
+          droneCamera.position.x = Math.sin(angle) * radius;
+          droneCamera.position.z = Math.cos(angle) * radius;
+          droneCamera.position.y = height;
+          
+          // La cámara siempre mira hacia el centro del jardín
+          droneCamera.lookAt(0, 0, 0);
+        } else {
+          // Secuencia épica del muñeco gigante
+          animateEpicSequence(elapsed - 10000);
+        }
         
         // Renderizar la escena
         droneRenderer.render(droneScene, droneCamera);
@@ -1270,6 +1286,203 @@
     }
     
     animateDrone();
+  }
+
+  function createGiantRobloxCharacter() {
+    // Crear muñeco gigante estilo Roblox
+    giantRobloxCharacter = new THREE.Group();
+    
+    // Cuerpo principal - grande y cuadrado estilo Roblox
+    const bodyGeo = new THREE.BoxGeometry(8, 12, 4);
+    const bodyMat = new THREE.MeshLambertMaterial({ color: 0x1877f2 }); // Azul Roblox
+    const body = new THREE.Mesh(bodyGeo, bodyMat);
+    body.position.y = 6;
+    giantRobloxCharacter.add(body);
+    
+    // Cabeza cuadrada
+    const headGeo = new THREE.BoxGeometry(6, 6, 6);
+    const headMat = new THREE.MeshLambertMaterial({ color: 0xffdbcb }); // Color piel
+    const head = new THREE.Mesh(headGeo, headMat);
+    head.position.y = 15;
+    giantRobloxCharacter.add(head);
+    
+    // Sombrero rojo épico
+    robloxRedHat = new THREE.Group();
+    const hatBase = new THREE.Mesh(
+      new THREE.CylinderGeometry(4, 4, 1),
+      new THREE.MeshLambertMaterial({ color: 0xcc0000 }) // Rojo brillante
+    );
+    hatBase.position.y = 18.5;
+    robloxRedHat.add(hatBase);
+    
+    const hatTop = new THREE.Mesh(
+      new THREE.CylinderGeometry(3, 3, 3),
+      new THREE.MeshLambertMaterial({ color: 0xaa0000 }) // Rojo más oscuro
+    );
+    hatTop.position.y = 20;
+    robloxRedHat.add(hatTop);
+    
+    giantRobloxCharacter.add(robloxRedHat);
+    
+    // Brazos cuadrados
+    const armGeo = new THREE.BoxGeometry(3, 10, 3);
+    const armMat = new THREE.MeshLambertMaterial({ color: 0xffdbcb });
+    
+    const leftArm = new THREE.Mesh(armGeo, armMat);
+    leftArm.position.set(-6, 8, 0);
+    giantRobloxCharacter.add(leftArm);
+    
+    const rightArm = new THREE.Mesh(armGeo, armMat);
+    rightArm.position.set(6, 8, 0);
+    giantRobloxCharacter.add(rightArm);
+    
+    // Piernas cuadradas
+    const legGeo = new THREE.BoxGeometry(3, 8, 3);
+    const legMat = new THREE.MeshLambertMaterial({ color: 0x333333 }); // Pantalones oscuros
+    
+    const leftLeg = new THREE.Mesh(legGeo, legMat);
+    leftLeg.position.set(-2, -4, 0);
+    giantRobloxCharacter.add(leftLeg);
+    
+    const rightLeg = new THREE.Mesh(legGeo, legMat);
+    rightLeg.position.set(2, -4, 0);
+    giantRobloxCharacter.add(rightLeg);
+    
+    // Posicionar el muñeco lejos de la tienda inicialmente
+    giantRobloxCharacter.position.set(60, 0, -25);
+    giantRobloxCharacter.castShadow = true;
+    
+    droneScene.add(giantRobloxCharacter);
+  }
+
+  function animateEpicSequence(sequenceTime) {
+    if (!giantRobloxCharacter) return;
+    
+    // Caminar lentamente hacia la tienda (primeros 8 segundos)
+    if (sequenceTime <= 8000) {
+      const walkProgress = sequenceTime / 8000;
+      
+      // Movimiento hacia la tienda
+      giantRobloxCharacter.position.x = 60 - (walkProgress * 60); // Camina de x=60 a x=0
+      
+      // Animación de caminar (balanceo de brazos y piernas)
+      const walkCycle = Math.sin(sequenceTime * 0.01) * 0.3;
+      giantRobloxCharacter.children[3].rotation.x = walkCycle; // Brazo izquierdo
+      giantRobloxCharacter.children[4].rotation.x = -walkCycle; // Brazo derecho
+      giantRobloxCharacter.children[5].rotation.x = -walkCycle; // Pierna izquierda
+      giantRobloxCharacter.children[6].rotation.x = walkCycle; // Pierna derecha
+      
+      // Sombrero se balancea ligeramente
+      if (robloxRedHat) {
+        robloxRedHat.rotation.z = Math.sin(sequenceTime * 0.008) * 0.1;
+      }
+      
+      // Cámara sigue al muñeco dramáticamente
+      droneCamera.position.set(
+        giantRobloxCharacter.position.x + 20,
+        25,
+        giantRobloxCharacter.position.z + 30
+      );
+      droneCamera.lookAt(giantRobloxCharacter.position);
+    }
+    // Aplastar la tienda (segundos 8-10)
+    else if (sequenceTime <= 10000) {
+      const crushProgress = (sequenceTime - 8000) / 2000;
+      
+      // El muñeco levanta el pie
+      giantRobloxCharacter.children[6].rotation.x = crushProgress * 1.5; // Pierna derecha se levanta
+      
+      // La tienda se aplasta gradualmente
+      if (storeBase) {
+        storeBase.scale.y = 1 - (crushProgress * 0.8); // Se aplasta a 20% de su altura
+        storeBase.position.y = 3 - (crushProgress * 2.4); // Baja
+      }
+      
+      // Cámara se acerca para capturar la acción
+      droneCamera.position.set(10, 15, -5);
+      droneCamera.lookAt(0, 0, -15);
+    }
+    // Celebración de victoria (segundos 10-13)
+    else if (sequenceTime <= 13000 && !victorySequenceStarted) {
+      victorySequenceStarted = true;
+      
+      // Brazo derecho se levanta en señal de victoria
+      giantRobloxCharacter.children[4].rotation.z = -Math.PI / 2; // Brazo derecho arriba
+      giantRobloxCharacter.children[4].rotation.x = 0;
+      
+      // Pierna vuelve a posición normal
+      giantRobloxCharacter.children[6].rotation.x = 0;
+      
+      // Cámara captura la pose épica
+      droneCamera.position.set(15, 20, -10);
+      droneCamera.lookAt(giantRobloxCharacter.position);
+      
+      // Después de 1 segundo, mostrar calavera y efecto blanco y negro
+      setTimeout(() => {
+        showSkullAndBlackWhiteEffect();
+      }, 1000);
+    }
+  }
+
+  function showSkullAndBlackWhiteEffect() {
+    // Crear overlay de calavera
+    const skullOverlay = document.createElement('div');
+    skullOverlay.style.position = 'fixed';
+    skullOverlay.style.top = '50%';
+    skullOverlay.style.left = '50%';
+    skullOverlay.style.transform = 'translate(-50%, -50%)';
+    skullOverlay.style.fontSize = '100px';
+    skullOverlay.style.zIndex = '2500';
+    skullOverlay.style.animation = 'skullAppear 1s ease-out';
+    skullOverlay.textContent = '💀';
+    
+    // CSS para la animación de calavera
+    const skullStyle = document.createElement('style');
+    skullStyle.textContent = `
+      @keyframes skullAppear {
+        from { transform: translate(-50%, -50%) scale(0) rotate(180deg); opacity: 0; }
+        to { transform: translate(-50%, -50%) scale(1) rotate(0deg); opacity: 1; }
+      }
+    `;
+    document.head.appendChild(skullStyle);
+    
+    document.body.appendChild(skullOverlay);
+    
+    // Efecto blanco y negro en toda la vista
+    const blackWhiteFilter = document.createElement('div');
+    blackWhiteFilter.style.position = 'fixed';
+    blackWhiteFilter.style.top = '0';
+    blackWhiteFilter.style.left = '0';
+    blackWhiteFilter.style.width = '100vw';
+    blackWhiteFilter.style.height = '100vh';
+    blackWhiteFilter.style.background = 'rgba(0, 0, 0, 0.3)';
+    blackWhiteFilter.style.backdropFilter = 'grayscale(100%) contrast(150%)';
+    blackWhiteFilter.style.zIndex = '2400';
+    blackWhiteFilter.style.animation = 'blackWhiteAppear 2s ease-in-out';
+    
+    const filterStyle = document.createElement('style');
+    filterStyle.textContent = `
+      @keyframes blackWhiteAppear {
+        from { opacity: 0; backdrop-filter: grayscale(0%) contrast(100%); }
+        to { opacity: 1; backdrop-filter: grayscale(100%) contrast(150%); }
+      }
+    `;
+    document.head.appendChild(filterStyle);
+    
+    document.body.appendChild(blackWhiteFilter);
+    
+    // Cambiar el fondo de la escena 3D a blanco y negro
+    if (droneScene) {
+      droneScene.background = new THREE.Color(0x808080); // Gris para efecto B&N
+    }
+    
+    // Después de 3 segundos, terminar el intro
+    setTimeout(() => {
+      endIntro();
+      // Limpiar elementos
+      document.body.removeChild(skullOverlay);
+      document.body.removeChild(blackWhiteFilter);
+    }, 3000);
   }
 
   function endIntro() {
